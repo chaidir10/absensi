@@ -3,9 +3,9 @@
   "short_name": "Presensi",
   "id": "/",
   "start_url": "./",
-  "display": "standalone",
-  "background_color": "#0a9396",
-  "theme_color": "#0a9396",
+  "display": "fullscreen",
+  "background_color": "#6a4d94",
+  "theme_color": "#9b59b6",
   "orientation": "portrait",
   "icons": [
     {
@@ -32,5 +32,9 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "lang": "id",
+  "categories": [
+    "government"
   ]
 }
