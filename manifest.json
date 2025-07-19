@@ -3,7 +3,7 @@
   "short_name": "Presensi",
   "id": "/",
   "start_url": "./",
-  "display": "fullscreen",
+  "display": "standalone",
   "background_color": "#7237d5",
   "theme_color": "#7237d5",
   "orientation": "portrait",
