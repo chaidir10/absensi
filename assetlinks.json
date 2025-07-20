@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.chaidir10.twa",
+        "sha256_cert_fingerprints": ["DD:39:16:14:07:7D:10:08:AB:14:F6:92:94:88:EB:8E:23:EA:88:51:DF:D9:A5:ED:DF:76:AA:1F:4E:20:85:1D"]
+      }
+    }]
