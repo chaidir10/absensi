@@ -1,73 +1,117 @@
-// This is the "Offline page" service worker
-
+// service-worker.js
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
-const CACHE = "pwabuilder-page";
+const CACHE_NAME = 'absensi-cache-v1';
+const OFFLINE_PAGE = '/absensi/offline.html'; // pastikan file ini ada
 
-// TODO: replace the following with the correct offline fallback page i.e.: const offlineFallbackPage = "offline.html";
-const offlineFallbackPage = "ToDo-replace-this-name.html";
-
+// Aktifkan skipWaiting agar langsung aktif
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });
 
-self.addEventListener('install', async (event) => {
+// Cache saat install
+self.addEventListener('install', (event) => {
+  console.log('[SW] Installing...');
   event.waitUntil(
-    caches.open(CACHE)
-      .then((cache) => cache.add(offlineFallbackPage))
-  );
-});
-
-if (workbox.navigationPreload.isSupported()) {
-  workbox.navigationPreload.enable();
-}
-
-self.addEventListener('fetch', (event) => {
-  if (event.request.mode === 'navigate') {
-    event.respondWith((async () => {
-      try {
-        const preloadResp = await event.preloadResponse;
-
-        if (preloadResp) {
-          return preloadResp;
-        }
-
-        const networkResp = await fetch(event.request);
-        return networkResp;
-      } catch (error) {
-
-        const cache = await caches.open(CACHE);
-        const cachedResp = await cache.match(offlineFallbackPage);
-        return cachedResp;
-      }
-    })());
-  }
-});
-// service-worker.js
-self.addEventListener('install', function (e) {
-  console.log('Service Worker: Installed');
-  e.waitUntil(
-    caches.open('v1').then(function (cache) {
+    caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll([
-        '/',
+        '/absensi/',
         '/absensi/index.html',
         '/absensi/manifest.json',
+        '/absensi/offline.html',
         '/absensi/icons/icon-192.png',
         '/absensi/icons/icon-192-maskable.png',
         '/absensi/icons/icon-512.png',
         '/absensi/icons/icon-512-maskable.png',
-        // tambahkan semua file statis yang ingin di-cache
+        // tambahkan file statis lainnya jika ada
       ]);
     })
   );
+  self.skipWaiting();
 });
 
-self.addEventListener('fetch', function (e) {
-  e.respondWith(
-    caches.match(e.request).then(function (response) {
-      return response || fetch(e.request);
-    })
+// Aktivasi dan hapus cache lama
+self.addEventListener('activate', (event) => {
+  console.log('[SW] Activated');
+  event.waitUntil(
+    caches.keys().then((keyList) =>
+      Promise.all(
+        keyList.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      )
+    )
+  );
+  return self.clients.claim();
+});
+
+// Fetch: gunakan cache dulu, fallback ke network, fallback ke offline.html
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+
+  event.respondWith(
+    fetch(event.request)
+      .then((response) => {
+        return response;
+      })
+      .catch(() => {
+        return caches.match(event.request).then((resp) => {
+          return resp || caches.match(OFFLINE_PAGE);
+        });
+      })
+  );
+});
+
+
+// ------------------------------
+// ✅ Background Sync
+// ------------------------------
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-form') {
+    event.waitUntil(syncFormData());
+  }
+});
+
+async function syncFormData() {
+  // Logika kirim ulang data form yang tertunda
+  console.log('[SW] Syncing form data...');
+  // Misalnya ambil dari IndexedDB atau storage lokal lainnya
+}
+
+// ------------------------------
+// ✅ Periodic Sync
+// ------------------------------
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'update-data') {
+    event.waitUntil(updateData());
+  }
+});
+
+async function updateData() {
+  console.log('[SW] Periodic Sync...');
+  // Fetch atau update data dari API jika perlu
+}
+
+// ------------------------------
+// ✅ Push Notification
+// ------------------------------
+self.addEventListener('push', (event) => {
+  const data = event.data?.json() || {
+    title: "Pemberitahuan",
+    body: "Ini adalah notifikasi push default.",
+  };
+
+  const options = {
+    body: data.body,
+    icon: '/absensi/icons/icon-192.png',
+    badge: '/absensi/icons/icon-192-maskable.png'
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
   );
 });
