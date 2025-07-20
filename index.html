@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="/absensi/manifest.json">
+    <meta name="theme-color" content="#5c1cb4">
     
     <style>
         :root {
@@ -678,6 +680,19 @@
                 e.preventDefault();
             });
         });
+    </script>
+    <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/absensi/service-worker.js')
+        .then(function (registration) {
+          console.log('ServiceWorker registered: ', registration);
+        })
+        .catch(function (error) {
+          console.log('ServiceWorker registration failed: ', error);
+        });
+    });
+  }
     </script>
 </body>
 </html>
