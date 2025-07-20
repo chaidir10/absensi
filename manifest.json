@@ -4,7 +4,7 @@
   "id": "/absensi/",
   "scope": "/absensi/",
   "start_url": "/absensi/index.html",
-  "display": "fullscreen",
+  "display": "standalone",
   "dir": "ltr",
   "background_color": "#5c24c0",
   "theme_color": "#5c24c0",
