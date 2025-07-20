@@ -17,14 +17,14 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll([
-        '/absensi/',
-        '/absensi/index.html',
-        '/absensi/manifest.json',
-        '/absensi/offline.html',
-        '/absensi/icons/icon-192.png',
-        '/absensi/icons/icon-192-maskable.png',
-        '/absensi/icons/icon-512.png',
-        '/absensi/icons/icon-512-maskable.png',
+        '/',
+        '/index.html',
+        '/manifest.json',
+        '/offline.html',
+        '/icons/icon-192.png',
+        '/icons/icon-192-maskable.png',
+        '/icons/icon-512.png',
+        '/icons/icon-512-maskable.png',
         // tambahkan file statis lainnya jika ada
       ]);
     })
