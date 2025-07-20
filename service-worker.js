@@ -1,22 +1,23 @@
-// sw.js (di root)
+// service-worker.js
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
 const CACHE = "pwa-cache-v1";
-const OFFLINE_PAGE = "/offline.html";
+const BASE_PATH = "/absensi"; // sesuai path GitHub Pages kamu
+const OFFLINE_PAGE = `${BASE_PATH}/offline.html`;
 
 self.addEventListener("install", (event) => {
   console.log("[SW] Install");
   event.waitUntil(
     caches.open(CACHE).then((cache) => {
       return cache.addAll([
-        "/",
-        "/index.html",
-        "/manifest.json",
-        "/offline.html",
-        "/icons/icon-192.png",
-        "/icons/icon-512.png",
-        "/icons/icon-192-maskable.png",
-        "/icons/icon-512-maskable.png",
+        `${BASE_PATH}/`,
+        `${BASE_PATH}/index.html`,
+        `${BASE_PATH}/manifest.json`,
+        `${BASE_PATH}/offline.html`,
+        `${BASE_PATH}/assets/icons/icon-192x192.png`,
+        `${BASE_PATH}/assets/icons/icon-512x512.png`,
+        `${BASE_PATH}/assets/icons/icon-192x192-maskable.png`,
+        `${BASE_PATH}/assets/icons/icon-512x512-maskable.png`
       ]);
     })
   );
