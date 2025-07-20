@@ -1,8 +1,7 @@
-// service-worker.js
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
 const CACHE = "pwa-cache-v1";
-const BASE_PATH = "/absensi"; // sesuai path GitHub Pages kamu
+const BASE_PATH = "/absensi";
 const OFFLINE_PAGE = `${BASE_PATH}/offline.html`;
 
 self.addEventListener("install", (event) => {
