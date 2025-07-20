@@ -1,10 +1,11 @@
 {
-  "name": "Presensi by BKK Tarakan",
-  "short_name": "Presensi",
+  "name": "MyPresensi by BKK Tarakan",
+  "short_name": "MyPresensi",
   "id": "/absensi/",
   "scope": "/absensi/",
-  "start_url": "/absensi/index.html",
+  "start_url": "/absensi/index.html?homescreen=1",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "fullscreen", "standalone"],
   "dir": "ltr",
   "background_color": "#5c24c0",
   "theme_color": "#5c24c0",
@@ -45,7 +46,5 @@
     }
   ],
   "lang": "id",
-  "categories": [
-    "government"
-  ]
+  "categories": ["government"]
 }
