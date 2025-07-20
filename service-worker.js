@@ -1,47 +1,35 @@
-// service-worker.js
+// sw.js (di root)
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
-const CACHE_NAME = 'absensi-cache-v1';
-const OFFLINE_PAGE = '/absensi/offline.html'; // pastikan file ini ada
+const CACHE = "pwa-cache-v1";
+const OFFLINE_PAGE = "/offline.html";
 
-// Aktifkan skipWaiting agar langsung aktif
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
-});
-
-// Cache saat install
-self.addEventListener('install', (event) => {
-  console.log('[SW] Installing...');
+self.addEventListener("install", (event) => {
+  console.log("[SW] Install");
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
+    caches.open(CACHE).then((cache) => {
       return cache.addAll([
-        '/',
-        '/index.html',
-        '/manifest.json',
-        '/offline.html',
-        '/icons/icon-192.png',
-        '/icons/icon-192-maskable.png',
-        '/icons/icon-512.png',
-        '/icons/icon-512-maskable.png',
-        // tambahkan file statis lainnya jika ada
+        "/",
+        "/index.html",
+        "/manifest.json",
+        "/offline.html",
+        "/icons/icon-192.png",
+        "/icons/icon-512.png",
+        "/icons/icon-192-maskable.png",
+        "/icons/icon-512-maskable.png",
       ]);
     })
   );
   self.skipWaiting();
 });
 
-// Aktivasi dan hapus cache lama
-self.addEventListener('activate', (event) => {
-  console.log('[SW] Activated');
+self.addEventListener("activate", (event) => {
+  console.log("[SW] Activate");
   event.waitUntil(
     caches.keys().then((keyList) =>
       Promise.all(
         keyList.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
+          if (key !== CACHE) return caches.delete(key);
         })
       )
     )
@@ -49,69 +37,31 @@ self.addEventListener('activate', (event) => {
   return self.clients.claim();
 });
 
-// Fetch: gunakan cache dulu, fallback ke network, fallback ke offline.html
-self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
-
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        return response;
-      })
-      .catch(() => {
-        return caches.match(event.request).then((resp) => {
-          return resp || caches.match(OFFLINE_PAGE);
-        });
-      })
-  );
-});
-
-
-// ------------------------------
-// ✅ Background Sync
-// ------------------------------
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'sync-form') {
-    event.waitUntil(syncFormData());
-  }
-});
-
-async function syncFormData() {
-  // Logika kirim ulang data form yang tertunda
-  console.log('[SW] Syncing form data...');
-  // Misalnya ambil dari IndexedDB atau storage lokal lainnya
+if (workbox.navigationPreload.isSupported()) {
+  workbox.navigationPreload.enable();
 }
 
-// ------------------------------
-// ✅ Periodic Sync
-// ------------------------------
-self.addEventListener('periodicsync', (event) => {
-  if (event.tag === 'update-data') {
-    event.waitUntil(updateData());
+self.addEventListener("fetch", (event) => {
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      (async () => {
+        try {
+          const preloadResp = await event.preloadResponse;
+          if (preloadResp) return preloadResp;
+
+          const networkResp = await fetch(event.request);
+          return networkResp;
+        } catch (error) {
+          const cache = await caches.open(CACHE);
+          return await cache.match(OFFLINE_PAGE);
+        }
+      })()
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request).then((response) => {
+        return response || fetch(event.request);
+      })
+    );
   }
-});
-
-async function updateData() {
-  console.log('[SW] Periodic Sync...');
-  // Fetch atau update data dari API jika perlu
-}
-
-// ------------------------------
-// ✅ Push Notification
-// ------------------------------
-self.addEventListener('push', (event) => {
-  const data = event.data?.json() || {
-    title: "Pemberitahuan",
-    body: "Ini adalah notifikasi push default.",
-  };
-
-  const options = {
-    body: data.body,
-    icon: '/absensi/icons/icon-192.png',
-    badge: '/absensi/icons/icon-192-maskable.png'
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(data.title, options)
-  );
 });
