@@ -681,17 +681,25 @@
         });
     </script>
     <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(function (registration) {
-          console.log('ServiceWorker registered: ', registration);
-        })
-        .catch(function (error) {
-          console.log('ServiceWorker registration failed: ', error);
-        });
-    });
-  }
-    </script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/absensi/sw.js')
+    .then(reg => {
+      console.log('SW Registered ✅');
+
+      // Background Sync
+      if ('sync' in reg) {
+        reg.sync.register('sync-form').catch(console.error);
+      }
+
+      // Periodic Sync
+      if ('periodicSync' in reg) {
+        reg.periodicSync.register('update-data', {
+          minInterval: 24 * 60 * 60 * 1000 // 1 hari
+        }).catch(console.error);
+      }
+    })
+    .catch(err => console.error('SW Registration Failed ❌', err));
+}
+</script>
 </body>
 </html>
