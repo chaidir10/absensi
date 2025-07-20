@@ -5,7 +5,7 @@
   "scope": "/absensi/",
   "start_url": "/absensi/index.html?homescreen=1",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "fullscreen", "standalone"],
+  
   "dir": "ltr",
   "background_color": "#5c24c0",
   "theme_color": "#5c24c0",
