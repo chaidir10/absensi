@@ -3,7 +3,7 @@
   "short_name": "MyPresensi",
   "id": "/absensi/",
   "scope": "/absensi/",
-  "start_url": "/absensi/index.html?homescreen=1",
+  "start_url": "/absensi/?homescreen=1"
   "display": "standalone",
   
   "dir": "ltr",
