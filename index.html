@@ -28,6 +28,7 @@
             --gray: #94a3b8;
             --dark: #1e293b;
             --white: #ffffff;
+            --vh: 1vh;
         }
 
         body {
@@ -37,14 +38,15 @@
         }
 
         .container {
-            max-width: 500px;
-            background-color: var(--white);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-            box-shadow: 0 0 40px rgba(109, 40, 217, 0.08);
-            padding: 0;
-            padding-bottom: 90px;
+             max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    background-color: var(--white);
+    min-height: calc(var(--vh, 1vh) * 100);
+    position: relative;
+    overflow-x: hidden;
+    box-shadow: 0 0 40px rgba(109, 40, 217, 0.08);
+    padding-bottom: 80px;
         }
 
         /* Header Section */
