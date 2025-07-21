@@ -632,6 +632,82 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+
+        /* Guide Line Styles */
+        .guide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .guide-frame {
+            width: 70%;
+            height: 70%;
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.4);
+        }
+
+        .guide-frame::before, .guide-frame::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Horizontal lines */
+        .guide-frame::before {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Vertical lines */
+        .guide-frame::after {
+            height: 100%;
+            width: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Face detection feedback */
+        .face-feedback {
+            position: absolute;
+            border: 3px solid #4ade80;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 1.5s infinite;
+            z-index: 6;
+        }
+
+        .face-feedback i {
+            color: #4ade80;
+            font-size: 30px;
+            animation: bounce 0.8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(74, 222, 128, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        }
+
+        @keyframes bounce {
+            from { transform: scale(1); }
+            to { transform: scale(1.2); }
+        }
     </style>
 </head>
 <body>
@@ -655,7 +731,7 @@
             </div>
             <div class="attendance-time d-flex justify-content-center align-items-center gap-3 mb-3">
                 <i class="far fa-clock time-icon"></i>
-                <span class="time-range" id="current-time">Jam Kerja (07:30 - 16:00)</span>
+                <small class="time-range" id="">Jam Kerja (07:30 - 16:00)</small>
             </div>
             
             <div class="attendance-actions">
@@ -796,6 +872,13 @@
                 <canvas id="photo-canvas" style="display:none;"></canvas>
                 <img id="captured-photo" class="captured-photo" alt="Captured photo">
                 
+                <div class="guide-overlay">
+                    <div class="guide-frame"></div>
+                    <div class="face-feedback" id="faceFeedback">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
                 <button class="switch-camera-btn" id="switchCamera">
                     <i class="fas fa-camera-retro"></i>
                 </button>
@@ -828,8 +911,7 @@
     <!-- Leaflet JS for maps -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-       
-        
+
         // Feature Card Horizontal Scroll
         const featureScroll = document.getElementById('featureScroll');
         let isDown = false;
@@ -905,6 +987,7 @@
         const retakeBtn = document.getElementById('retakePhoto');
         const switchCameraBtn = document.getElementById('switchCamera');
         const locationAddress = document.getElementById('location-address');
+        const faceFeedback = document.getElementById('faceFeedback');
         
         let stream = null;
         let currentFacingMode = 'user'; // front camera by default
@@ -912,6 +995,95 @@
         let marker;
         let currentLocation = null;
         let photoTaken = false;
+        let isFaceInPosition = false;
+        
+        // Face detection variables
+        let faceDetector;
+        
+        // Initialize face detector
+        async function initFaceDetection() {
+            // Check if FaceDetector is supported
+            if (!('FaceDetector' in window)) {
+                console.log('FaceDetector API not supported');
+                return;
+            }
+            
+            try {
+                faceDetector = new FaceDetector({ 
+                    maxDetectedFaces: 1,
+                    fastMode: true 
+                });
+                
+                // Start detecting faces
+                detectFaces();
+            } catch (err) {
+                console.error('FaceDetector initialization failed:', err);
+            }
+        }
+
+        // Detect faces in video stream
+        async function detectFaces() {
+            if (!faceDetector || !cameraView.videoWidth) {
+                requestAnimationFrame(detectFaces);
+                return;
+            }
+            
+            try {
+                const faces = await faceDetector.detect(cameraView);
+                
+                if (faces.length > 0) {
+                    const face = faces[0];
+                    const guideFrame = document.querySelector('.guide-frame');
+                    const guideRect = guideFrame.getBoundingClientRect();
+                    
+                    // Calculate face position relative to guide frame
+                    const faceX = face.boundingBox.x + face.boundingBox.width / 2;
+                    const faceY = face.boundingBox.y + face.boundingBox.height / 2;
+                    
+                    // Check if face is centered in guide frame
+                    const isXInCenter = faceX > guideRect.left && faceX < guideRect.right;
+                    const isYInCenter = faceY > guideRect.top && faceY < guideRect.bottom;
+                    
+                    // Face is properly positioned
+                    if (isXInCenter && isYInCenter) {
+                        if (!isFaceInPosition) {
+                            // Show feedback
+                            faceFeedback.style.display = 'flex';
+                            faceFeedback.style.left = `${face.boundingBox.x + face.boundingBox.width/2 - 50}px`;
+                            faceFeedback.style.top = `${face.boundingBox.y + face.boundingBox.height/2 - 50}px`;
+                            isFaceInPosition = true;
+                            
+                            // Enable capture button
+                            captureBtn.disabled = false;
+                            captureBtn.style.backgroundColor = 'var(--primary)';
+                        }
+                    } else {
+                        if (isFaceInPosition) {
+                            faceFeedback.style.display = 'none';
+                            isFaceInPosition = false;
+                            
+                            // Disable capture button
+                            captureBtn.disabled = true;
+                            captureBtn.style.backgroundColor = 'var(--gray)';
+                        }
+                    }
+                } else {
+                    if (isFaceInPosition) {
+                        faceFeedback.style.display = 'none';
+                        isFaceInPosition = false;
+                        
+                        // Disable capture button
+                        captureBtn.disabled = true;
+                        captureBtn.style.backgroundColor = 'var(--gray)';
+                    }
+                }
+            } catch (err) {
+                console.error('Face detection error:', err);
+            }
+            
+            // Continue detection
+            requestAnimationFrame(detectFaces);
+        }
         
         // Open modal for clock in/out
         function openAttendanceModal(isClockIn) {
@@ -925,6 +1097,10 @@
             cameraView.style.display = 'block';
             retakeBtn.style.display = 'none';
             submitBtn.disabled = true;
+            
+            // Hide face feedback
+            faceFeedback.style.display = 'none';
+            isFaceInPosition = false;
             
             // Start camera and get location
             startCamera();
@@ -960,6 +1136,15 @@
                 });
                 
                 cameraView.srcObject = stream;
+                
+                // Wait for video to start playing
+                cameraView.onplaying = () => {
+                    initFaceDetection();
+                };
+                
+                // Disable capture button until face is detected
+                captureBtn.disabled = true;
+                captureBtn.style.backgroundColor = 'var(--gray)';
             } catch (err) {
                 console.error("Error accessing camera:", err);
                 alert('Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.');
@@ -990,6 +1175,9 @@
             retakeBtn.style.display = 'block';
             photoTaken = true;
             
+            // Hide face feedback
+            faceFeedback.style.display = 'none';
+            
             // Enable submit if location is available
             if (currentLocation) {
                 submitBtn.disabled = false;
@@ -1003,6 +1191,9 @@
             retakeBtn.style.display = 'none';
             photoTaken = false;
             submitBtn.disabled = true;
+            
+            // Restart face detection
+            initFaceDetection();
         }
         
         // Get current location and show on map
