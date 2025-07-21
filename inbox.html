@@ -238,6 +238,159 @@
             background-color: var(--primary);
         }
 
+        /* Chat Room Styles */
+        .chat-room {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--white);
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .chat-room.active {
+            transform: translateY(0);
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: linear-gradient(160deg, var(--primary-dark), var(--primary));
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .chat-back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chat-user-info {
+            flex-grow: 1;
+        }
+
+        .chat-user-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .chat-user-status {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #f9f7ff;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .received {
+            align-self: flex-start;
+            background-color: var(--white);
+            border-bottom-left-radius: 5px;
+            color: var(--dark);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .sent {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 10px;
+            margin-top: 5px;
+            text-align: right;
+            opacity: 0.7;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            background-color: var(--white);
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            border: 1px solid var(--gray-light);
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .attachment-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
         /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
@@ -436,7 +589,7 @@
 
             <div class="message-list">
                 <!-- Message 1 -->
-                <a href="#" class="message-item unread">
+                <a href="#" class="message-item unread" data-chat="ahmad-budiman">
                     <img src="https://avatar.iran.liara.run/public/35" alt="Sender" class="sender-avatar">
                     <div class="message-content">
                         <div class="message-header">
@@ -450,7 +603,7 @@
                 </a>
 
                 <!-- Message 2 -->
-                <a href="#" class="message-item">
+                <a href="#" class="message-item" data-chat="siti-rahayu">
                     <img src="https://avatar.iran.liara.run/public/36" alt="Sender" class="sender-avatar">
                     <div class="message-content">
                         <div class="message-header">
@@ -463,7 +616,7 @@
                 </a>
 
                 <!-- Message 3 -->
-                <a href="#" class="message-item unread">
+                <a href="#" class="message-item unread" data-chat="budi-santoso">
                     <img src="https://avatar.iran.liara.run/public/37" alt="Sender" class="sender-avatar">
                     <div class="message-content">
                         <div class="message-header">
@@ -477,7 +630,7 @@
                 </a>
 
                 <!-- Message 4 -->
-                <a href="#" class="message-item">
+                <a href="#" class="message-item" data-chat="dewi-lestari">
                     <img src="https://avatar.iran.liara.run/public/38" alt="Sender" class="sender-avatar">
                     <div class="message-content">
                         <div class="message-header">
@@ -490,7 +643,7 @@
                 </a>
 
                 <!-- Message 5 -->
-                <a href="#" class="message-item">
+                <a href="#" class="message-item" data-chat="rudi-hermawan">
                     <img src="https://avatar.iran.liara.run/public/39" alt="Sender" class="sender-avatar">
                     <div class="message-content">
                         <div class="message-header">
@@ -529,29 +682,150 @@
         </div>
     </div>
 
+    <!-- Chat Room -->
+    <div class="chat-room" id="chat-room">
+        <div class="chat-header">
+            <button class="chat-back-btn" id="chat-back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <img src="https://avatar.iran.liara.run/public/35" alt="User" class="chat-avatar" id="chat-avatar">
+            <div class="chat-user-info">
+                <div class="chat-user-name" id="chat-user-name">Ahmad Budiman</div>
+                <div class="chat-user-status">Online</div>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be inserted here by JavaScript -->
+        </div>
+        
+        <div class="chat-input-area">
+            <button class="attachment-btn">
+                <i class="fas fa-paperclip"></i>
+            </button>
+            <input type="text" class="chat-input" id="chat-input" placeholder="Ketik pesan...">
+            <button class="send-btn" id="send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const navItems = document.querySelectorAll('.nav-item');
             const inboxTabs = document.querySelectorAll('.inbox-tab');
+            const messageItems = document.querySelectorAll('.message-item');
+            const chatRoom = document.getElementById('chat-room');
+            const chatBackBtn = document.getElementById('chat-back-btn');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('send-btn');
+            const chatUserName = document.getElementById('chat-user-name');
+            const chatAvatar = document.getElementById('chat-avatar');
+
+            // Sample chat data
+            const chatData = {
+                'ahmad-budiman': {
+                    name: 'Ahmad Budiman',
+                    avatar: 'https://avatar.iran.liara.run/public/35',
+                    messages: [
+                        {
+                            text: 'Halo, mohon persetujuan untuk pengajuan cuti tahunan saya tanggal 15-20 Juli 2023.',
+                            time: '10:15',
+                            sent: false
+                        },
+                        {
+                            text: 'Saya butuh waktu untuk keluarga selama seminggu.',
+                            time: '10:16',
+                            sent: false
+                        },
+                        {
+                            text: 'Baik, saya akan proses pengajuan cuti Anda. Apakah sudah mengisi form cuti di sistem?',
+                            time: '10:20',
+                            sent: true
+                        }
+                    ]
+                },
+                'siti-rahayu': {
+                    name: 'Siti Rahayu',
+                    avatar: 'https://avatar.iran.liara.run/public/36',
+                    messages: [
+                        {
+                            text: 'Berikut saya lampirkan laporan bulanan departemen HR untuk bulan Juni 2023.',
+                            time: '09:30',
+                            sent: false
+                        },
+                        {
+                            text: 'Terima kasih, laporan sudah diterima. Ada beberapa poin yang perlu didiskusikan.',
+                            time: '09:45',
+                            sent: true
+                        }
+                    ]
+                },
+                'budi-santoso': {
+                    name: 'Budi Santoso',
+                    avatar: 'https://avatar.iran.liara.run/public/37',
+                    messages: [
+                        {
+                            text: 'Mohon bantuannya untuk pengiriman dokumen kontrak karyawan baru.',
+                            time: '08:15',
+                            sent: false
+                        }
+                    ]
+                },
+                'dewi-lestari': {
+                    name: 'Dewi Lestari',
+                    avatar: 'https://avatar.iran.liara.run/public/38',
+                    messages: [
+                        {
+                            text: 'Meeting rutin bulanan akan dilaksanakan hari Jumat pukul 10.00 WIB di ruang rapat lantai 3.',
+                            time: 'Kemarin, 14:30',
+                            sent: false
+                        },
+                        {
+                            text: 'Baik, saya akan hadir. Apakah ada agenda khusus yang perlu dipersiapkan?',
+                            time: 'Kemarin, 14:45',
+                            sent: true
+                        },
+                        {
+                            text: 'Ya, tolong bawa laporan progress proyek masing-masing.',
+                            time: 'Kemarin, 14:46',
+                            sent: false
+                        }
+                    ]
+                },
+                'rudi-hermawan': {
+                    name: 'Rudi Hermawan',
+                    avatar: 'https://avatar.iran.liara.run/public/39',
+                    messages: [
+                        {
+                            text: 'Budget untuk event tahunan sudah saya review dan approve, silakan diproses sesuai rencana.',
+                            time: '2 hari lalu, 16:20',
+                            sent: false
+                        },
+                        {
+                            text: 'Terima kasih, akan segera kami proses.',
+                            time: '2 hari lalu, 16:25',
+                            sent: true
+                        }
+                    ]
+                }
+            };
 
             // Fungsi untuk menangani klik navigasi
             function handleNavClick(e) {
-                // Hanya preventDefault jika itu adalah link placeholder (#)
                 if (this.getAttribute('href') === '#') {
                     e.preventDefault();
                 }
 
-                // Update active state
                 navItems.forEach(item => item.classList.remove('active'));
                 this.classList.add('active');
 
-                // Jika bukan link placeholder, biarkan default behavior bekerja
                 if (this.getAttribute('href') !== '#') {
                     return true;
                 }
 
-                // Untuk link placeholder, bisa tambahkan logika custom di sini
                 console.log('Menu ini belum diimplementasikan');
             }
 
@@ -559,9 +833,71 @@
             function handleTabClick() {
                 inboxTabs.forEach(tab => tab.classList.remove('active'));
                 this.classList.add('active');
-                
-                // Di sini bisa ditambahkan logika untuk menampilkan pesan sesuai tab
                 console.log('Tab diubah:', this.textContent);
+            }
+
+            // Fungsi untuk membuka chat room
+            function openChatRoom(chatId) {
+                const chat = chatData[chatId];
+                if (!chat) return;
+
+                // Update chat header
+                chatUserName.textContent = chat.name;
+                chatAvatar.src = chat.avatar;
+
+                // Clear previous messages
+                chatMessages.innerHTML = '';
+
+                // Add messages to chat
+                chat.messages.forEach(msg => {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.classList.add(msg.sent ? 'sent' : 'received');
+                    
+                    messageElement.innerHTML = `
+                        <div>${msg.text}</div>
+                        <div class="message-time">${msg.time}</div>
+                    `;
+                    
+                    chatMessages.appendChild(messageElement);
+                });
+
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Show chat room
+                chatRoom.classList.add('active');
+            }
+
+            // Fungsi untuk menutup chat room
+            function closeChatRoom() {
+                chatRoom.classList.remove('active');
+            }
+
+            // Fungsi untuk mengirim pesan
+            function sendMessage() {
+                const messageText = chatInput.value.trim();
+                if (!messageText) return;
+
+                const currentTime = new Date();
+                const hours = currentTime.getHours().toString().padStart(2, '0');
+                const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+                const timeString = `${hours}:${minutes}`;
+
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                messageElement.classList.add('sent');
+                
+                messageElement.innerHTML = `
+                    <div>${messageText}</div>
+                    <div class="message-time">${timeString}</div>
+                `;
+                
+                chatMessages.appendChild(messageElement);
+                chatInput.value = '';
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
             // Tambahkan event listener
@@ -571,6 +907,24 @@
 
             inboxTabs.forEach(tab => {
                 tab.addEventListener('click', handleTabClick);
+            });
+
+            messageItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const chatId = this.getAttribute('data-chat');
+                    openChatRoom(chatId);
+                });
+            });
+
+            chatBackBtn.addEventListener('click', closeChatRoom);
+
+            sendBtn.addEventListener('click', sendMessage);
+
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
             });
 
             // Set active nav based on current page
