@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <meta content="#5c24c0" name="theme-color" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengajuan - Aplikasi Karyawan</title>
@@ -47,6 +48,7 @@
             overflow: hidden;
             z-index: 1;
             padding-bottom: 30px;
+            animation: fadeIn 0.4s ease-out forwards;
         }
 
         .header::before {
@@ -60,6 +62,35 @@
             z-index: -1;
         }
 
+        .greeting {
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--light), #e2e8f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
         /* Submission Card */
         .submission-card {
             background-color: var(--white);
@@ -70,6 +101,8 @@
             position: relative;
             z-index: 2;
             border: 1px solid rgba(214, 188, 250, 0.5);
+            animation: fadeIn 0.4s 0.1s ease-out forwards;
+            opacity: 0;
         }
 
         .submission-item {
@@ -82,7 +115,13 @@
             transition: all 0.2s ease;
             border: 1px solid var(--gray-light);
             cursor: pointer;
+            animation: fadeIn 0.3s ease-out forwards;
+            opacity: 0;
         }
+
+        .submission-item:nth-child(1) { animation-delay: 0.15s; }
+        .submission-item:nth-child(2) { animation-delay: 0.2s; }
+        .submission-item:nth-child(3) { animation-delay: 0.25s; }
 
         .submission-item:hover {
             transform: translateY(-2px);
@@ -192,24 +231,61 @@
             box-shadow: 0 -6px 20px rgba(109, 40, 217, 0.08);
             z-index: 10;
             border-top: 1px solid var(--gray-light);
+            animation: fadeIn 0.4s 0.15s ease-out forwards;
+            opacity: 0;
         }
 
         .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
+            text-align: center;
             color: var(--gray);
-            font-size: 12px;
+            font-size: 9px;
+            width: 20%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 8px 0;
+            border-radius: 10px;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .nav-item::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+            background: #f5f3ff;
+        }
+
+        .nav-icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
         }
 
         .nav-item.active {
             color: var(--primary);
+            transform: translateY(-5px);
         }
 
-        .nav-icon {
-            font-size: 20px;
-            margin-bottom: 4px;
+        .nav-item.active::before {
+            opacity: 1;
+            top: -5px;
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.15);
+            color: var(--primary);
         }
 
         /* Form Improvements */
@@ -257,24 +333,6 @@
             font-weight: 500;
             margin-bottom: 4px;
         }
-
-        .greeting {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .user-name {
-            font-weight: 600;
-            margin-bottom: 0;
-        }
-
-        /* Avatar */
-        .user-avatar img {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
     </style>
 </head>
 <body>
@@ -282,8 +340,8 @@
         <!-- Header Section -->
         <div class="header d-flex justify-content-between align-items-center">
             <div class="header-content">
-                <div class="greeting">Halo Admin</div>
-                <h4 class="user-name">Menu Pengajuan</h4>
+                <div class="greeting">Selamat pagi</div>
+                <h4 class="user-name">Chaidirrahman, S.Kom.</h4>
             </div>
             <div class="user-avatar mb-2">
                 <img alt="User Avatar" class="img-fluid" src="https://avatar.iran.liara.run/public/48">
@@ -566,25 +624,25 @@
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <a href="index.html" class="nav-item">
+            <a href="index.html" class="nav-item" id="nav-home">
                 <div class="nav-icon"><i class="fas fa-home"></i></div>
                 <div>Beranda</div>
             </a>
-            <a href="employees.html" class="nav-item">
+            <a href="employees.html" class="nav-item" id="nav-employees">
                 <div class="nav-icon"><i class="fas fa-users"></i></div>
                 <div>Karyawan</div>
             </a>
-            <a href="pengajuan.html" class="nav-item active">
+            <a href="pengajuan.html" class="nav-item active" id="nav-submission">
                 <div class="nav-icon"><i class="fas fa-file-upload"></i></div>
                 <div>Pengajuan</div>
             </a>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" id="nav-inbox">
                 <div class="nav-icon"><i class="fas fa-inbox"></i></div>
                 <div>Inbox</div>
             </a>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" id="nav-account">
                 <div class="nav-icon"><i class="fas fa-user"></i></div>
-                <div>Profil</div>
+                <div>Akun</div>
             </a>
         </div>
     </div>
@@ -592,6 +650,33 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Set active nav based on current page
+            function setActiveNav() {
+                const currentPage = window.location.pathname.split('/').pop();
+                const pageToNavId = {
+                    'index.html': 'nav-home',
+                    'employees.html': 'nav-employees',
+                    'pengajuan.html': 'nav-submission'
+                };
+
+                const activeNavId = pageToNavId[currentPage] || 'nav-submission';
+                document.getElementById(activeNavId)?.classList.add('active');
+            }
+
+            setActiveNav();
+
+            // Handle nav clicks
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') === '#') {
+                        e.preventDefault();
+                    }
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
             // Set today's date as default for date inputs
             const today = new Date().toISOString().split('T')[0];
             document.querySelectorAll('input[type="date"]').forEach(input => {
