@@ -668,7 +668,7 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-       // Global variables
+     // Global variables
 let currentStream = null;
 let currentCamera = 'user'; // 'user' for front camera, 'environment' for back
 let capturedPhoto = null;
@@ -821,6 +821,11 @@ function getLocation() {
             
             // Initialize and show map
             if (typeof L !== 'undefined') {
+                // Remove existing map if any
+                if (map) {
+                    map.remove();
+                }
+                
                 map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 16);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -958,7 +963,6 @@ window.addEventListener('click', (event) => {
     if (event.target === attendanceModal) {
         closeAttendanceModal();
     }
-});
-    </script>
+});    </script>
 </body>
 </html>
