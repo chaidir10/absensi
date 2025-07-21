@@ -668,291 +668,141 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Global variables
-        let currentStream = null;
-        let currentCamera = 'user'; // 'user' for front camera, 'environment' for back
-        let capturedPhoto = null;
-        let currentLocation = null;
-        let attendanceType = ''; // 'clock-in' or 'clock-out'
-        let isLoading = false;
+       // Global variables
+let currentStream = null;
+let currentCamera = 'user'; // 'user' for front camera, 'environment' for back
+let capturedPhoto = null;
+let currentLocation = null;
+let attendanceType = ''; // 'clock-in' or 'clock-out'
+let isLoading = false;
+let map = null;
 
-        // DOM Elements
-        const clockInBtn = document.getElementById('clock-in-btn');
-        const clockOutBtn = document.getElementById('clock-out-btn');
-        const attendanceModal = document.getElementById('attendance-modal');
-        const closeModalBtn = document.getElementById('close-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const cameraView = document.getElementById('camera-view');
-        const switchCameraBtn = document.getElementById('switch-camera');
-        const captureBtn = document.getElementById('capture-btn');
-        const locationText = document.getElementById('location-text');
-        const submitBtn = document.getElementById('submit-attendance');
-        const submitText = document.getElementById('submit-text');
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const attendanceNotes = document.getElementById('attendance-notes');
-        const currentDateElement = document.getElementById('current-date');
-        const currentTimeElement = document.getElementById('current-time');
+// DOM Elements
+const clockInBtn = document.getElementById('clock-in-btn');
+const clockOutBtn = document.getElementById('clock-out-btn');
+const attendanceModal = document.getElementById('attendance-modal');
+const closeModalBtn = document.getElementById('close-modal');
+const modalTitle = document.getElementById('modal-title');
+const cameraView = document.getElementById('camera-view');
+const switchCameraBtn = document.getElementById('switch-camera');
+const captureBtn = document.getElementById('capture-btn');
+const locationText = document.getElementById('location-text');
+const submitBtn = document.getElementById('submit-attendance');
+const submitText = document.getElementById('submit-text');
+const loadingSpinner = document.getElementById('loading-spinner');
+const attendanceNotes = document.getElementById('attendance-notes');
+const currentDateElement = document.getElementById('current-date');
+const currentTimeElement = document.getElementById('current-time');
 
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            updateDateTime();
-            setInterval(updateDateTime, 1000);
-            
-            // Event listeners
-            clockInBtn.addEventListener('click', () => openAttendanceModal('clock-in'));
-            clockOutBtn.addEventListener('click', () => openAttendanceModal('clock-out'));
-            closeModalBtn.addEventListener('click', closeAttendanceModal);
-            switchCameraBtn.addEventListener('click', switchCamera);
-            captureBtn.addEventListener('click', capturePhoto);
-            submitBtn.addEventListener('click', submitAttendance);
-            
-            // Initialize geolocation
-            getLocation();
-        });
-
-        // Update current date and time
-        function updateDateTime() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            currentDateElement.textContent = now.toLocaleDateString('id-ID', options);
-            currentTimeElement.textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-        }
-
-        // Open attendance modal
-        function openAttendanceModal(type) {
-            attendanceType = type;
-            modalTitle.textContent = type === 'clock-in' ? 'Clock In' : 'Clock Out';
-            capturedPhoto = null;
-            
-            // Reset modal state
-            submitBtn.disabled = true;
-            submitText.style.display = 'block';
-            loadingSpinner.style.display = 'none';
-            attendanceNotes.value = '';
-            
-            attendanceModal.style.display = 'flex';
-            startCamera();
-        }
-
-        // Close attendance modal
-        function closeAttendanceModal() {
-            stopCamera();
-            attendanceModal.style.display = 'none';
-        }
-
-        // Start camera stream
-        async function startCamera() {
-            try {
-                const constraints = {
-                    video: {
-                        facingMode: currentCamera,
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    }
-                };
-                
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                cameraView.srcObject = stream;
-                currentStream = stream;
-            } catch (err) {
-                console.error("Error accessing camera:", err);
-                locationText.textContent = "Tidak dapat mengakses kamera. Pastikan izin kamera diberikan.";
-            }
-        }
-
-        // Stop camera stream
-        function stopCamera() {
-            if (currentStream) {
-                currentStream.getTracks().forEach(track => track.stop());
-                cameraView.srcObject = null;
-                currentStream = null;
-            }
-        }
-
-        // Switch between front and back camera
-        function switchCamera() {
-            currentCamera = currentCamera === 'user' ? 'environment' : 'user';
-            stopCamera();
-            startCamera();
-        }
-
-        // Capture photo from camera
-        function capturePhoto() {
-            if (!currentStream) return;
-            
-            const canvas = document.createElement('canvas');
-            canvas.width = cameraView.videoWidth;
-            canvas.height = cameraView.videoHeight;
-            const ctx = canvas.getContext('2d');
-            
-            // Draw image to canvas
-            ctx.drawImage(cameraView, 0, 0, canvas.width, canvas.height);
-            
-            // Convert to data URL
-            capturedPhoto = canvas.toDataURL('image/jpeg');
-            
-            // Enable submit button if location is available
-            if (currentLocation) {
-                submitBtn.disabled = false;
-            }
-            
-            alert('Foto berhasil diambil!');
-        }
-
-        // Get current geolocation
-        function getLocation() {
-            if (!navigator.geolocation) {
-                locationText.textContent = "Geolokasi tidak didukung oleh browser Anda";
-                return;
-            }
-            
-            locationText.textContent = "Mendapatkan lokasi...";
-            
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    currentLocation = {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        accuracy: position.coords.accuracy
-                    };
-                    
-                    // Reverse geocoding to get address (simplified)
-                    getAddressFromCoords(position.coords.latitude, position.coords.longitude);
-                    
-                    // Enable submit button if photo is captured
-                    if (capturedPhoto) {
-                        submitBtn.disabled = false;
-                    }
-                },
-                (error) => {
-                    console.error("Error getting location:", error);
-                    let errorMessage = "Tidak dapat mendapatkan lokasi";
-                    
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            errorMessage = "Izin lokasi ditolak. Harap aktifkan izin lokasi.";
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            errorMessage = "Informasi lokasi tidak tersedia.";
-                            break;
-                        case error.TIMEOUT:
-                            errorMessage = "Permintaan lokasi timeout.";
-                            break;
-                    }
-                    
-                    locationText.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${errorMessage}`;
-                },
-                { 
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
-                }
-            );
-        }
-
-        // Simulate reverse geocoding (in a real app, you would use a geocoding API)
-        function getAddressFromCoords(lat, lng) {
-            // This is a simulation - in a real app, you would call a geocoding API here
-            setTimeout(() => {
-                const addresses = [
-                    "Jl. Sudirman No. 123, Jakarta Pusat",
-                    "Komplek Perkantoran Gatot Subroto, Jakarta Selatan",
-                    "Gedung Bursa Efek Indonesia, Jakarta Selatan",
-                    "Kawasan SCBD, Jakarta Selatan",
-                    "Plaza Senayan, Jakarta Pusat"
-                ];
-                
-                const randomAddress = addresses[Math.floor(Math.random() * addresses.length)];
-                locationText.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${randomAddress} (Akurasi: ${currentLocation.accuracy.toFixed(0)} meter)`;
-            }, 1000);
-        }
-
-        // Submit attendance
-        function submitAttendance() {
-            if (isLoading) return;
-            
-            if (!capturedPhoto) {
-                alert('Harap ambil foto terlebih dahulu');
-                return;
-            }
-            
-            if (!currentLocation) {
-                alert('Sedang mendapatkan lokasi... Harap tunggu');
-                return;
-            }
-            
-            isLoading = true;
-            submitText.style.display = 'none';
-            loadingSpinner.style.display = 'block';
-            submitBtn.disabled = true;
-            
-            // Simulate API call
-            setTimeout(() => {
-                isLoading = false;
-                
-                // In a real app, you would send this data to your backend
-                const attendanceData = {
-                    type: attendanceType,
-                    timestamp: new Date().toISOString(),
-                    photo: capturedPhoto,
-                    location: currentLocation,
-                    notes: attendanceNotes.value
-                };
-                
-                console.log('Attendance data:', attendanceData);
-                
-                // Show success message
-                alert(`${attendanceType === 'clock-in' ? 'Clock In' : 'Clock Out'} berhasil!`);
-                
-                // Update button state
-                if (attendanceType === 'clock-in') {
-                    clockInBtn.innerHTML = `
-                        <div class="btn-content d-flex align-items-center gap-2">
-                            <i class="fas fa-check-circle attendance-icon" style="color: var(--success);"></i>
-                            <span>Sudah Clock In</span>
-                        </div>
-                    `;
-                    clockInBtn.style.background = '#f0fdf4';
-                } else {
-                    clockOutBtn.innerHTML = `
-                        <div class="btn-content d-flex align-items-center gap-2">
-                            <i class="fas fa-check-circle attendance-icon" style="color: var(--danger);"></i>
-                            <span>Sudah Clock Out</span>
-                        </div>
-                    `;
-                    clockOutBtn.style.background = '#fef2f2';
-                }
-                
-                // Close modal
-                closeAttendanceModal();
-            }, 2000);
-        }
-
-        // Close modal when clicking outside
-        window.addEventListener('click', (event) => {
-            if (event.target === attendanceModal) {
-                closeAttendanceModal();
-            }
-        });
-        // Variabel untuk peta
-let map;
-let marker;
-
-// Fungsi untuk menampilkan peta
-function initMap(lat, lng) {
-    map = L.map('map').setView([lat, lng], 16);
+// Initialize the app
+document.addEventListener('DOMContentLoaded', function() {
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
     
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    
-    // Tambahkan marker
-    marker = L.marker([lat, lng]).addTo(map)
-        .bindPopup("Lokasi Anda saat ini")
-        .openPopup();
+    // Event listeners
+    clockInBtn.addEventListener('click', () => openAttendanceModal('clock-in'));
+    clockOutBtn.addEventListener('click', () => openAttendanceModal('clock-out'));
+    closeModalBtn.addEventListener('click', closeAttendanceModal);
+    switchCameraBtn.addEventListener('click', switchCamera);
+    captureBtn.addEventListener('click', capturePhoto);
+    submitBtn.addEventListener('click', submitAttendance);
+});
+
+// Update current date and time
+function updateDateTime() {
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    currentDateElement.textContent = now.toLocaleDateString('id-ID', options);
+    currentTimeElement.textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 }
 
-// Update fungsi getLocation
+// Open attendance modal
+function openAttendanceModal(type) {
+    attendanceType = type;
+    modalTitle.textContent = type === 'clock-in' ? 'Clock In' : 'Clock Out';
+    capturedPhoto = null;
+    
+    // Reset modal state
+    submitBtn.disabled = true;
+    submitText.style.display = 'block';
+    loadingSpinner.style.display = 'none';
+    attendanceNotes.value = '';
+    
+    attendanceModal.style.display = 'flex';
+    startCamera();
+    getLocation(); // Get location when modal opens
+}
+
+// Close attendance modal
+function closeAttendanceModal() {
+    stopCamera();
+    if (map) {
+        map.remove();
+        map = null;
+    }
+    attendanceModal.style.display = 'none';
+}
+
+// Start camera stream
+async function startCamera() {
+    try {
+        const constraints = {
+            video: {
+                facingMode: currentCamera,
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            }
+        };
+        
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        cameraView.srcObject = stream;
+        currentStream = stream;
+    } catch (err) {
+        console.error("Error accessing camera:", err);
+        locationText.textContent = "Tidak dapat mengakses kamera. Pastikan izin kamera diberikan.";
+    }
+}
+
+// Stop camera stream
+function stopCamera() {
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+        cameraView.srcObject = null;
+        currentStream = null;
+    }
+}
+
+// Switch between front and back camera
+function switchCamera() {
+    currentCamera = currentCamera === 'user' ? 'environment' : 'user';
+    stopCamera();
+    startCamera();
+}
+
+// Capture photo from camera
+function capturePhoto() {
+    if (!currentStream) return;
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = cameraView.videoWidth;
+    canvas.height = cameraView.videoHeight;
+    const ctx = canvas.getContext('2d');
+    
+    // Draw image to canvas
+    ctx.drawImage(cameraView, 0, 0, canvas.width, canvas.height);
+    
+    // Convert to data URL
+    capturedPhoto = canvas.toDataURL('image/jpeg');
+    
+    // Enable submit button if location is available
+    if (currentLocation) {
+        submitBtn.disabled = false;
+    }
+    
+    alert('Foto berhasil diambil!');
+}
+
+// Get current geolocation and show map
 function getLocation() {
     if (!navigator.geolocation) {
         locationText.textContent = "Geolokasi tidak didukung oleh browser Anda";
@@ -969,16 +819,27 @@ function getLocation() {
                 accuracy: position.coords.accuracy
             };
             
-            // Tampilkan peta
-            initMap(position.coords.latitude, position.coords.longitude);
+            // Initialize and show map
+            if (typeof L !== 'undefined') {
+                map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 16);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+                
+                L.marker([position.coords.latitude, position.coords.longitude])
+                    .addTo(map)
+                    .bindPopup("Lokasi Anda saat ini")
+                    .openPopup();
+            }
             
-            // Tampilkan koordinat
+            // Show coordinates
             document.getElementById('coordinates').textContent = 
                 `Lat: ${position.coords.latitude.toFixed(6)}, Long: ${position.coords.longitude.toFixed(6)}`;
             
-            // Reverse geocoding
+            // Get address
             getAddressFromCoords(position.coords.latitude, position.coords.longitude);
             
+            // Enable submit if photo already taken
             if (capturedPhoto) {
                 submitBtn.disabled = false;
             }
@@ -1008,6 +869,96 @@ function getLocation() {
         }
     );
 }
+
+// Simulate reverse geocoding
+function getAddressFromCoords(lat, lng) {
+    // In a real app, use a geocoding API here
+    setTimeout(() => {
+        const addresses = [
+            "Jl. Sudirman No. 123, Jakarta Pusat",
+            "Komplek Perkantoran Gatot Subroto, Jakarta Selatan",
+            "Gedung Bursa Efek Indonesia, Jakarta Selatan",
+            "Kawasan SCBD, Jakarta Selatan",
+            "Plaza Senayan, Jakarta Pusat"
+        ];
+        
+        const randomAddress = addresses[Math.floor(Math.random() * addresses.length)];
+        locationText.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${randomAddress} (Akurasi: ${currentLocation.accuracy.toFixed(0)} meter)`;
+    }, 1000);
+}
+
+// Submit attendance
+function submitAttendance() {
+    if (isLoading) return;
+    
+    if (!capturedPhoto) {
+        alert('Harap ambil foto terlebih dahulu');
+        return;
+    }
+    
+    if (!currentLocation) {
+        alert('Sedang mendapatkan lokasi... Harap tunggu');
+        return;
+    }
+    
+    isLoading = true;
+    submitText.style.display = 'none';
+    loadingSpinner.style.display = 'block';
+    submitBtn.disabled = true;
+    
+    // Simulate API call
+    setTimeout(() => {
+        isLoading = false;
+        
+        // Prepare attendance data
+        const attendanceData = {
+            type: attendanceType,
+            timestamp: new Date().toISOString(),
+            photo: capturedPhoto,
+            location: currentLocation,
+            notes: attendanceNotes.value
+        };
+        
+        console.log('Attendance data:', attendanceData);
+        
+        // Show success message
+        alert(`${attendanceType === 'clock-in' ? 'Clock In' : 'Clock Out'} berhasil!`);
+        
+        // Update button state
+        updateAttendanceButton(attendanceType);
+        
+        // Close modal
+        closeAttendanceModal();
+    }, 2000);
+}
+
+// Update attendance button after successful submission
+function updateAttendanceButton(type) {
+    if (type === 'clock-in') {
+        clockInBtn.innerHTML = `
+            <div class="btn-content d-flex align-items-center gap-2">
+                <i class="fas fa-check-circle attendance-icon" style="color: #10b981;"></i>
+                <span>Sudah Clock In</span>
+            </div>
+        `;
+        clockInBtn.style.background = '#f0fdf4';
+    } else {
+        clockOutBtn.innerHTML = `
+            <div class="btn-content d-flex align-items-center gap-2">
+                <i class="fas fa-check-circle attendance-icon" style="color: #ef4444;"></i>
+                <span>Sudah Clock Out</span>
+            </div>
+        `;
+        clockOutBtn.style.background = '#fef2f2';
+    }
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', (event) => {
+    if (event.target === attendanceModal) {
+        closeAttendanceModal();
+    }
+});
     </script>
 </body>
 </html>
