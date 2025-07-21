@@ -633,81 +633,89 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Guide Line Styles */
-        .guide-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
-            z-index: 5;
-        }
+       /* Guide Oval Styles */
+.guide-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: 5;
+}
 
-        .guide-frame {
-            width: 70%;
-            height: 70%;
-            border: 3px solid rgba(255, 255, 255, 0.7);
-            border-radius: 15px;
-            position: relative;
-            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.4);
-        }
+.guide-frame {
+    width: 70%;
+    height: 80%; /* Lebih tinggi untuk bentuk oval */
+    border: 3px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%; /* Membuat bentuk oval */
+    position: relative;
+    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.4);
+}
 
-        .guide-frame::before, .guide-frame::after {
-            content: '';
-            position: absolute;
-            background: rgba(255, 255, 255, 0.7);
-        }
+/* Garis panduan tengah */
+.guide-frame::before, .guide-frame::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
 
-        /* Horizontal lines */
-        .guide-frame::before {
-            width: 100%;
-            height: 2px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
+/* Garis horizontal */
+.guide-frame::before {
+    width: 80%;
+    height: 2px;
+}
 
-        /* Vertical lines */
-        .guide-frame::after {
-            height: 100%;
-            width: 2px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+/* Garis vertikal */
+.guide-frame::after {
+    height: 80%;
+    width: 2px;
+}
 
-        /* Face detection feedback */
-        .face-feedback {
-            position: absolute;
-            border: 3px solid #4ade80;
-            border-radius: 50%;
-            width: 100px;
-            height: 100px;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            animation: pulse 1.5s infinite;
-            z-index: 6;
-        }
+/* Face detection feedback */
+.face-feedback {
+    position: absolute;
+    border: 3px solid #4ade80;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    animation: pulse 1.5s infinite;
+    z-index: 6;
+}
 
-        .face-feedback i {
-            color: #4ade80;
-            font-size: 30px;
-            animation: bounce 0.8s infinite alternate;
-        }
+.face-feedback i {
+    color: #4ade80;
+    font-size: 30px;
+    animation: bounce 0.8s infinite alternate;
+}
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(74, 222, 128, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
-        }
+@keyframes pulse {
+    0% { 
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4);
+        transform: scale(1);
+    }
+    70% { 
+        box-shadow: 0 0 0 15px rgba(74, 222, 128, 0);
+    }
+    100% { 
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+        transform: scale(1.05);
+    }
+}
 
-        @keyframes bounce {
-            from { transform: scale(1); }
-            to { transform: scale(1.2); }
-        }
+@keyframes bounce {
+    from { transform: scale(1); }
+    to { transform: scale(1.2); }
+}
     </style>
 </head>
 <body>
@@ -910,59 +918,95 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Leaflet JS for maps -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-
+<script>
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Update current date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+            const dateElement = document.getElementById('current-date');
+            const timeElement = document.getElementById('current-time');
+            
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('id-ID', options);
+            }
+            
+            if (timeElement) {
+                const timeOptions = { hour: '2-digit', minute: '2-digit' };
+                timeElement.textContent = now.toLocaleTimeString('id-ID', timeOptions);
+            }
+        }
+        
+        // Update time every minute
+        updateDateTime();
+        const timeInterval = setInterval(updateDateTime, 60000);
+        
+        // Navigation Functionality
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const activeItem = document.querySelector('.nav-item.active');
+                if (activeItem) {
+                    activeItem.classList.remove('active');
+                }
+                this.classList.add('active');
+            });
+        });
+        
         // Feature Card Horizontal Scroll
         const featureScroll = document.getElementById('featureScroll');
-        let isDown = false;
-        let startX;
-        let scrollLeft;
+        if (featureScroll) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
 
-        featureScroll.addEventListener('mousedown', (e) => {
-            isDown = true;
-            startX = e.pageX - featureScroll.offsetLeft;
-            scrollLeft = featureScroll.scrollLeft;
-        });
+            featureScroll.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - featureScroll.offsetLeft;
+                scrollLeft = featureScroll.scrollLeft;
+            });
 
-        featureScroll.addEventListener('mouseleave', () => {
-            isDown = false;
-        });
+            featureScroll.addEventListener('mouseleave', () => {
+                isDown = false;
+            });
 
-        featureScroll.addEventListener('mouseup', () => {
-            isDown = false;
-        });
+            featureScroll.addEventListener('mouseup', () => {
+                isDown = false;
+            });
 
-        featureScroll.addEventListener('mousemove', (e) => {
-            if(!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - featureScroll.offsetLeft;
-            const walk = (x - startX) * 2;
-            featureScroll.scrollLeft = scrollLeft - walk;
-        });
+            featureScroll.addEventListener('mousemove', (e) => {
+                if(!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - featureScroll.offsetLeft;
+                const walk = (x - startX) * 2;
+                featureScroll.scrollLeft = scrollLeft - walk;
+            });
 
-        // Touch events for mobile
-        featureScroll.addEventListener('touchstart', (e) => {
-            isDown = true;
-            startX = e.touches[0].pageX - featureScroll.offsetLeft;
-            scrollLeft = featureScroll.scrollLeft;
-        });
+            // Touch events for mobile
+            featureScroll.addEventListener('touchstart', (e) => {
+                isDown = true;
+                startX = e.touches[0].pageX - featureScroll.offsetLeft;
+                scrollLeft = featureScroll.scrollLeft;
+            });
 
-        featureScroll.addEventListener('touchend', () => {
-            isDown = false;
-        });
+            featureScroll.addEventListener('touchend', () => {
+                isDown = false;
+            });
 
-        featureScroll.addEventListener('touchmove', (e) => {
-            if(!isDown) return;
-            const x = e.touches[0].pageX - featureScroll.offsetLeft;
-            const walk = (x - startX) * 2;
-            featureScroll.scrollLeft = scrollLeft - walk;
-        });
+            featureScroll.addEventListener('touchmove', (e) => {
+                if(!isDown) return;
+                const x = e.touches[0].pageX - featureScroll.offsetLeft;
+                const walk = (x - startX) * 2;
+                featureScroll.scrollLeft = scrollLeft - walk;
+            });
 
-        // Wheel event for horizontal scrolling
-        featureScroll.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            featureScroll.scrollLeft += e.deltaY;
-        });
+            // Wheel event for horizontal scrolling
+            featureScroll.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                featureScroll.scrollLeft += e.deltaY;
+            });
+        }
 
         // Remove focus from buttons when clicked
         document.querySelectorAll('.btn-scale').forEach(button => {
@@ -999,12 +1043,15 @@
         
         // Face detection variables
         let faceDetector;
+        let faceDetectionInterval;
         
         // Initialize face detector
         async function initFaceDetection() {
             // Check if FaceDetector is supported
             if (!('FaceDetector' in window)) {
                 console.log('FaceDetector API not supported');
+                // Enable capture button anyway
+                enableCaptureButton();
                 return;
             }
             
@@ -1018,13 +1065,31 @@
                 detectFaces();
             } catch (err) {
                 console.error('FaceDetector initialization failed:', err);
+                // Enable capture button anyway
+                enableCaptureButton();
+            }
+        }
+
+        // Enable capture button
+        function enableCaptureButton() {
+            if (captureBtn) {
+                captureBtn.disabled = false;
+                captureBtn.style.backgroundColor = 'var(--primary)';
+            }
+        }
+
+        // Disable capture button
+        function disableCaptureButton() {
+            if (captureBtn) {
+                captureBtn.disabled = true;
+                captureBtn.style.backgroundColor = 'var(--gray)';
             }
         }
 
         // Detect faces in video stream
         async function detectFaces() {
-            if (!faceDetector || !cameraView.videoWidth) {
-                requestAnimationFrame(detectFaces);
+            if (!faceDetector || !cameraView || !cameraView.videoWidth) {
+                faceDetectionInterval = requestAnimationFrame(detectFaces);
                 return;
             }
             
@@ -1034,6 +1099,12 @@
                 if (faces.length > 0) {
                     const face = faces[0];
                     const guideFrame = document.querySelector('.guide-frame');
+                    
+                    if (!guideFrame) {
+                        faceDetectionInterval = requestAnimationFrame(detectFaces);
+                        return;
+                    }
+                    
                     const guideRect = guideFrame.getBoundingClientRect();
                     
                     // Calculate face position relative to guide frame
@@ -1046,7 +1117,7 @@
                     
                     // Face is properly positioned
                     if (isXInCenter && isYInCenter) {
-                        if (!isFaceInPosition) {
+                        if (!isFaceInPosition && faceFeedback) {
                             // Show feedback
                             faceFeedback.style.display = 'flex';
                             faceFeedback.style.left = `${face.boundingBox.x + face.boundingBox.width/2 - 50}px`;
@@ -1054,27 +1125,24 @@
                             isFaceInPosition = true;
                             
                             // Enable capture button
-                            captureBtn.disabled = false;
-                            captureBtn.style.backgroundColor = 'var(--primary)';
+                            enableCaptureButton();
                         }
                     } else {
-                        if (isFaceInPosition) {
+                        if (isFaceInPosition && faceFeedback) {
                             faceFeedback.style.display = 'none';
                             isFaceInPosition = false;
                             
                             // Disable capture button
-                            captureBtn.disabled = true;
-                            captureBtn.style.backgroundColor = 'var(--gray)';
+                            disableCaptureButton();
                         }
                     }
                 } else {
-                    if (isFaceInPosition) {
+                    if (isFaceInPosition && faceFeedback) {
                         faceFeedback.style.display = 'none';
                         isFaceInPosition = false;
                         
                         // Disable capture button
-                        captureBtn.disabled = true;
-                        captureBtn.style.backgroundColor = 'var(--gray)';
+                        disableCaptureButton();
                     }
                 }
             } catch (err) {
@@ -1082,24 +1150,28 @@
             }
             
             // Continue detection
-            requestAnimationFrame(detectFaces);
+            faceDetectionInterval = requestAnimationFrame(detectFaces);
         }
         
         // Open modal for clock in/out
         function openAttendanceModal(isClockIn) {
+            if (!modal || !modalTitle) return;
+            
             modalTitle.textContent = isClockIn ? 'Clock In' : 'Clock Out';
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             
             // Reset modal state
             photoTaken = false;
-            capturedPhoto.style.display = 'none';
-            cameraView.style.display = 'block';
-            retakeBtn.style.display = 'none';
-            submitBtn.disabled = true;
+            if (capturedPhoto) capturedPhoto.style.display = 'none';
+            if (cameraView) cameraView.style.display = 'block';
+            if (retakeBtn) retakeBtn.style.display = 'none';
+            if (submitBtn) submitBtn.disabled = true;
             
             // Hide face feedback
-            faceFeedback.style.display = 'none';
+            if (faceFeedback) {
+                faceFeedback.style.display = 'none';
+            }
             isFaceInPosition = false;
             
             // Start camera and get location
@@ -1109,6 +1181,8 @@
         
         // Close modal
         function closeAttendanceModal() {
+            if (!modal) return;
+            
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
             
@@ -1117,6 +1191,11 @@
                 stream.getTracks().forEach(track => track.stop());
                 stream = null;
             }
+            
+            // Stop face detection
+            if (faceDetectionInterval) {
+                cancelAnimationFrame(faceDetectionInterval);
+            }
         }
         
         // Start camera
@@ -1124,6 +1203,10 @@
             try {
                 if (stream) {
                     stream.getTracks().forEach(track => track.stop());
+                }
+                
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error('MediaDevices API not supported');
                 }
                 
                 stream = await navigator.mediaDevices.getUserMedia({
@@ -1135,19 +1218,23 @@
                     audio: false
                 });
                 
-                cameraView.srcObject = stream;
+                if (cameraView) {
+                    cameraView.srcObject = stream;
+                    
+                    // Wait for video to start playing
+                    cameraView.onplaying = () => {
+                        initFaceDetection();
+                    };
+                }
                 
-                // Wait for video to start playing
-                cameraView.onplaying = () => {
-                    initFaceDetection();
-                };
-                
-                // Disable capture button until face is detected
-                captureBtn.disabled = true;
-                captureBtn.style.backgroundColor = 'var(--gray)';
+                // Initially disable capture button
+                disableCaptureButton();
             } catch (err) {
                 console.error("Error accessing camera:", err);
                 alert('Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.');
+                
+                // Enable capture button anyway if camera fails
+                enableCaptureButton();
             }
         }
         
@@ -1159,7 +1246,7 @@
         
         // Capture photo
         function capturePhoto() {
-            if (!stream) return;
+            if (!stream || !cameraView || !photoCanvas || !capturedPhoto) return;
             
             const context = photoCanvas.getContext('2d');
             photoCanvas.width = cameraView.videoWidth;
@@ -1172,20 +1259,24 @@
             capturedPhoto.src = photoCanvas.toDataURL('image/jpeg');
             cameraView.style.display = 'none';
             capturedPhoto.style.display = 'block';
-            retakeBtn.style.display = 'block';
+            if (retakeBtn) retakeBtn.style.display = 'block';
             photoTaken = true;
             
             // Hide face feedback
-            faceFeedback.style.display = 'none';
+            if (faceFeedback) {
+                faceFeedback.style.display = 'none';
+            }
             
             // Enable submit if location is available
-            if (currentLocation) {
+            if (submitBtn && currentLocation) {
                 submitBtn.disabled = false;
             }
         }
         
         // Retake photo
         function retakePhoto() {
+            if (!cameraView || !capturedPhoto || !retakeBtn || !submitBtn) return;
+            
             cameraView.style.display = 'block';
             capturedPhoto.style.display = 'none';
             retakeBtn.style.display = 'none';
@@ -1199,11 +1290,15 @@
         // Get current location and show on map
         function getLocation() {
             if (!navigator.geolocation) {
-                locationAddress.textContent = 'Geolocation tidak didukung oleh browser Anda';
+                if (locationAddress) {
+                    locationAddress.textContent = 'Geolocation tidak didukung oleh browser Anda';
+                }
                 return;
             }
             
-            locationAddress.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendeteksi lokasi...';
+            if (locationAddress) {
+                locationAddress.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendeteksi lokasi...';
+            }
             
             navigator.geolocation.getCurrentPosition(
                 position => {
@@ -1215,20 +1310,24 @@
                         initMap(latitude, longitude);
                     } else {
                         map.setView([latitude, longitude], 18);
-                        marker.setLatLng([latitude, longitude]);
+                        if (marker) {
+                            marker.setLatLng([latitude, longitude]);
+                        }
                     }
                     
                     // Get address from coordinates
                     getAddressFromCoords(latitude, longitude);
                     
                     // Enable submit if photo is taken
-                    if (photoTaken) {
+                    if (submitBtn && photoTaken) {
                         submitBtn.disabled = false;
                     }
                 },
                 error => {
                     console.error("Error getting location:", error);
-                    locationAddress.textContent = 'Gagal mendapatkan lokasi. Pastikan GPS aktif dan izin diberikan.';
+                    if (locationAddress) {
+                        locationAddress.textContent = 'Gagal mendapatkan lokasi. Pastikan GPS aktif dan izin diberikan.';
+                    }
                     
                     // Default location if geolocation fails
                     const defaultLat = -6.2088;
@@ -1249,7 +1348,10 @@
         
         // Initialize Leaflet map
         function initMap(lat, lng) {
-            map = L.map('attendance-map').setView([lat, lng], 18);
+            const mapElement = document.getElementById('attendance-map');
+            if (!mapElement) return;
+            
+            map = L.map(mapElement).setView([lat, lng], 18);
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -1263,6 +1365,8 @@
         
         // Get address from coordinates using Nominatim (OpenStreetMap)
         async function getAddressFromCoords(lat, lng) {
+            if (!locationAddress) return;
+            
             try {
                 const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
                 const data = await response.json();
@@ -1282,6 +1386,8 @@
         
         // Submit attendance
         function submitAttendance() {
+            if (!modalTitle || !photoCanvas || !locationAddress) return;
+            
             const isClockIn = modalTitle.textContent === 'Clock In';
             
             // In a real app, you would send this data to your server
@@ -1300,24 +1406,53 @@
             closeAttendanceModal();
         }
         
-        // Event Listeners
-        clockInBtn.addEventListener('click', () => openAttendanceModal(true));
-        clockOutBtn.addEventListener('click', () => openAttendanceModal(false));
-        closeModal.addEventListener('click', closeAttendanceModal);
-        captureBtn.addEventListener('click', capturePhoto);
-        retakeBtn.addEventListener('click', retakePhoto);
-        switchCameraBtn.addEventListener('click', switchCamera);
-        submitBtn.addEventListener('click', submitAttendance);
+        // Event Listeners with null checks
+        if (clockInBtn) {
+            clockInBtn.addEventListener('click', () => openAttendanceModal(true));
+        }
+        if (clockOutBtn) {
+            clockOutBtn.addEventListener('click', () => openAttendanceModal(false));
+        }
+        if (closeModal) {
+            closeModal.addEventListener('click', closeAttendanceModal);
+        }
+        if (captureBtn) {
+            captureBtn.addEventListener('click', capturePhoto);
+        }
+        if (retakeBtn) {
+            retakeBtn.addEventListener('click', retakePhoto);
+        }
+        if (switchCameraBtn) {
+            switchCameraBtn.addEventListener('click', switchCamera);
+        }
+        if (submitBtn) {
+            submitBtn.addEventListener('click', submitAttendance);
+        }
         
         // Close modal when clicking outside
         window.addEventListener('click', (e) => {
-            if (e.target === modal) {
+            if (modal && e.target === modal) {
                 closeAttendanceModal();
             }
         });
-    </script>
-    <script>
-        if ('serviceWorker' in navigator) {
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            clearInterval(timeInterval);
+            
+            if (faceDetectionInterval) {
+                cancelAnimationFrame(faceDetectionInterval);
+            }
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+    });
+
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
             navigator.serviceWorker.register('/absensi/service-worker.js')
                 .then(reg => {
                     console.log('SW Registered ✅', reg.scope);
@@ -1335,7 +1470,8 @@
                     }
                 })
                 .catch(err => console.error('SW Registration Failed ❌', err));
-        }
-    </script>
+        });
+    }
+</script>
 </body>
 </html>
