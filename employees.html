@@ -306,6 +306,19 @@
             background-color: var(--primary);
             color: white;
         }
+        /* NAVBAR */
+        .nav-item {
+            text-decoration: none !important;
+            color: var(--gray);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
@@ -444,11 +457,11 @@
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <a href="#" class="nav-item">
+            <a href="index.html" class="nav-item">
                 <div class="nav-icon"><i class="fas fa-home"></i></div>
                 <div>Beranda</div>
             </a>
-            <a href="#" class="nav-item active">
+            <a href="employees.html" class="nav-item active">
                 <div class="nav-icon"><i class="fas fa-users"></i></div>
                 <div>Karyawan</div>
             </a>
