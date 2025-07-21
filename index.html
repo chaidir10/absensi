@@ -655,7 +655,7 @@
             </div>
             <div class="attendance-time d-flex justify-content-center align-items-center gap-3 mb-3">
                 <i class="far fa-clock time-icon"></i>
-                <small class="time-range" id="">Jam Kerja (07:30 - 16:00)</small>
+                <span class="time-range" id="current-time">Jam Kerja (07:30 - 16:00)</span>
             </div>
             
             <div class="attendance-actions">
@@ -828,27 +828,7 @@
     <!-- Leaflet JS for maps -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Update current date and time
-        function updateDateTime() {
-            const now = new Date();
-            const options = { day: 'numeric', month: 'short', year: 'numeric' };
-            document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', options);
-            
-            const timeOptions = { hour: '2-digit', minute: '2-digit' };
-            document.getElementById('current-time').textContent = now.toLocaleTimeString('id-ID', timeOptions);
-        }
-        
-        // Update time every minute
-        updateDateTime();
-        setInterval(updateDateTime, 60000);
-        
-        // Navigation Functionality
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelector('.nav-item.active').classList.remove('active');
-                this.classList.add('active');
-            });
-        });
+       
         
         // Feature Card Horizontal Scroll
         const featureScroll = document.getElementById('featureScroll');
