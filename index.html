@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <meta name="theme-color" content="#5c24c0">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Absensi Professional</title>
@@ -8,13 +9,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts - Poppins -->
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="manifest" href="/absensi/manifest.json">
+    <meta name="theme-color" content="#5c1cb4">
+    <!-- Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script>
+        // Set --vh equal to 1% of the viewport height
+        function setVh() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        setVh();
+        window.addEventListener('resize', setVh);
+    </script>
     
     <style>
         :root {
@@ -234,6 +244,120 @@
             padding: 0 5px;
         }
 
+        .scroll-hint {
+            text-align: center;
+            margin-top: 10px;
+            color: var(--gray);
+            font-size: 12px;
+        }
+
+        .scroll-hint i {
+            color: var(--primary-light);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateX(0);}
+            40% {transform: translateX(-5px);}
+            60% {transform: translateX(5px);}
+        }
+
+        /* Promo Banner */
+        .promo-banner {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            margin: 0 20px 25px;
+            padding: 20px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(109, 40, 217, 0.2);
+        }
+
+        .promo-banner::after {
+            content: "";
+            position: absolute;
+            top: -100px;
+            right: -80px;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 65%);
+        }
+
+        .promo-title {
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+        }
+
+        .promo-text {
+            font-size: 12px;
+            margin-bottom: 15px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 2;
+            line-height: 1.5;
+        }
+
+        .promo-btn {
+            background-color: var(--white);
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .promo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            color: var(--primary-dark);
+        }
+
+        /* Sections */
+        .section {
+            background-color: var(--white);
+            margin: 0 20px 25px;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--gray-light);
+        }
+
+        .section-title {
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--dark);
+        }
+
+        .see-all {
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .see-all:hover {
+            color: var(--primary-dark);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 25px 0;
+            color: var(--gray);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
         /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
@@ -301,7 +425,34 @@
             color: var(--primary);
         }
 
-        /* Modal Styles (New) */
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-content {
+            animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .attendance-card {
+            animation: fadeIn 0.8s 0.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        .feature-card {
+            animation: fadeIn 0.8s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        /* Micro-interactions */
+        .btn-scale {
+            transition: transform 0.2s ease;
+        }
+
+        .btn-scale:active {
+            transform: scale(0.96);
+        }
+
+        /* Modal Styles */
         .attendance-modal {
             display: none;
             position: fixed;
@@ -309,44 +460,50 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.7);
+            background-color: rgba(0,0,0,0.8);
             z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease;
+            overflow-y: auto;
         }
 
         .modal-content {
-            background: white;
+            background-color: white;
+            margin: 20px auto;
+            padding: 25px;
+            border-radius: 16px;
+            max-width: 500px;
             width: 90%;
-            max-width: 400px;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(109, 40, 217, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeIn 0.3s ease-out;
         }
 
         .modal-header {
-            padding: 20px;
-            background: linear-gradient(160deg, var(--primary-dark), var(--primary));
-            color: white;
-            font-weight: 600;
-            font-size: 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
         }
 
-        .modal-body {
-            padding: 20px;
+        .modal-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 18px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
         }
 
         .camera-container {
             width: 100%;
-            height: 250px;
-            background: #f1f1f1;
+            height: 300px;
+            background-color: #f0f0f0;
             border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             position: relative;
         }
 
@@ -370,117 +527,111 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.9);
+            background-color: white;
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: none;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: all 0.2s ease;
         }
 
-        .camera-btn:hover {
-            transform: scale(1.05);
+        .capture-btn {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        #attendance-map {
+            width: 100%;
+            height: 100%;
         }
 
         .location-info {
-            background: #f8f9fa;
-            padding: 12px;
+            background-color: #f8f9fa;
+            padding: 15px;
             border-radius: 12px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            color: var(--dark);
+            margin-bottom: 20px;
+            font-size: 14px;
         }
 
-        .location-info i {
+        .location-icon {
             color: var(--primary);
             margin-right: 8px;
         }
 
-        .notes-area {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid var(--gray-light);
-            resize: none;
-            font-family: 'Poppins', sans-serif;
-            margin-bottom: 15px;
-            min-height: 80px;
-        }
-
         .submit-btn {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(160deg, var(--primary-dark), var(--primary));
+            padding: 12px;
+            background-color: var(--primary);
             color: white;
             border: none;
             border-radius: 50px;
             font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
         }
 
         .submit-btn:hover {
+            background-color: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(109, 40, 217, 0.3);
         }
 
         .submit-btn:disabled {
-            background: var(--gray-light);
-            color: var(--gray);
+            background-color: var(--gray-light);
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .captured-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
         }
-        .camera-container {
-    position: relative;
-}
 
-.camera-guide {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 250px;
-    border: 3px dashed rgba(255,255,255,0.7);
-    border-radius: 10px;
-    pointer-events: none;
-    z-index: 2;
-}
+        .switch-camera-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
 
-.camera-guide::before {
-    content: "Arahkan wajah ke dalam bingkai";
-    position: absolute;
-    bottom: -40px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    color: white;
-    font-size: 12px;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-}
+        .gps-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--gray);
+        }
 
-#map-container {
-    height: 150px;
-    width: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 15px;
-    border: 1px solid var(--gray-light);
-}
+        .gps-loading i {
+            margin-right: 8px;
+            animation: spin 1s linear infinite;
+        }
 
-#map {
-    height: 100%;
-    width: 100%;
-}
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -503,9 +654,9 @@
                 <span id="current-date">24 Jun 2025</span>
             </div>
             <div class="attendance-time d-flex justify-content-center align-items-center gap-3 mb-3">
-    <i class="far fa-clock time-icon"></i>
-    <span class="time-range">Jam Kerja (07:00-16:00)</span>
-</div>
+                <i class="far fa-clock time-icon"></i>
+                <span class="time-range" id="current-time">07:30 - 16:00</span>
+            </div>
             
             <div class="attendance-actions">
                 <div class="attendance-btn btn-scale" id="clock-in-btn">
@@ -572,27 +723,37 @@
                     </div>
                 </div>
             </div>
+            <div class="scroll-hint">
+                <i class="fas fa-arrows-alt-h"></i> Geser untuk melihat lebih banyak
+            </div>
+        </div>
+        
+        <!-- Promo Banner -->
+        <div class="promo-banner">
+            <h3 class="promo-title">Makin flexible!</h3>
+            <p class="promo-text">Kini performance review dapat dilakukan di Mobile App dengan fitur yang lebih lengkap dan akses yang lebih mudah</p>
+            <button class="promo-btn btn-scale">Coba Sekarang</button>
         </div>
         
         <!-- Announcement Section -->
-        <div class="feature-card">
+        <div class="section">
             <div class="section-header d-flex justify-content-between mb-3">
-                <h3 style="font-weight: 600; font-size: 17px; color: var(--dark);">Pengumuman</h3>
-                <span style="color: var(--primary); font-size: 14px; cursor: pointer;">Lihat Semua</span>
+                <h3 class="section-title">Pengumuman</h3>
+                <span class="see-all">Lihat Semua</span>
             </div>
-            <div style="text-align: center; padding: 25px 0; color: var(--gray); font-size: 14px;">
+            <div class="empty-state">
                 Belum ada pengumuman<br>
                 Your announcement will show here
             </div>
         </div>
         
         <!-- Task Section -->
-        <div class="feature-card">
+        <div class="section">
             <div class="section-header d-flex justify-content-between mb-3">
-                <h3 style="font-weight: 600; font-size: 17px; color: var(--dark);">Tasks</h3>
-                <span style="color: var(--primary); font-size: 14px; cursor: pointer;">Lihat Semua</span>
+                <h3 class="section-title">Tasks</h3>
+                <span class="see-all">Lihat Semua</span>
             </div>
-            <div style="text-align: center; padding: 25px 0; color: var(--gray); font-size: 14px;">
+            <div class="empty-state">
                 Belum ada task
             </div>
         </div>
@@ -623,346 +784,387 @@
     </div>
 
     <!-- Attendance Modal -->
-    <div class="attendance-modal" id="attendance-modal">
+    <div class="attendance-modal" id="attendanceModal">
         <div class="modal-content">
             <div class="modal-header">
-                <span id="modal-title">Clock In</span>
-                <span id="close-modal" style="cursor: pointer; font-size: 24px;">&times;</span>
+                <h3 class="modal-title" id="modalTitle">Clock In</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
             </div>
-            <div class="modal-body">
-    <div class="camera-container">
-        <video id="camera-view" autoplay playsinline></video>
-        <div class="camera-guide"></div>
-        <div class="camera-controls">
-            <button class="camera-btn" id="switch-camera">
-                <i class="fas fa-sync-alt"></i>
-            </button>
-            <button class="camera-btn" id="capture-btn">
-                <i class="fas fa-camera"></i>
-            </button>
-        </div>
-    </div>
-    
-    <div id="map-container">
-        <div id="map"></div>
-    </div>
-    
-    <div class="location-info">
-        <i class="fas fa-map-marker-alt"></i>
-        <span id="location-text">Mendapatkan lokasi...</span>
-        <span id="coordinates" style="display: block; font-size: 12px; margin-top: 5px;"></span>
-    </div>
-    
-    <textarea class="notes-area" placeholder="Tambahkan catatan (opsional)" id="attendance-notes"></textarea>
-    
-    <button class="submit-btn" id="submit-attendance" disabled>
-        <span id="submit-text">Submit Attendance</span>
-        <span id="loading-spinner" style="display: none;">
-            <i class="fas fa-spinner fa-spin"></i> Memproses...
-        </span>
-    </button>
-</div>
+            
+            <div class="camera-container">
+                <video id="camera-view" autoplay playsinline></video>
+                <canvas id="photo-canvas" style="display:none;"></canvas>
+                <img id="captured-photo" class="captured-photo" alt="Captured photo">
+                
+                <button class="switch-camera-btn" id="switchCamera">
+                    <i class="fas fa-camera-retro"></i>
+                </button>
+                
+                <div class="camera-controls">
+                    <button class="camera-btn" id="retakePhoto" style="display:none;">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button class="camera-btn capture-btn" id="capturePhoto">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <div id="attendance-map"></div>
+            </div>
+            
+            <div class="location-info">
+                <div><i class="fas fa-map-marker-alt location-icon"></i> <span id="location-address">Mendeteksi lokasi...</span></div>
+                <div class="mt-2"><i class="fas fa-info-circle location-icon"></i> Pastikan Anda berada di lokasi yang benar</div>
+            </div>
+            
+            <button class="submit-btn btn-scale" id="submitAttendance" disabled>Submit Attendance</button>
         </div>
     </div>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS for maps -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-     // Global variables
-let currentStream = null;
-let currentCamera = 'user'; // 'user' for front camera, 'environment' for back
-let capturedPhoto = null;
-let currentLocation = null;
-let attendanceType = ''; // 'clock-in' or 'clock-out'
-let isLoading = false;
-let map = null;
-
-// DOM Elements
-const clockInBtn = document.getElementById('clock-in-btn');
-const clockOutBtn = document.getElementById('clock-out-btn');
-const attendanceModal = document.getElementById('attendance-modal');
-const closeModalBtn = document.getElementById('close-modal');
-const modalTitle = document.getElementById('modal-title');
-const cameraView = document.getElementById('camera-view');
-const switchCameraBtn = document.getElementById('switch-camera');
-const captureBtn = document.getElementById('capture-btn');
-const locationText = document.getElementById('location-text');
-const submitBtn = document.getElementById('submit-attendance');
-const submitText = document.getElementById('submit-text');
-const loadingSpinner = document.getElementById('loading-spinner');
-const attendanceNotes = document.getElementById('attendance-notes');
-const currentDateElement = document.getElementById('current-date');
-const currentTimeElement = document.getElementById('current-time');
-
-// Initialize the app
-document.addEventListener('DOMContentLoaded', function() {
-    updateDateTime();
-    setInterval(updateDateTime, 1000);
-    
-    // Event listeners
-    clockInBtn.addEventListener('click', () => openAttendanceModal('clock-in'));
-    clockOutBtn.addEventListener('click', () => openAttendanceModal('clock-out'));
-    closeModalBtn.addEventListener('click', closeAttendanceModal);
-    switchCameraBtn.addEventListener('click', switchCamera);
-    captureBtn.addEventListener('click', capturePhoto);
-    submitBtn.addEventListener('click', submitAttendance);
-});
-
-// Update current date and time
-function updateDateTime() {
-    const now = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    currentDateElement.textContent = now.toLocaleDateString('id-ID', options);
-    currentTimeElement.textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-}
-
-// Open attendance modal
-function openAttendanceModal(type) {
-    attendanceType = type;
-    modalTitle.textContent = type === 'clock-in' ? 'Clock In' : 'Clock Out';
-    capturedPhoto = null;
-    
-    // Reset modal state
-    submitBtn.disabled = true;
-    submitText.style.display = 'block';
-    loadingSpinner.style.display = 'none';
-    attendanceNotes.value = '';
-    
-    attendanceModal.style.display = 'flex';
-    startCamera();
-    getLocation(); // Get location when modal opens
-}
-
-// Close attendance modal
-function closeAttendanceModal() {
-    stopCamera();
-    if (map) {
-        map.remove();
-        map = null;
-    }
-    attendanceModal.style.display = 'none';
-}
-
-// Start camera stream
-async function startCamera() {
-    try {
-        const constraints = {
-            video: {
-                facingMode: currentCamera,
-                width: { ideal: 1280 },
-                height: { ideal: 720 }
-            }
-        };
-        
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        cameraView.srcObject = stream;
-        currentStream = stream;
-    } catch (err) {
-        console.error("Error accessing camera:", err);
-        locationText.textContent = "Tidak dapat mengakses kamera. Pastikan izin kamera diberikan.";
-    }
-}
-
-// Stop camera stream
-function stopCamera() {
-    if (currentStream) {
-        currentStream.getTracks().forEach(track => track.stop());
-        cameraView.srcObject = null;
-        currentStream = null;
-    }
-}
-
-// Switch between front and back camera
-function switchCamera() {
-    currentCamera = currentCamera === 'user' ? 'environment' : 'user';
-    stopCamera();
-    startCamera();
-}
-
-// Capture photo from camera
-function capturePhoto() {
-    if (!currentStream) return;
-    
-    const canvas = document.createElement('canvas');
-    canvas.width = cameraView.videoWidth;
-    canvas.height = cameraView.videoHeight;
-    const ctx = canvas.getContext('2d');
-    
-    // Draw image to canvas
-    ctx.drawImage(cameraView, 0, 0, canvas.width, canvas.height);
-    
-    // Convert to data URL
-    capturedPhoto = canvas.toDataURL('image/jpeg');
-    
-    // Enable submit button if location is available
-    if (currentLocation) {
-        submitBtn.disabled = false;
-    }
-    
-    alert('Foto berhasil diambil!');
-}
-
-// Get current geolocation and show map
-function getLocation() {
-    if (!navigator.geolocation) {
-        locationText.textContent = "Geolokasi tidak didukung oleh browser Anda";
-        return;
-    }
-    
-    locationText.textContent = "Mendapatkan lokasi...";
-    
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            currentLocation = {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                accuracy: position.coords.accuracy
-            };
+        // Update current date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', options);
             
-            // Initialize and show map
-            if (typeof L !== 'undefined') {
-                // Remove existing map if any
-                if (map) {
-                    map.remove();
-                }
-                
-                map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 16);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(map);
-                
-                L.marker([position.coords.latitude, position.coords.longitude])
-                    .addTo(map)
-                    .bindPopup("Lokasi Anda saat ini")
-                    .openPopup();
-            }
-            
-            // Show coordinates
-            document.getElementById('coordinates').textContent = 
-                `Lat: ${position.coords.latitude.toFixed(6)}, Long: ${position.coords.longitude.toFixed(6)}`;
-            
-            // Get address
-            getAddressFromCoords(position.coords.latitude, position.coords.longitude);
-            
-            // Enable submit if photo already taken
-            if (capturedPhoto) {
-                submitBtn.disabled = false;
-            }
-        },
-        (error) => {
-            console.error("Error getting location:", error);
-            let errorMessage = "Tidak dapat mendapatkan lokasi";
-            
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    errorMessage = "Izin lokasi ditolak. Harap aktifkan izin lokasi.";
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    errorMessage = "Informasi lokasi tidak tersedia.";
-                    break;
-                case error.TIMEOUT:
-                    errorMessage = "Permintaan lokasi timeout.";
-                    break;
-            }
-            
-            locationText.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${errorMessage}`;
-        },
-        { 
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('id-ID', timeOptions);
         }
-    );
-}
+        
+        // Update time every minute
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
+        
+        // Navigation Functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelector('.nav-item.active').classList.remove('active');
+                this.classList.add('active');
+            });
+        });
+        
+        // Feature Card Horizontal Scroll
+        const featureScroll = document.getElementById('featureScroll');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
 
-// Simulate reverse geocoding
-function getAddressFromCoords(lat, lng) {
-    // In a real app, use a geocoding API here
-    setTimeout(() => {
-        const addresses = [
-            "Jl. Sudirman No. 123, Jakarta Pusat",
-            "Komplek Perkantoran Gatot Subroto, Jakarta Selatan",
-            "Gedung Bursa Efek Indonesia, Jakarta Selatan",
-            "Kawasan SCBD, Jakarta Selatan",
-            "Plaza Senayan, Jakarta Pusat"
-        ];
-        
-        const randomAddress = addresses[Math.floor(Math.random() * addresses.length)];
-        locationText.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${randomAddress} (Akurasi: ${currentLocation.accuracy.toFixed(0)} meter)`;
-    }, 1000);
-}
+        featureScroll.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - featureScroll.offsetLeft;
+            scrollLeft = featureScroll.scrollLeft;
+        });
 
-// Submit attendance
-function submitAttendance() {
-    if (isLoading) return;
-    
-    if (!capturedPhoto) {
-        alert('Harap ambil foto terlebih dahulu');
-        return;
-    }
-    
-    if (!currentLocation) {
-        alert('Sedang mendapatkan lokasi... Harap tunggu');
-        return;
-    }
-    
-    isLoading = true;
-    submitText.style.display = 'none';
-    loadingSpinner.style.display = 'block';
-    submitBtn.disabled = true;
-    
-    // Simulate API call
-    setTimeout(() => {
-        isLoading = false;
+        featureScroll.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+
+        featureScroll.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+
+        featureScroll.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - featureScroll.offsetLeft;
+            const walk = (x - startX) * 2;
+            featureScroll.scrollLeft = scrollLeft - walk;
+        });
+
+        // Touch events for mobile
+        featureScroll.addEventListener('touchstart', (e) => {
+            isDown = true;
+            startX = e.touches[0].pageX - featureScroll.offsetLeft;
+            scrollLeft = featureScroll.scrollLeft;
+        });
+
+        featureScroll.addEventListener('touchend', () => {
+            isDown = false;
+        });
+
+        featureScroll.addEventListener('touchmove', (e) => {
+            if(!isDown) return;
+            const x = e.touches[0].pageX - featureScroll.offsetLeft;
+            const walk = (x - startX) * 2;
+            featureScroll.scrollLeft = scrollLeft - walk;
+        });
+
+        // Wheel event for horizontal scrolling
+        featureScroll.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            featureScroll.scrollLeft += e.deltaY;
+        });
+
+        // Remove focus from buttons when clicked
+        document.querySelectorAll('.btn-scale').forEach(button => {
+            button.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+            });
+        });
         
-        // Prepare attendance data
-        const attendanceData = {
-            type: attendanceType,
-            timestamp: new Date().toISOString(),
-            photo: capturedPhoto,
-            location: currentLocation,
-            notes: attendanceNotes.value
-        };
+        // Attendance Modal Functionality
+        const modal = document.getElementById('attendanceModal');
+        const closeModal = document.getElementById('closeModal');
+        const clockInBtn = document.getElementById('clock-in-btn');
+        const clockOutBtn = document.getElementById('clock-out-btn');
+        const modalTitle = document.getElementById('modalTitle');
+        const submitBtn = document.getElementById('submitAttendance');
         
-        console.log('Attendance data:', attendanceData);
+        // Camera and Map Variables
+        const cameraView = document.getElementById('camera-view');
+        const photoCanvas = document.getElementById('photo-canvas');
+        const capturedPhoto = document.getElementById('captured-photo');
+        const captureBtn = document.getElementById('capturePhoto');
+        const retakeBtn = document.getElementById('retakePhoto');
+        const switchCameraBtn = document.getElementById('switchCamera');
+        const locationAddress = document.getElementById('location-address');
         
-        // Show success message
-        alert(`${attendanceType === 'clock-in' ? 'Clock In' : 'Clock Out'} berhasil!`);
+        let stream = null;
+        let currentFacingMode = 'user'; // front camera by default
+        let map;
+        let marker;
+        let currentLocation = null;
+        let photoTaken = false;
         
-        // Update button state
-        updateAttendanceButton(attendanceType);
+        // Open modal for clock in/out
+        function openAttendanceModal(isClockIn) {
+            modalTitle.textContent = isClockIn ? 'Clock In' : 'Clock Out';
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Reset modal state
+            photoTaken = false;
+            capturedPhoto.style.display = 'none';
+            cameraView.style.display = 'block';
+            retakeBtn.style.display = 'none';
+            submitBtn.disabled = true;
+            
+            // Start camera and get location
+            startCamera();
+            getLocation();
+        }
         
         // Close modal
-        closeAttendanceModal();
-    }, 2000);
-}
+        function closeAttendanceModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            
+            // Stop camera stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+        }
+        
+        // Start camera
+        async function startCamera() {
+            try {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { 
+                        facingMode: currentFacingMode,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                });
+                
+                cameraView.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing camera:", err);
+                alert('Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.');
+            }
+        }
+        
+        // Switch between front and back camera
+        async function switchCamera() {
+            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            await startCamera();
+        }
+        
+        // Capture photo
+        function capturePhoto() {
+            if (!stream) return;
+            
+            const context = photoCanvas.getContext('2d');
+            photoCanvas.width = cameraView.videoWidth;
+            photoCanvas.height = cameraView.videoHeight;
+            
+            // Draw image to canvas
+            context.drawImage(cameraView, 0, 0, photoCanvas.width, photoCanvas.height);
+            
+            // Convert to data URL and display
+            capturedPhoto.src = photoCanvas.toDataURL('image/jpeg');
+            cameraView.style.display = 'none';
+            capturedPhoto.style.display = 'block';
+            retakeBtn.style.display = 'block';
+            photoTaken = true;
+            
+            // Enable submit if location is available
+            if (currentLocation) {
+                submitBtn.disabled = false;
+            }
+        }
+        
+        // Retake photo
+        function retakePhoto() {
+            cameraView.style.display = 'block';
+            capturedPhoto.style.display = 'none';
+            retakeBtn.style.display = 'none';
+            photoTaken = false;
+            submitBtn.disabled = true;
+        }
+        
+        // Get current location and show on map
+        function getLocation() {
+            if (!navigator.geolocation) {
+                locationAddress.textContent = 'Geolocation tidak didukung oleh browser Anda';
+                return;
+            }
+            
+            locationAddress.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendeteksi lokasi...';
+            
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const { latitude, longitude } = position.coords;
+                    currentLocation = { lat: latitude, lng: longitude };
+                    
+                    // Initialize map if not already done
+                    if (!map) {
+                        initMap(latitude, longitude);
+                    } else {
+                        map.setView([latitude, longitude], 18);
+                        marker.setLatLng([latitude, longitude]);
+                    }
+                    
+                    // Get address from coordinates
+                    getAddressFromCoords(latitude, longitude);
+                    
+                    // Enable submit if photo is taken
+                    if (photoTaken) {
+                        submitBtn.disabled = false;
+                    }
+                },
+                error => {
+                    console.error("Error getting location:", error);
+                    locationAddress.textContent = 'Gagal mendapatkan lokasi. Pastikan GPS aktif dan izin diberikan.';
+                    
+                    // Default location if geolocation fails
+                    const defaultLat = -6.2088;
+                    const defaultLng = 106.8456;
+                    currentLocation = { lat: defaultLat, lng: defaultLng };
+                    
+                    if (!map) {
+                        initMap(defaultLat, defaultLng);
+                    }
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+        
+        // Initialize Leaflet map
+        function initMap(lat, lng) {
+            map = L.map('attendance-map').setView([lat, lng], 18);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Add marker
+            marker = L.marker([lat, lng]).addTo(map)
+                .bindPopup('Lokasi Anda saat ini')
+                .openPopup();
+        }
+        
+        // Get address from coordinates using Nominatim (OpenStreetMap)
+        async function getAddressFromCoords(lat, lng) {
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+                const data = await response.json();
+                
+                if (data && data.address) {
+                    const address = data.display_name || 
+                                   `${data.address.road || ''}, ${data.address.village || data.address.town || data.address.city || ''}`;
+                    locationAddress.textContent = address;
+                } else {
+                    locationAddress.textContent = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+                }
+            } catch (err) {
+                console.error("Error getting address:", err);
+                locationAddress.textContent = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+            }
+        }
+        
+        // Submit attendance
+        function submitAttendance() {
+            const isClockIn = modalTitle.textContent === 'Clock In';
+            
+            // In a real app, you would send this data to your server
+            const attendanceData = {
+                type: isClockIn ? 'clock-in' : 'clock-out',
+                timestamp: new Date().toISOString(),
+                location: currentLocation,
+                photo: photoCanvas.toDataURL('image/jpeg'),
+                address: locationAddress.textContent
+            };
+            
+            console.log('Attendance data:', attendanceData);
+            
+            // Show success message
+            alert(`${isClockIn ? 'Clock In' : 'Clock Out'} berhasil!`);
+            closeAttendanceModal();
+        }
+        
+        // Event Listeners
+        clockInBtn.addEventListener('click', () => openAttendanceModal(true));
+        clockOutBtn.addEventListener('click', () => openAttendanceModal(false));
+        closeModal.addEventListener('click', closeAttendanceModal);
+        captureBtn.addEventListener('click', capturePhoto);
+        retakeBtn.addEventListener('click', retakePhoto);
+        switchCameraBtn.addEventListener('click', switchCamera);
+        submitBtn.addEventListener('click', submitAttendance);
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeAttendanceModal();
+            }
+        });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/absensi/service-worker.js')
+                .then(reg => {
+                    console.log('SW Registered ✅', reg.scope);
 
-// Update attendance button after successful submission
-function updateAttendanceButton(type) {
-    if (type === 'clock-in') {
-        clockInBtn.innerHTML = `
-            <div class="btn-content d-flex align-items-center gap-2">
-                <i class="fas fa-check-circle attendance-icon" style="color: #10b981;"></i>
-                <span>Sudah Clock In</span>
-            </div>
-        `;
-        clockInBtn.style.background = '#f0fdf4';
-    } else {
-        clockOutBtn.innerHTML = `
-            <div class="btn-content d-flex align-items-center gap-2">
-                <i class="fas fa-check-circle attendance-icon" style="color: #ef4444;"></i>
-                <span>Sudah Clock Out</span>
-            </div>
-        `;
-        clockOutBtn.style.background = '#fef2f2';
-    }
-}
+                    // Background Sync
+                    if ('sync' in reg) {
+                        reg.sync.register('sync-form').catch(console.error);
+                    }
 
-// Close modal when clicking outside
-window.addEventListener('click', (event) => {
-    if (event.target === attendanceModal) {
-        closeAttendanceModal();
-    }
-});    </script>
+                    // Periodic Sync (jika didukung browser)
+                    if ('periodicSync' in reg) {
+                        reg.periodicSync.register('update-data', {
+                            minInterval: 24 * 60 * 60 * 1000 // 1 hari
+                        }).catch(console.error);
+                    }
+                })
+                .catch(err => console.error('SW Registration Failed ❌', err));
+        }
+    </script>
 </body>
 </html>
