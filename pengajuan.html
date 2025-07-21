@@ -180,7 +180,7 @@
         }
 
         /* Bottom Navigation */
-       bottom-nav {
+        .bottom-nav {
             position: fixed;
             bottom: 0;
             width: 100%;
@@ -195,56 +195,21 @@
         }
 
         .nav-item {
-            text-align: center;
-            color: var(--gray);
-            font-size: 9px;
-            width: 20%;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 8px 0;
-            border-radius: 10px;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-decoration: none;
-        }
-
-        .nav-item::before {
-            content: "";
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .nav-item:hover {
-            color: var(--primary);
-            background: #f5f3ff;
-        }
-
-        .nav-icon {
-            font-size: 22px;
-            margin-bottom: 5px;
-            transition: all 0.3s ease;
+            color: var(--gray);
+            font-size: 12px;
         }
 
         .nav-item.active {
             color: var(--primary);
-            transform: translateY(-5px);
         }
 
-        .nav-item.active::before {
-            opacity: 1;
-            top: -5px;
-        }
-
-        .nav-item.active .nav-icon {
-            transform: scale(1.15);
-            color: var(--primary);
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
         }
 
         /* Form Improvements */
