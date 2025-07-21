@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta content="#5c24c0" name="theme-color" />
     <meta charset="utf-8" />
@@ -306,6 +307,7 @@
             background-color: var(--primary);
             color: white;
         }
+
         /* NAVBAR */
         .nav-item {
             text-decoration: none !important;
@@ -321,6 +323,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Header Section -->
@@ -479,35 +482,78 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Simple JavaScript for active nav item
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            // Navigation handling - enhanced version
             const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
+
+            // Function to handle navigation clicks
+            function handleNavClick(e) {
+                // Only prevent default if it's a regular link (not Laravel route)
+                if (!this.getAttribute('href').startsWith('http') &&
+                    !this.getAttribute('href').startsWith('/')) {
                     e.preventDefault();
-                    document.querySelector('.nav-item.active').classList.remove('active');
-                    this.classList.add('active');
-                });
+                }
+
+                // Update active state
+                navItems.forEach(item => item.classList.remove('active'));
+                this.classList.add('active');
+
+                // If it's a SPA (Single Page Application), load content here
+                // Otherwise, let the link work normally
+            }
+
+            // Add click event to all nav items
+            navItems.forEach(item => {
+                item.addEventListener('click', handleNavClick);
             });
-            
-            // Search functionality
+
+            // Search functionality - improved version
             const searchInput = document.querySelector('.search-box input');
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const employees = document.querySelectorAll('.employee-item');
-                
-                employees.forEach(employee => {
-                    const name = employee.querySelector('.employee-name').textContent.toLowerCase();
-                    const position = employee.querySelector('.employee-position').textContent.toLowerCase();
-                    
-                    if (name.includes(searchTerm) || position.includes(searchTerm)) {
-                        employee.style.display = 'flex';
-                    } else {
-                        employee.style.display = 'none';
+            if (searchInput) {
+                searchInput.addEventListener('input', debounce(function () {
+                    const searchTerm = this.value.trim().toLowerCase();
+                    const employees = document.querySelectorAll('.employee-item');
+
+                    employees.forEach(employee => {
+                        const name = employee.querySelector('.employee-name')?.textContent.toLowerCase();
+                        const position = employee.querySelector('.employee-position')?.textContent.toLowerCase();
+                        const department = employee.querySelector('.employee-department')?.textContent.toLowerCase();
+
+                        const shouldShow = name?.includes(searchTerm) ||
+                            position?.includes(searchTerm) ||
+                            department?.includes(searchTerm);
+
+                        employee.style.display = shouldShow ? 'flex' : 'none';
+                    });
+                }, 300));
+            }
+
+            // Debounce function for better performance
+            function debounce(func, wait) {
+                let timeout;
+                return function () {
+                    const context = this, args = arguments;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        func.apply(context, args);
+                    }, wait);
+                };
+            }
+
+            // Optional: Highlight current page on load
+            function highlightCurrentPage() {
+                const currentPath = window.location.pathname;
+                navItems.forEach(item => {
+                    const itemPath = new URL(item.href).pathname;
+                    if (currentPath === itemPath) {
+                        item.classList.add('active');
                     }
                 });
-            });
+            }
+
+            highlightCurrentPage();
         });
     </script>
 </body>
+
 </html>
