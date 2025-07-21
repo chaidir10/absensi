@@ -889,8 +889,8 @@
 <div id="attendance-map"></div>
 </div>
 <div class="location-info">
-<div><i class="fas fa-map-marker-alt location-icon"></i> <span id="location-address">Mendeteksi lokasi...</span></div>
-<div class="mt-2"><i class="fas fa-info-circle location-icon"></i> Pastikan Anda berada di lokasi yang benar</div>
+<div><small><i class="fas fa-map-marker-alt location-icon"></i> <span id="location-address">Mendeteksi lokasi...</span></small></div>
+<div class="mt-2"> <small><i class="fas fa-info-circle location-icon"></i>Pastikan Anda berada di lokasi yang benar</small></div>
 </div>
 <button class="submit-btn btn-scale" disabled id="captureAndSubmit">Ambil Foto &amp; Absen</button>
 </div>
@@ -901,14 +901,23 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     let isCameraReady = false;
-let isMapReady = false;
-let currentLocation = null;
-function checkReadiness() {
-    const btn = document.getElementById('captureAndSubmit');
-    if (btn) {
-        btn.disabled = !(isCameraReady && isMapReady && currentLocation);
+    let isMapReady = false;
+    let currentLocation = null;
+    
+    function checkReadiness() {
+        const captureBtn = document.getElementById('capturePhoto');
+        const submitBtn = document.getElementById('captureAndSubmit');
+        
+        if (captureBtn) {
+            captureBtn.disabled = !isCameraReady;
+            captureBtn.style.backgroundColor = isCameraReady ? 'var(--primary)' : 'var(--gray)';
+        }
+        
+        if (submitBtn) {
+            submitBtn.disabled = !(isCameraReady && isMapReady && currentLocation);
+        }
     }
-}
+    
     // Wait for DOM to be fully loaded
     document.addEventListener('DOMContentLoaded', function() {
         // Update current date and time
@@ -1027,7 +1036,6 @@ function checkReadiness() {
         let currentFacingMode = 'user'; // front camera by default
         let map;
         let marker;
-        let currentLocation = null;
         let photoTaken = false;
         let isFaceInPosition = false;
         
@@ -1041,7 +1049,8 @@ function checkReadiness() {
             if (!('FaceDetector' in window)) {
                 console.log('FaceDetector API not supported');
                 // Enable capture button anyway
-                enableCaptureButton();
+                isCameraReady = true;
+                checkReadiness();
                 return;
             }
             
@@ -1056,23 +1065,8 @@ function checkReadiness() {
             } catch (err) {
                 console.error('FaceDetector initialization failed:', err);
                 // Enable capture button anyway
-                enableCaptureButton();
-            }
-        }
-
-        // Enable capture button
-        function enableCaptureButton() {
-            if (captureBtn) {
-                captureBtn.disabled = false;
-                captureBtn.style.backgroundColor = 'var(--primary)';
-            }
-        }
-
-        // Disable capture button
-        function disableCaptureButton() {
-            if (captureBtn) {
-                captureBtn.disabled = true;
-                captureBtn.style.backgroundColor = 'var(--gray)';
+                isCameraReady = true;
+                checkReadiness();
             }
         }
 
@@ -1113,26 +1107,17 @@ function checkReadiness() {
                             faceFeedback.style.left = `${face.boundingBox.x + face.boundingBox.width/2 - 50}px`;
                             faceFeedback.style.top = `${face.boundingBox.y + face.boundingBox.height/2 - 50}px`;
                             isFaceInPosition = true;
-                            
-                            // Enable capture button
-                            enableCaptureButton();
                         }
                     } else {
                         if (isFaceInPosition && faceFeedback) {
                             faceFeedback.style.display = 'none';
                             isFaceInPosition = false;
-                            
-                            // Disable capture button
-                            disableCaptureButton();
                         }
                     }
                 } else {
                     if (isFaceInPosition && faceFeedback) {
                         faceFeedback.style.display = 'none';
                         isFaceInPosition = false;
-                        
-                        // Disable capture button
-                        disableCaptureButton();
                     }
                 }
             } catch (err) {
@@ -1147,17 +1132,26 @@ function checkReadiness() {
         function openAttendanceModal(isClockIn) {
             if (!modal || !modalTitle) return;
             
+            // Check if location services are enabled
+            if (!navigator.geolocation) {
+                alert('Lokasi tidak diaktifkan. Silakan aktifkan lokasi untuk melanjutkan.');
+                return;
+            }
+            
             modalTitle.textContent = isClockIn ? 'Clock In' : 'Clock Out';
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             
             // Reset modal state
             photoTaken = false;
+            isCameraReady = false;
+            isMapReady = false;
+            currentLocation = null;
+            checkReadiness();
+            
             if (capturedPhoto) capturedPhoto.style.display = 'none';
             if (cameraView) cameraView.style.display = 'block';
             if (retakeBtn) retakeBtn.style.display = 'none';
-            const captureAndSubmitBtn = document.getElementById('captureAndSubmit');
-            if (captureAndSubmitBtn) captureAndSubmitBtn.disabled = false;
             
             // Hide face feedback
             if (faceFeedback) {
@@ -1173,8 +1167,10 @@ function checkReadiness() {
         // Close modal
         function closeAttendanceModal() {
             isCameraReady = false;
-    isMapReady = false;
-    currentLocation = null;
+            isMapReady = false;
+            currentLocation = null;
+            checkReadiness();
+            
             if (!modal) return;
             
             modal.style.display = 'none';
@@ -1217,25 +1213,24 @@ function checkReadiness() {
                     
                     // Wait for video to start playing
                     cameraView.onplaying = () => {
-    isCameraReady = true;
-    checkReadiness();
-    initFaceDetection();
-};
+                        isCameraReady = true;
+                        checkReadiness();
+                        initFaceDetection();
+                    };
                 }
-                
-                // Initially disable capture button
-                disableCaptureButton();
-            }catch (err) {
-    console.error("Error accessing camera:", err);
-    isCameraReady = false; // Tambahkan ini
-    checkReadiness(); // Tambahkan ini
-    alert('Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.');
-}
+            } catch (err) {
+                console.error("Error accessing camera:", err);
+                isCameraReady = false;
+                checkReadiness();
+                alert('Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.');
+            }
         }
         
         // Switch between front and back camera
         async function switchCamera() {
             currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            isCameraReady = false;
+            checkReadiness();
             await startCamera();
         }
         
@@ -1261,22 +1256,16 @@ function checkReadiness() {
             if (faceFeedback) {
                 faceFeedback.style.display = 'none';
             }
-            
-            // Enable submit if location is available
-            if (submitBtn && currentLocation) {
-                submitBtn.disabled = false;
-            }
         }
         
         // Retake photo
         function retakePhoto() {
-            if (!cameraView || !capturedPhoto || !retakeBtn || !submitBtn) return;
+            if (!cameraView || !capturedPhoto || !retakeBtn) return;
             
             cameraView.style.display = 'block';
             capturedPhoto.style.display = 'none';
             retakeBtn.style.display = 'none';
             photoTaken = false;
-            submitBtn.disabled = true;
             
             // Restart face detection
             initFaceDetection();
@@ -1288,6 +1277,7 @@ function checkReadiness() {
                 if (locationAddress) {
                     locationAddress.textContent = 'Geolocation tidak didukung oleh browser Anda';
                 }
+                alert('Lokasi tidak diaktifkan. Silakan aktifkan lokasi untuk melanjutkan.');
                 return;
             }
             
@@ -1313,16 +1303,15 @@ function checkReadiness() {
                     // Get address from coordinates
                     getAddressFromCoords(latitude, longitude);
                     
-                    // Enable submit if photo is taken
-                    if (submitBtn && photoTaken) {
-                        submitBtn.disabled = false;
-                    }
+                    isMapReady = true;
+                    checkReadiness();
                 },
                 error => {
                     console.error("Error getting location:", error);
                     if (locationAddress) {
                         locationAddress.textContent = 'Gagal mendapatkan lokasi. Pastikan GPS aktif dan izin diberikan.';
                     }
+                    alert('Lokasi tidak dapat dideteksi. Pastikan GPS aktif dan izin lokasi diberikan.');
                     
                     // Default location if geolocation fails
                     const defaultLat = -6.2088;
@@ -1332,6 +1321,9 @@ function checkReadiness() {
                     if (!map) {
                         initMap(defaultLat, defaultLng);
                     }
+                    
+                    isMapReady = true;
+                    checkReadiness();
                 },
                 {
                     enableHighAccuracy: true,
@@ -1343,22 +1335,22 @@ function checkReadiness() {
         
         // Initialize Leaflet map
         function initMap(lat, lng) {
-    const mapElement = document.getElementById('attendance-map');
-    if (!mapElement) return;
-    
-    map = L.map(mapElement).setView([lat, lng], 18);
-    
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    
-    marker = L.marker([lat, lng]).addTo(map)
-        .bindPopup('Lokasi Anda saat ini')
-        .openPopup();
-    
-    isMapReady = true;
-    checkReadiness(); // Tambahkan ini
-}
+            const mapElement = document.getElementById('attendance-map');
+            if (!mapElement) return;
+            
+            map = L.map(mapElement).setView([lat, lng], 18);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            marker = L.marker([lat, lng]).addTo(map)
+                .bindPopup('Lokasi Anda saat ini')
+                .openPopup();
+            
+            isMapReady = true;
+            checkReadiness();
+        }
         
         // Get address from coordinates using Nominatim (OpenStreetMap)
         async function getAddressFromCoords(lat, lng) {
@@ -1380,7 +1372,6 @@ function checkReadiness() {
                 locationAddress.textContent = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
             }
         }
-        
         
         // Capture photo and submit attendance directly
         function captureAndSubmit() {
@@ -1405,17 +1396,11 @@ function checkReadiness() {
                 faceFeedback.style.display = 'none';
             }
 
-            // Enable submit if location is available
-            if (currentLocation) {
-                // Proceed to submit
-                submitAttendance();
-            } else {
-                alert('Lokasi belum terdeteksi.');
-            }
+            // Proceed to submit
+            submitAttendance();
         }
 
-
-// Submit attendance
+        // Submit attendance
         function submitAttendance() {
             if (!modalTitle || !photoCanvas || !locationAddress) return;
             
