@@ -14,16 +14,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/absensi/manifest.json">
     <meta name="theme-color" content="#5c1cb4">
-    <!-- Leaflet CSS for maps -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script>
-        // Set --vh equal to 1% of the viewport height
-        function setVh() {
-            let vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        }
-        setVh();
-        window.addEventListener('resize', setVh);
+  // Set --vh equal to 1% of the viewport height
+  function setVh() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  setVh();
+  window.addEventListener('resize', setVh);
     </script>
     
     <style>
@@ -156,14 +154,13 @@
         }
 
         #clock-in-btn {
-            background-color: var(--light);
-           border-radius: 50px 0 0 50px;
+            background-color: var(--white);
+            border-radius: 0 50px 50px 0;
         }
 
         #clock-out-btn {
             background-color: var(--light);
-            border-radius: 0 50px 50px 0;
-           
+            border-radius: 50px 0 0 50px;
         }
 
         .attendance-btn:hover {
@@ -451,188 +448,17 @@
         .btn-scale:active {
             transform: scale(0.96);
         }
-
-        /* Modal Styles */
-        .attendance-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 20px auto;
-            padding: 25px;
-            border-radius: 16px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            font-weight: 600;
-            color: var(--primary-dark);
-            font-size: 18px;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray);
-        }
-
-        .camera-container {
-            width: 100%;
-            height: 300px;
-            background-color: #f0f0f0;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        #camera-view {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .camera-controls {
-            position: absolute;
-            bottom: 10px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .camera-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: white;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            cursor: pointer;
-        }
-
-        .capture-btn {
-            width: 60px;
-            height: 60px;
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .map-container {
-            width: 100%;
-            height: 200px;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        #attendance-map {
-            width: 100%;
-            height: 100%;
-        }
-
-        .location-info {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .location-icon {
-            color: var(--primary);
-            margin-right: 8px;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .submit-btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .submit-btn:disabled {
-            background-color: var(--gray-light);
-            cursor: not-allowed;
-        }
-
-        .captured-photo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-
-        .switch-camera-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .gps-loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: var(--gray);
-        }
-
-        .gps-loading i {
-            margin-right: 8px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
     </style>
+
+    <link rel="manifest" href="manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(reg => console.log('Service Worker registered:', reg))
+                .catch(err => console.error('Service Worker registration failed:', err));
+        }
+    </script>
+
 </head>
 <body>
     <div class="container">
@@ -651,24 +477,24 @@
         <div class="attendance-card">
             <div class="attendance-date d-flex justify-content-center align-items-center gap-3 mb-4">
                 <i class="far fa-calendar-alt date-icon"></i>
-                <span id="current-date">24 Jun 2025</span>
+                <span>24 Jun 2025</span>
             </div>
             <div class="attendance-time d-flex justify-content-center align-items-center gap-3 mb-3">
                 <i class="far fa-clock time-icon"></i>
-                <span class="time-range" id="current-time">07:30 - 16:00</span>
+                <span class="time-range">07:30 - 16:00</span>
             </div>
             
             <div class="attendance-actions">
-                <div class="attendance-btn btn-scale" id="clock-in-btn">
-                    <div class="btn-content d-flex align-items-center gap-2">
-                        <i class="fas fa-fingerprint attendance-icon"></i>
-                        <span>Clock In</span>
-                    </div>
-                </div>
                 <div class="attendance-btn btn-scale" id="clock-out-btn">
                     <div class="btn-content d-flex align-items-center gap-2">
                         <i class="fas fa-sign-out-alt attendance-icon"></i>
                         <span>Clock Out</span>
+                    </div>
+                </div>
+                <div class="attendance-btn btn-scale" id="clock-in-btn">
+                    <div class="btn-content d-flex align-items-center gap-2">
+                        <i class="fas fa-fingerprint attendance-icon"></i>
+                        <span>Clock In</span>
                     </div>
                 </div>
             </div>
@@ -783,65 +609,9 @@
         </div>
     </div>
 
-    <!-- Attendance Modal -->
-    <div class="attendance-modal" id="attendanceModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Clock In</h3>
-                <button class="close-btn" id="closeModal">&times;</button>
-            </div>
-            
-            <div class="camera-container">
-                <video id="camera-view" autoplay playsinline></video>
-                <canvas id="photo-canvas" style="display:none;"></canvas>
-                <img id="captured-photo" class="captured-photo" alt="Captured photo">
-                
-                <button class="switch-camera-btn" id="switchCamera">
-                    <i class="fas fa-camera-retro"></i>
-                </button>
-                
-                <div class="camera-controls">
-                    <button class="camera-btn" id="retakePhoto" style="display:none;">
-                        <i class="fas fa-redo"></i>
-                    </button>
-                    <button class="camera-btn capture-btn" id="capturePhoto">
-                        <i class="fas fa-camera"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="map-container">
-                <div id="attendance-map"></div>
-            </div>
-            
-            <div class="location-info">
-                <div><i class="fas fa-map-marker-alt location-icon"></i> <span id="location-address">Mendeteksi lokasi...</span></div>
-                <div class="mt-2"><i class="fas fa-info-circle location-icon"></i> Pastikan Anda berada di lokasi yang benar</div>
-            </div>
-            
-            <button class="submit-btn btn-scale" id="submitAttendance" disabled>Submit Attendance</button>
-        </div>
-    </div>
-
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Leaflet JS for maps -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Update current date and time
-        function updateDateTime() {
-            const now = new Date();
-            const options = { day: 'numeric', month: 'short', year: 'numeric' };
-            document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', options);
-            
-            const timeOptions = { hour: '2-digit', minute: '2-digit' };
-            document.getElementById('current-time').textContent = now.toLocaleTimeString('id-ID', timeOptions);
-        }
-        
-        // Update time every minute
-        updateDateTime();
-        setInterval(updateDateTime, 60000);
-        
         // Navigation Functionality
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function() {
@@ -850,7 +620,18 @@
             });
         });
         
-        // Feature Card Horizontal Scroll
+        // Attendance Buttons
+        document.getElementById('clock-in-btn').addEventListener('click', function() {
+            alert('Fitur Clock In akan dibuka');
+            this.blur();
+        });
+        
+        document.getElementById('clock-out-btn').addEventListener('click', function() {
+            alert('Fitur Clock Out akan dibuka');
+            this.blur();
+        });
+        
+    // Feature Card Horizontal Scroll
         const featureScroll = document.getElementById('featureScroll');
         let isDown = false;
         let startX;
@@ -908,263 +689,27 @@
                 e.preventDefault();
             });
         });
-        
-        // Attendance Modal Functionality
-        const modal = document.getElementById('attendanceModal');
-        const closeModal = document.getElementById('closeModal');
-        const clockInBtn = document.getElementById('clock-in-btn');
-        const clockOutBtn = document.getElementById('clock-out-btn');
-        const modalTitle = document.getElementById('modalTitle');
-        const submitBtn = document.getElementById('submitAttendance');
-        
-        // Camera and Map Variables
-        const cameraView = document.getElementById('camera-view');
-        const photoCanvas = document.getElementById('photo-canvas');
-        const capturedPhoto = document.getElementById('captured-photo');
-        const captureBtn = document.getElementById('capturePhoto');
-        const retakeBtn = document.getElementById('retakePhoto');
-        const switchCameraBtn = document.getElementById('switchCamera');
-        const locationAddress = document.getElementById('location-address');
-        
-        let stream = null;
-        let currentFacingMode = 'user'; // front camera by default
-        let map;
-        let marker;
-        let currentLocation = null;
-        let photoTaken = false;
-        
-        // Open modal for clock in/out
-        function openAttendanceModal(isClockIn) {
-            modalTitle.textContent = isClockIn ? 'Clock In' : 'Clock Out';
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            
-            // Reset modal state
-            photoTaken = false;
-            capturedPhoto.style.display = 'none';
-            cameraView.style.display = 'block';
-            retakeBtn.style.display = 'none';
-            submitBtn.disabled = true;
-            
-            // Start camera and get location
-            startCamera();
-            getLocation();
-        }
-        
-        // Close modal
-        function closeAttendanceModal() {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            
-            // Stop camera stream
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                stream = null;
-            }
-        }
-        
-        // Start camera
-        async function startCamera() {
-            try {
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                }
-                
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: { 
-                        facingMode: currentFacingMode,
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    },
-                    audio: false
-                });
-                
-                cameraView.srcObject = stream;
-            } catch (err) {
-                console.error("Error accessing camera:", err);
-                alert('Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.');
-            }
-        }
-        
-        // Switch between front and back camera
-        async function switchCamera() {
-            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-            await startCamera();
-        }
-        
-        // Capture photo
-        function capturePhoto() {
-            if (!stream) return;
-            
-            const context = photoCanvas.getContext('2d');
-            photoCanvas.width = cameraView.videoWidth;
-            photoCanvas.height = cameraView.videoHeight;
-            
-            // Draw image to canvas
-            context.drawImage(cameraView, 0, 0, photoCanvas.width, photoCanvas.height);
-            
-            // Convert to data URL and display
-            capturedPhoto.src = photoCanvas.toDataURL('image/jpeg');
-            cameraView.style.display = 'none';
-            capturedPhoto.style.display = 'block';
-            retakeBtn.style.display = 'block';
-            photoTaken = true;
-            
-            // Enable submit if location is available
-            if (currentLocation) {
-                submitBtn.disabled = false;
-            }
-        }
-        
-        // Retake photo
-        function retakePhoto() {
-            cameraView.style.display = 'block';
-            capturedPhoto.style.display = 'none';
-            retakeBtn.style.display = 'none';
-            photoTaken = false;
-            submitBtn.disabled = true;
-        }
-        
-        // Get current location and show on map
-        function getLocation() {
-            if (!navigator.geolocation) {
-                locationAddress.textContent = 'Geolocation tidak didukung oleh browser Anda';
-                return;
-            }
-            
-            locationAddress.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendeteksi lokasi...';
-            
-            navigator.geolocation.getCurrentPosition(
-                position => {
-                    const { latitude, longitude } = position.coords;
-                    currentLocation = { lat: latitude, lng: longitude };
-                    
-                    // Initialize map if not already done
-                    if (!map) {
-                        initMap(latitude, longitude);
-                    } else {
-                        map.setView([latitude, longitude], 18);
-                        marker.setLatLng([latitude, longitude]);
-                    }
-                    
-                    // Get address from coordinates
-                    getAddressFromCoords(latitude, longitude);
-                    
-                    // Enable submit if photo is taken
-                    if (photoTaken) {
-                        submitBtn.disabled = false;
-                    }
-                },
-                error => {
-                    console.error("Error getting location:", error);
-                    locationAddress.textContent = 'Gagal mendapatkan lokasi. Pastikan GPS aktif dan izin diberikan.';
-                    
-                    // Default location if geolocation fails
-                    const defaultLat = -6.2088;
-                    const defaultLng = 106.8456;
-                    currentLocation = { lat: defaultLat, lng: defaultLng };
-                    
-                    if (!map) {
-                        initMap(defaultLat, defaultLng);
-                    }
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
-                }
-            );
-        }
-        
-        // Initialize Leaflet map
-        function initMap(lat, lng) {
-            map = L.map('attendance-map').setView([lat, lng], 18);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-            
-            // Add marker
-            marker = L.marker([lat, lng]).addTo(map)
-                .bindPopup('Lokasi Anda saat ini')
-                .openPopup();
-        }
-        
-        // Get address from coordinates using Nominatim (OpenStreetMap)
-        async function getAddressFromCoords(lat, lng) {
-            try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-                const data = await response.json();
-                
-                if (data && data.address) {
-                    const address = data.display_name || 
-                                   `${data.address.road || ''}, ${data.address.village || data.address.town || data.address.city || ''}`;
-                    locationAddress.textContent = address;
-                } else {
-                    locationAddress.textContent = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
-                }
-            } catch (err) {
-                console.error("Error getting address:", err);
-                locationAddress.textContent = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
-            }
-        }
-        
-        // Submit attendance
-        function submitAttendance() {
-            const isClockIn = modalTitle.textContent === 'Clock In';
-            
-            // In a real app, you would send this data to your server
-            const attendanceData = {
-                type: isClockIn ? 'clock-in' : 'clock-out',
-                timestamp: new Date().toISOString(),
-                location: currentLocation,
-                photo: photoCanvas.toDataURL('image/jpeg'),
-                address: locationAddress.textContent
-            };
-            
-            console.log('Attendance data:', attendanceData);
-            
-            // Show success message
-            alert(`${isClockIn ? 'Clock In' : 'Clock Out'} berhasil!`);
-            closeAttendanceModal();
-        }
-        
-        // Event Listeners
-        clockInBtn.addEventListener('click', () => openAttendanceModal(true));
-        clockOutBtn.addEventListener('click', () => openAttendanceModal(false));
-        closeModal.addEventListener('click', closeAttendanceModal);
-        captureBtn.addEventListener('click', capturePhoto);
-        retakeBtn.addEventListener('click', retakePhoto);
-        switchCameraBtn.addEventListener('click', switchCamera);
-        submitBtn.addEventListener('click', submitAttendance);
-        
-        // Close modal when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeAttendanceModal();
-            }
-        });
     </script>
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/absensi/service-worker.js')
-                .then(reg => {
-                    console.log('SW Registered ✅', reg.scope);
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/absensi/service-worker.js')
+    .then(reg => {
+      console.log('SW Registered ✅', reg.scope);
 
-                    // Background Sync
-                    if ('sync' in reg) {
-                        reg.sync.register('sync-form').catch(console.error);
-                    }
+      // Background Sync
+      if ('sync' in reg) {
+        reg.sync.register('sync-form').catch(console.error);
+      }
 
-                    // Periodic Sync (jika didukung browser)
-                    if ('periodicSync' in reg) {
-                        reg.periodicSync.register('update-data', {
-                            minInterval: 24 * 60 * 60 * 1000 // 1 hari
-                        }).catch(console.error);
-                    }
-                })
-                .catch(err => console.error('SW Registration Failed ❌', err));
-        }
-    </script>
+      // Periodic Sync (jika didukung browser)
+      if ('periodicSync' in reg) {
+        reg.periodicSync.register('update-data', {
+          minInterval: 24 * 60 * 60 * 1000 // 1 hari
+        }).catch(console.error);
+      }
+    })
+    .catch(err => console.error('SW Registration Failed ❌', err));
+}
+</script>
 </body>
 </html>
