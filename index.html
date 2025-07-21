@@ -1,30 +1,32 @@
 <!DOCTYPE html>
+
 <html lang="id">
 <head>
-    <meta name="theme-color" content="#5c24c0">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Absensi Professional</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="manifest" href="/absensi/manifest.json">
-    <meta name="theme-color" content="#5c1cb4">
-    <script>
-  // Set --vh equal to 1% of the viewport height
-  function setVh() {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  }
-  setVh();
-  window.addEventListener('resize', setVh);
+<meta content="#5c24c0" name="theme-color"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aplikasi Absensi Professional</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<!-- Google Fonts - Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="/absensi/manifest.json" rel="manifest"/>
+<meta content="#5c1cb4" name="theme-color"/>
+<!-- Leaflet CSS for maps -->
+<link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+<script>
+        // Set --vh equal to 1% of the viewport height
+        function setVh() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        setVh();
+        window.addEventListener('resize', setVh);
     </script>
-    
-    <style>
+<style>
         :root {
             --primary: #6d28d9;
             --primary-light: #8b5cf6;
@@ -154,13 +156,14 @@
         }
 
         #clock-in-btn {
-            background-color: var(--white);
-            border-radius: 0 50px 50px 0;
+            background-color: var(--light);
+           border-radius: 50px 0 0 50px;
         }
 
         #clock-out-btn {
             background-color: var(--light);
-            border-radius: 50px 0 0 50px;
+            border-radius: 0 50px 50px 0;
+           
         }
 
         .attendance-btn:hover {
@@ -448,240 +451,543 @@
         .btn-scale:active {
             transform: scale(0.96);
         }
-    </style>
 
-    <link rel="manifest" href="manifest.json">
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(reg => console.log('Service Worker registered:', reg))
-                .catch(err => console.error('Service Worker registration failed:', err));
+        /* Modal Styles */
+        .attendance-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
         }
-    </script>
 
-</head>
+        .modal-content {
+            background-color: white;
+            margin: 20px auto;
+            padding: 25px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 18px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .camera-container {
+            width: 100%;
+            height: 300px;
+            background-color: #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        #camera-view {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-controls {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .camera-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        .capture-btn {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        #attendance-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .location-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .location-icon {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:disabled {
+            background-color: var(--gray-light);
+            cursor: not-allowed;
+        }
+
+        .captured-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .switch-camera-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .gps-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--gray);
+        }
+
+        .gps-loading i {
+            margin-right: 8px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+       /* Guide Oval Styles */
+.guide-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.guide-frame {
+    width: 70%;
+    height: 80%; /* Lebih tinggi untuk bentuk oval */
+    border: 3px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%; /* Membuat bentuk oval */
+    position: relative;
+    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.4);
+}
+
+/* Garis panduan tengah */
+.guide-frame::before, .guide-frame::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Garis horizontal */
+.guide-frame::before {
+    width: 80%;
+    height: 2px;
+}
+
+/* Garis vertikal */
+.guide-frame::after {
+    height: 80%;
+    width: 2px;
+}
+
+/* Face detection feedback */
+.face-feedback {
+    position: absolute;
+    border: 3px solid #4ade80;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    animation: pulse 1.5s infinite;
+    z-index: 6;
+}
+
+.face-feedback i {
+    color: #4ade80;
+    font-size: 30px;
+    animation: bounce 0.8s infinite alternate;
+}
+
+@keyframes pulse {
+    0% { 
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4);
+        transform: scale(1);
+    }
+    70% { 
+        box-shadow: 0 0 0 15px rgba(74, 222, 128, 0);
+    }
+    100% { 
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes bounce {
+    from { transform: scale(1); }
+    to { transform: scale(1.2); }
+}
+    </style>
+</link></head>
 <body>
-    <div class="container">
-        <!-- Header Section -->
-        <div class="header d-flex justify-content-between align-items-center">
-            <div class="header-content">
-                <div class="greeting">Selamat pagi</div>
-                <h1 class="user-name">Chaidirrahman</h1>
+<div class="container">
+<!-- Header Section -->
+<div class="header d-flex justify-content-between align-items-center">
+<div class="header-content">
+<div class="greeting">Selamat pagi</div>
+<h1 class="user-name">Chaidirrahman</h1>
+</div>
+<div class="user-avatar">
+<img alt="User Avatar" class="img-fluid" src="https://randomuser.me/api/portraits/men/32.jpg"/>
+</div>
+</div>
+<!-- Attendance Card -->
+<div class="attendance-card">
+<div class="attendance-date d-flex justify-content-center align-items-center gap-3 mb-4">
+<i class="far fa-calendar-alt date-icon"></i>
+<span id="current-date">24 Jun 2025</span>
+</div>
+<div class="attendance-time d-flex justify-content-center align-items-center gap-3 mb-3">
+<i class="far fa-clock time-icon"></i>
+<small class="time-range" id="">Jam Kerja (07:30 - 16:00)</small>
+</div>
+<div class="attendance-actions">
+<div class="attendance-btn btn-scale" id="clock-in-btn">
+<div class="btn-content d-flex align-items-center gap-2">
+<i class="fas fa-fingerprint attendance-icon"></i>
+<span>Clock In</span>
+</div>
+</div>
+<div class="attendance-btn btn-scale" id="clock-out-btn">
+<div class="btn-content d-flex align-items-center gap-2">
+<i class="fas fa-sign-out-alt attendance-icon"></i>
+<span>Clock Out</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Feature Card with 2 Rows -->
+<div class="feature-card">
+<div class="feature-scroll" id="featureScroll">
+<div class="feature-grid">
+<!-- Row 1 -->
+<div class="feature-item btn-scale">
+<i class="fas fa-file-invoice-dollar feature-icon"></i>
+<span class="feature-name">Reimbur<br/>sement</span>
+</div>
+<div class="feature-item btn-scale">
+<i class="fas fa-clipboard-list feature-icon"></i>
+<span class="feature-name">Daftar Absensi</span>
+</div>
+<div class="feature-item btn-scale">
+<i class="far fa-calendar feature-icon"></i>
+<span class="feature-name">Kalender</span>
+</div>
+<div class="feature-item btn-scale">
+<i class="fas fa-file-invoice feature-icon"></i>
+<span class="feature-name">Slip Gaji</span>
+</div>
+<div class="feature-item btn-scale">
+<i class="fas fa-umbrella-beach feature-icon"></i>
+<span class="feature-name">Cuti</span>
+</div>
+<!-- Row 2 -->
+<div class="feature-item btn-scale">
+<i class="far fa-calendar-check feature-icon"></i>
+<span class="feature-name">Absen</span>
+</div>
+<div class="feature-item btn-scale">
+<i class="far fa-clock feature-icon"></i>
+<span class="feature-name">Lembur</span>
+</div>
+<div class="feature-item btn-scale">
+<i class="far fa-folder feature-icon"></i>
+<span class="feature-name">File</span>
+</div>
+<div class="feature-item btn-scale">
+<i class="fas fa-chart-line feature-icon"></i>
+<span class="feature-name">Performance</span>
+</div>
+<div class="feature-item btn-scale">
+<i class="fas fa-cog feature-icon"></i>
+<span class="feature-name">Pengaturan</span>
+</div>
+</div>
+</div>
+<div class="scroll-hint">
+<i class="fas fa-arrows-alt-h"></i> Geser untuk melihat lebih banyak
             </div>
-            <div class="user-avatar">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User Avatar" class="img-fluid">
-            </div>
-        </div>
-        
-        <!-- Attendance Card -->
-        <div class="attendance-card">
-            <div class="attendance-date d-flex justify-content-center align-items-center gap-3 mb-4">
-                <i class="far fa-calendar-alt date-icon"></i>
-                <span>24 Jun 2025</span>
-            </div>
-            <div class="attendance-time d-flex justify-content-center align-items-center gap-3 mb-3">
-                <i class="far fa-clock time-icon"></i>
-                <span class="time-range">07:30 - 16:00</span>
-            </div>
-            
-            <div class="attendance-actions">
-                <div class="attendance-btn btn-scale" id="clock-out-btn">
-                    <div class="btn-content d-flex align-items-center gap-2">
-                        <i class="fas fa-sign-out-alt attendance-icon"></i>
-                        <span>Clock Out</span>
-                    </div>
-                </div>
-                <div class="attendance-btn btn-scale" id="clock-in-btn">
-                    <div class="btn-content d-flex align-items-center gap-2">
-                        <i class="fas fa-fingerprint attendance-icon"></i>
-                        <span>Clock In</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Feature Card with 2 Rows -->
-        <div class="feature-card">
-            <div class="feature-scroll" id="featureScroll">
-                <div class="feature-grid">
-                    <!-- Row 1 -->
-                    <div class="feature-item btn-scale">
-                        <i class="fas fa-file-invoice-dollar feature-icon"></i>
-                        <span class="feature-name">Reimbur<br>sement</span>
-                    </div>
-                    <div class="feature-item btn-scale">
-                        <i class="fas fa-clipboard-list feature-icon"></i>
-                        <span class="feature-name">Daftar Absensi</span>
-                    </div>
-                    <div class="feature-item btn-scale">
-                        <i class="far fa-calendar feature-icon"></i>
-                        <span class="feature-name">Kalender</span>
-                    </div>
-                    <div class="feature-item btn-scale">
-                        <i class="fas fa-file-invoice feature-icon"></i>
-                        <span class="feature-name">Slip Gaji</span>
-                    </div>
-                    <div class="feature-item btn-scale">
-                        <i class="fas fa-umbrella-beach feature-icon"></i>
-                        <span class="feature-name">Cuti</span>
-                    </div>
-                    
-                    <!-- Row 2 -->
-                    <div class="feature-item btn-scale">
-                        <i class="far fa-calendar-check feature-icon"></i>
-                        <span class="feature-name">Absen</span>
-                    </div>
-                    <div class="feature-item btn-scale">
-                        <i class="far fa-clock feature-icon"></i>
-                        <span class="feature-name">Lembur</span>
-                    </div>
-                    <div class="feature-item btn-scale">
-                        <i class="far fa-folder feature-icon"></i>
-                        <span class="feature-name">File</span>
-                    </div>
-                    <div class="feature-item btn-scale">
-                        <i class="fas fa-chart-line feature-icon"></i>
-                        <span class="feature-name">Performance</span>
-                    </div>
-                    <div class="feature-item btn-scale">
-                        <i class="fas fa-cog feature-icon"></i>
-                        <span class="feature-name">Pengaturan</span>
-                    </div>
-                </div>
-            </div>
-            <div class="scroll-hint">
-                <i class="fas fa-arrows-alt-h"></i> Geser untuk melihat lebih banyak
-            </div>
-        </div>
-        
-        <!-- Promo Banner -->
-        <div class="promo-banner">
-            <h3 class="promo-title">Makin flexible!</h3>
-            <p class="promo-text">Kini performance review dapat dilakukan di Mobile App dengan fitur yang lebih lengkap dan akses yang lebih mudah</p>
-            <button class="promo-btn btn-scale">Coba Sekarang</button>
-        </div>
-        
-        <!-- Announcement Section -->
-        <div class="section">
-            <div class="section-header d-flex justify-content-between mb-3">
-                <h3 class="section-title">Pengumuman</h3>
-                <span class="see-all">Lihat Semua</span>
-            </div>
-            <div class="empty-state">
-                Belum ada pengumuman<br>
+</div>
+<!-- Promo Banner -->
+<div class="promo-banner">
+<h3 class="promo-title">Makin flexible!</h3>
+<p class="promo-text">Kini performance review dapat dilakukan di Mobile App dengan fitur yang lebih lengkap dan akses yang lebih mudah</p>
+<button class="promo-btn btn-scale">Coba Sekarang</button>
+</div>
+<!-- Announcement Section -->
+<div class="section">
+<div class="section-header d-flex justify-content-between mb-3">
+<h3 class="section-title">Pengumuman</h3>
+<span class="see-all">Lihat Semua</span>
+</div>
+<div class="empty-state">
+                Belum ada pengumuman<br/>
                 Your announcement will show here
             </div>
-        </div>
-        
-        <!-- Task Section -->
-        <div class="section">
-            <div class="section-header d-flex justify-content-between mb-3">
-                <h3 class="section-title">Tasks</h3>
-                <span class="see-all">Lihat Semua</span>
-            </div>
-            <div class="empty-state">
+</div>
+<!-- Task Section -->
+<div class="section">
+<div class="section-header d-flex justify-content-between mb-3">
+<h3 class="section-title">Tasks</h3>
+<span class="see-all">Lihat Semua</span>
+</div>
+<div class="empty-state">
                 Belum ada task
             </div>
-        </div>
-        
-        <!-- Bottom Navigation -->
-        <div class="bottom-nav">
-            <div class="nav-item active btn-scale">
-                <div class="nav-icon"><i class="fas fa-home"></i></div>
-                <div>Beranda</div>
-            </div>
-            <div class="nav-item btn-scale">
-                <div class="nav-icon"><i class="fas fa-users"></i></div>
-                <div>Karyawan</div>
-            </div>
-            <div class="nav-item btn-scale">
-                <div class="nav-icon"><i class="fas fa-file-upload"></i></div>
-                <div>Pengajuan</div>
-            </div>
-            <div class="nav-item btn-scale">
-                <div class="nav-icon"><i class="fas fa-inbox"></i></div>
-                <div>Inbox</div>
-            </div>
-            <div class="nav-item btn-scale">
-                <div class="nav-icon"><i class="fas fa-user"></i></div>
-                <div>Akun</div>
-            </div>
-        </div>
-    </div>
+</div>
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+<div class="nav-item active btn-scale">
+<div class="nav-icon"><i class="fas fa-home"></i></div>
+<div>Beranda</div>
+</div>
+<div class="nav-item btn-scale">
+<div class="nav-icon"><i class="fas fa-users"></i></div>
+<div>Karyawan</div>
+</div>
+<div class="nav-item btn-scale">
+<div class="nav-icon"><i class="fas fa-file-upload"></i></div>
+<div>Pengajuan</div>
+</div>
+<div class="nav-item btn-scale">
+<div class="nav-icon"><i class="fas fa-inbox"></i></div>
+<div>Inbox</div>
+</div>
+<div class="nav-item btn-scale">
+<div class="nav-icon"><i class="fas fa-user"></i></div>
+<div>Akun</div>
+</div>
+</div>
+</div>
+<!-- Attendance Modal -->
+<div class="attendance-modal" id="attendanceModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3 class="modal-title" id="modalTitle">Clock In</h3>
+<button class="close-btn" id="closeModal">×</button>
+</div>
+<div class="camera-container">
+<video autoplay="" id="camera-view" playsinline=""></video>
+<canvas id="photo-canvas" style="display:none;"></canvas>
+<img alt="Captured photo" class="captured-photo" id="captured-photo"/>
+<div class="guide-overlay">
+<div class="guide-frame"></div>
+<div class="face-feedback" id="faceFeedback">
+<i class="fas fa-check"></i>
+</div>
+</div>
+<button class="switch-camera-btn" id="switchCamera">
+<i class="fas fa-camera-retro"></i>
+</button>
+<div class="camera-controls">
+<button class="camera-btn" id="retakePhoto" style="display:none;">
+<i class="fas fa-redo"></i>
+</button>
 
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+</div>
+</div>
+<div class="map-container">
+<div id="attendance-map"></div>
+</div>
+<div class="location-info">
+<div><i class="fas fa-map-marker-alt location-icon"></i> <span id="location-address">Mendeteksi lokasi...</span></div>
+<div class="mt-2"><i class="fas fa-info-circle location-icon"></i> Pastikan Anda berada di lokasi yang benar</div>
+</div>
+<button class="submit-btn btn-scale" disabled="" id="captureAndSubmit">Ambil Foto &amp; Absen</button>
+</div>
+</div>
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Leaflet JS for maps -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Update current date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+            const dateElement = document.getElementById('current-date');
+            const timeElement = document.getElementById('current-time');
+            
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('id-ID', options);
+            }
+            
+            if (timeElement) {
+                const timeOptions = { hour: '2-digit', minute: '2-digit' };
+                timeElement.textContent = now.toLocaleTimeString('id-ID', timeOptions);
+            }
+        }
+        
+        // Update time every minute
+        updateDateTime();
+        const timeInterval = setInterval(updateDateTime, 60000);
+        
         // Navigation Functionality
-        document.querySelectorAll('.nav-item').forEach(item => {
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
             item.addEventListener('click', function() {
-                document.querySelector('.nav-item.active').classList.remove('active');
+                const activeItem = document.querySelector('.nav-item.active');
+                if (activeItem) {
+                    activeItem.classList.remove('active');
+                }
                 this.classList.add('active');
             });
         });
         
-        // Attendance Buttons
-        document.getElementById('clock-in-btn').addEventListener('click', function() {
-            alert('Fitur Clock In akan dibuka');
-            this.blur();
-        });
-        
-        document.getElementById('clock-out-btn').addEventListener('click', function() {
-            alert('Fitur Clock Out akan dibuka');
-            this.blur();
-        });
-        
-    // Feature Card Horizontal Scroll
+        // Feature Card Horizontal Scroll
         const featureScroll = document.getElementById('featureScroll');
-        let isDown = false;
-        let startX;
-        let scrollLeft;
+        if (featureScroll) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
 
-        featureScroll.addEventListener('mousedown', (e) => {
-            isDown = true;
-            startX = e.pageX - featureScroll.offsetLeft;
-            scrollLeft = featureScroll.scrollLeft;
-        });
+            featureScroll.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - featureScroll.offsetLeft;
+                scrollLeft = featureScroll.scrollLeft;
+            });
 
-        featureScroll.addEventListener('mouseleave', () => {
-            isDown = false;
-        });
+            featureScroll.addEventListener('mouseleave', () => {
+                isDown = false;
+            });
 
-        featureScroll.addEventListener('mouseup', () => {
-            isDown = false;
-        });
+            featureScroll.addEventListener('mouseup', () => {
+                isDown = false;
+            });
 
-        featureScroll.addEventListener('mousemove', (e) => {
-            if(!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - featureScroll.offsetLeft;
-            const walk = (x - startX) * 2;
-            featureScroll.scrollLeft = scrollLeft - walk;
-        });
+            featureScroll.addEventListener('mousemove', (e) => {
+                if(!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - featureScroll.offsetLeft;
+                const walk = (x - startX) * 2;
+                featureScroll.scrollLeft = scrollLeft - walk;
+            });
 
-        // Touch events for mobile
-        featureScroll.addEventListener('touchstart', (e) => {
-            isDown = true;
-            startX = e.touches[0].pageX - featureScroll.offsetLeft;
-            scrollLeft = featureScroll.scrollLeft;
-        });
+            // Touch events for mobile
+            featureScroll.addEventListener('touchstart', (e) => {
+                isDown = true;
+                startX = e.touches[0].pageX - featureScroll.offsetLeft;
+                scrollLeft = featureScroll.scrollLeft;
+            });
 
-        featureScroll.addEventListener('touchend', () => {
-            isDown = false;
-        });
+            featureScroll.addEventListener('touchend', () => {
+                isDown = false;
+            });
 
-        featureScroll.addEventListener('touchmove', (e) => {
-            if(!isDown) return;
-            const x = e.touches[0].pageX - featureScroll.offsetLeft;
-            const walk = (x - startX) * 2;
-            featureScroll.scrollLeft = scrollLeft - walk;
-        });
+            featureScroll.addEventListener('touchmove', (e) => {
+                if(!isDown) return;
+                const x = e.touches[0].pageX - featureScroll.offsetLeft;
+                const walk = (x - startX) * 2;
+                featureScroll.scrollLeft = scrollLeft - walk;
+            });
 
-        // Wheel event for horizontal scrolling
-        featureScroll.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            featureScroll.scrollLeft += e.deltaY;
-        });
+            // Wheel event for horizontal scrolling
+            featureScroll.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                featureScroll.scrollLeft += e.deltaY;
+            });
+        }
 
         // Remove focus from buttons when clicked
         document.querySelectorAll('.btn-scale').forEach(button => {
@@ -689,27 +995,500 @@
                 e.preventDefault();
             });
         });
-    </script>
-    <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/absensi/service-worker.js')
-    .then(reg => {
-      console.log('SW Registered ✅', reg.scope);
+        
+        // Attendance Modal Functionality
+        const modal = document.getElementById('attendanceModal');
+        const closeModal = document.getElementById('closeModal');
+        const clockInBtn = document.getElementById('clock-in-btn');
+        const clockOutBtn = document.getElementById('clock-out-btn');
+        const modalTitle = document.getElementById('modalTitle');
+        const submitBtn = document.getElementById('submitAttendance');
+        
+        // Camera and Map Variables
+        const cameraView = document.getElementById('camera-view');
+        const photoCanvas = document.getElementById('photo-canvas');
+        const capturedPhoto = document.getElementById('captured-photo');
+        const captureBtn = document.getElementById('capturePhoto');
+        const retakeBtn = document.getElementById('retakePhoto');
+        const switchCameraBtn = document.getElementById('switchCamera');
+        const locationAddress = document.getElementById('location-address');
+        const faceFeedback = document.getElementById('faceFeedback');
+        
+        let stream = null;
+        let currentFacingMode = 'user'; // front camera by default
+        let map;
+        let marker;
+        let currentLocation = null;
+        let photoTaken = false;
+        let isFaceInPosition = false;
+        
+        // Face detection variables
+        let faceDetector;
+        let faceDetectionInterval;
+        
+        // Initialize face detector
+        async function initFaceDetection() {
+            // Check if FaceDetector is supported
+            if (!('FaceDetector' in window)) {
+                console.log('FaceDetector API not supported');
+                // Enable capture button anyway
+                enableCaptureButton();
+                return;
+            }
+            
+            try {
+                faceDetector = new FaceDetector({ 
+                    maxDetectedFaces: 1,
+                    fastMode: true 
+                });
+                
+                // Start detecting faces
+                detectFaces();
+            } catch (err) {
+                console.error('FaceDetector initialization failed:', err);
+                // Enable capture button anyway
+                enableCaptureButton();
+            }
+        }
 
-      // Background Sync
-      if ('sync' in reg) {
-        reg.sync.register('sync-form').catch(console.error);
-      }
+        // Enable capture button
+        function enableCaptureButton() {
+            if (captureBtn) {
+                captureBtn.disabled = false;
+                captureBtn.style.backgroundColor = 'var(--primary)';
+            }
+        }
 
-      // Periodic Sync (jika didukung browser)
-      if ('periodicSync' in reg) {
-        reg.periodicSync.register('update-data', {
-          minInterval: 24 * 60 * 60 * 1000 // 1 hari
-        }).catch(console.error);
-      }
-    })
-    .catch(err => console.error('SW Registration Failed ❌', err));
-}
+        // Disable capture button
+        function disableCaptureButton() {
+            if (captureBtn) {
+                captureBtn.disabled = true;
+                captureBtn.style.backgroundColor = 'var(--gray)';
+            }
+        }
+
+        // Detect faces in video stream
+        async function detectFaces() {
+            if (!faceDetector || !cameraView || !cameraView.videoWidth) {
+                faceDetectionInterval = requestAnimationFrame(detectFaces);
+                return;
+            }
+            
+            try {
+                const faces = await faceDetector.detect(cameraView);
+                
+                if (faces.length > 0) {
+                    const face = faces[0];
+                    const guideFrame = document.querySelector('.guide-frame');
+                    
+                    if (!guideFrame) {
+                        faceDetectionInterval = requestAnimationFrame(detectFaces);
+                        return;
+                    }
+                    
+                    const guideRect = guideFrame.getBoundingClientRect();
+                    
+                    // Calculate face position relative to guide frame
+                    const faceX = face.boundingBox.x + face.boundingBox.width / 2;
+                    const faceY = face.boundingBox.y + face.boundingBox.height / 2;
+                    
+                    // Check if face is centered in guide frame
+                    const isXInCenter = faceX > guideRect.left && faceX < guideRect.right;
+                    const isYInCenter = faceY > guideRect.top && faceY < guideRect.bottom;
+                    
+                    // Face is properly positioned
+                    if (isXInCenter && isYInCenter) {
+                        if (!isFaceInPosition && faceFeedback) {
+                            // Show feedback
+                            faceFeedback.style.display = 'flex';
+                            faceFeedback.style.left = `${face.boundingBox.x + face.boundingBox.width/2 - 50}px`;
+                            faceFeedback.style.top = `${face.boundingBox.y + face.boundingBox.height/2 - 50}px`;
+                            isFaceInPosition = true;
+                            
+                            // Enable capture button
+                            enableCaptureButton();
+                        }
+                    } else {
+                        if (isFaceInPosition && faceFeedback) {
+                            faceFeedback.style.display = 'none';
+                            isFaceInPosition = false;
+                            
+                            // Disable capture button
+                            disableCaptureButton();
+                        }
+                    }
+                } else {
+                    if (isFaceInPosition && faceFeedback) {
+                        faceFeedback.style.display = 'none';
+                        isFaceInPosition = false;
+                        
+                        // Disable capture button
+                        disableCaptureButton();
+                    }
+                }
+            } catch (err) {
+                console.error('Face detection error:', err);
+            }
+            
+            // Continue detection
+            faceDetectionInterval = requestAnimationFrame(detectFaces);
+        }
+        
+        // Open modal for clock in/out
+        function openAttendanceModal(isClockIn) {
+            if (!modal || !modalTitle) return;
+            
+            modalTitle.textContent = isClockIn ? 'Clock In' : 'Clock Out';
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Reset modal state
+            photoTaken = false;
+            if (capturedPhoto) capturedPhoto.style.display = 'none';
+            if (cameraView) cameraView.style.display = 'block';
+            if (retakeBtn) retakeBtn.style.display = 'none';
+            const captureAndSubmitBtn = document.getElementById('captureAndSubmit');
+            if (captureAndSubmitBtn) captureAndSubmitBtn.disabled = false;
+            
+            // Hide face feedback
+            if (faceFeedback) {
+                faceFeedback.style.display = 'none';
+            }
+            isFaceInPosition = false;
+            
+            // Start camera and get location
+            startCamera();
+            getLocation();
+        }
+        
+        // Close modal
+        function closeAttendanceModal() {
+            if (!modal) return;
+            
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            
+            // Stop camera stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            // Stop face detection
+            if (faceDetectionInterval) {
+                cancelAnimationFrame(faceDetectionInterval);
+            }
+        }
+        
+        // Start camera
+        async function startCamera() {
+            try {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error('MediaDevices API not supported');
+                }
+                
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { 
+                        facingMode: currentFacingMode,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                });
+                
+                if (cameraView) {
+                    cameraView.srcObject = stream;
+                    
+                    // Wait for video to start playing
+                    cameraView.onplaying = () => {
+                        initFaceDetection();
+                    };
+                }
+                
+                // Initially disable capture button
+                disableCaptureButton();
+            } catch (err) {
+                console.error("Error accessing camera:", err);
+                alert('Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.');
+                
+                // Enable capture button anyway if camera fails
+                enableCaptureButton();
+            }
+        }
+        
+        // Switch between front and back camera
+        async function switchCamera() {
+            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            await startCamera();
+        }
+        
+        // Capture photo
+        function capturePhoto() {
+            if (!stream || !cameraView || !photoCanvas || !capturedPhoto) return;
+            
+            const context = photoCanvas.getContext('2d');
+            photoCanvas.width = cameraView.videoWidth;
+            photoCanvas.height = cameraView.videoHeight;
+            
+            // Draw image to canvas
+            context.drawImage(cameraView, 0, 0, photoCanvas.width, photoCanvas.height);
+            
+            // Convert to data URL and display
+            capturedPhoto.src = photoCanvas.toDataURL('image/jpeg');
+            cameraView.style.display = 'none';
+            capturedPhoto.style.display = 'block';
+            if (retakeBtn) retakeBtn.style.display = 'block';
+            photoTaken = true;
+            
+            // Hide face feedback
+            if (faceFeedback) {
+                faceFeedback.style.display = 'none';
+            }
+            
+            // Enable submit if location is available
+            if (submitBtn && currentLocation) {
+                submitBtn.disabled = false;
+            }
+        }
+        
+        // Retake photo
+        function retakePhoto() {
+            if (!cameraView || !capturedPhoto || !retakeBtn || !submitBtn) return;
+            
+            cameraView.style.display = 'block';
+            capturedPhoto.style.display = 'none';
+            retakeBtn.style.display = 'none';
+            photoTaken = false;
+            submitBtn.disabled = true;
+            
+            // Restart face detection
+            initFaceDetection();
+        }
+        
+        // Get current location and show on map
+        function getLocation() {
+            if (!navigator.geolocation) {
+                if (locationAddress) {
+                    locationAddress.textContent = 'Geolocation tidak didukung oleh browser Anda';
+                }
+                return;
+            }
+            
+            if (locationAddress) {
+                locationAddress.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendeteksi lokasi...';
+            }
+            
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const { latitude, longitude } = position.coords;
+                    currentLocation = { lat: latitude, lng: longitude };
+                    
+                    // Initialize map if not already done
+                    if (!map) {
+                        initMap(latitude, longitude);
+                    } else {
+                        map.setView([latitude, longitude], 18);
+                        if (marker) {
+                            marker.setLatLng([latitude, longitude]);
+                        }
+                    }
+                    
+                    // Get address from coordinates
+                    getAddressFromCoords(latitude, longitude);
+                    
+                    // Enable submit if photo is taken
+                    if (submitBtn && photoTaken) {
+                        submitBtn.disabled = false;
+                    }
+                },
+                error => {
+                    console.error("Error getting location:", error);
+                    if (locationAddress) {
+                        locationAddress.textContent = 'Gagal mendapatkan lokasi. Pastikan GPS aktif dan izin diberikan.';
+                    }
+                    
+                    // Default location if geolocation fails
+                    const defaultLat = -6.2088;
+                    const defaultLng = 106.8456;
+                    currentLocation = { lat: defaultLat, lng: defaultLng };
+                    
+                    if (!map) {
+                        initMap(defaultLat, defaultLng);
+                    }
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+        
+        // Initialize Leaflet map
+        function initMap(lat, lng) {
+            const mapElement = document.getElementById('attendance-map');
+            if (!mapElement) return;
+            
+            map = L.map(mapElement).setView([lat, lng], 18);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Add marker
+            marker = L.marker([lat, lng]).addTo(map)
+                .bindPopup('Lokasi Anda saat ini')
+                .openPopup();
+        }
+        
+        // Get address from coordinates using Nominatim (OpenStreetMap)
+        async function getAddressFromCoords(lat, lng) {
+            if (!locationAddress) return;
+            
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+                const data = await response.json();
+                
+                if (data && data.address) {
+                    const address = data.display_name || 
+                                   `${data.address.road || ''}, ${data.address.village || data.address.town || data.address.city || ''}`;
+                    locationAddress.textContent = address;
+                } else {
+                    locationAddress.textContent = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+                }
+            } catch (err) {
+                console.error("Error getting address:", err);
+                locationAddress.textContent = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+            }
+        }
+        
+        
+        // Capture photo and submit attendance directly
+        function captureAndSubmit() {
+            if (!stream || !cameraView || !photoCanvas || !capturedPhoto) return;
+
+            const context = photoCanvas.getContext('2d');
+            photoCanvas.width = cameraView.videoWidth;
+            photoCanvas.height = cameraView.videoHeight;
+
+            // Draw image to canvas
+            context.drawImage(cameraView, 0, 0, photoCanvas.width, photoCanvas.height);
+
+            // Set the photo for preview (optional)
+            capturedPhoto.src = photoCanvas.toDataURL('image/jpeg');
+            cameraView.style.display = 'none';
+            capturedPhoto.style.display = 'block';
+            if (retakeBtn) retakeBtn.style.display = 'block';
+            photoTaken = true;
+
+            // Hide face feedback
+            if (faceFeedback) {
+                faceFeedback.style.display = 'none';
+            }
+
+            // Enable submit if location is available
+            if (currentLocation) {
+                // Proceed to submit
+                submitAttendance();
+            } else {
+                alert('Lokasi belum terdeteksi.');
+            }
+        }
+
+
+// Submit attendance
+        function submitAttendance() {
+            if (!modalTitle || !photoCanvas || !locationAddress) return;
+            
+            const isClockIn = modalTitle.textContent === 'Clock In';
+            
+            // In a real app, you would send this data to your server
+            const attendanceData = {
+                type: isClockIn ? 'clock-in' : 'clock-out',
+                timestamp: new Date().toISOString(),
+                location: currentLocation,
+                photo: photoCanvas.toDataURL('image/jpeg'),
+                address: locationAddress.textContent
+            };
+            
+            console.log('Attendance data:', attendanceData);
+            
+            // Show success message
+            alert(`${isClockIn ? 'Clock In' : 'Clock Out'} berhasil!`);
+            closeAttendanceModal();
+        }
+        
+        // Event Listeners with null checks
+        if (clockInBtn) {
+            clockInBtn.addEventListener('click', () => openAttendanceModal(true));
+        }
+        if (clockOutBtn) {
+            clockOutBtn.addEventListener('click', () => openAttendanceModal(false));
+        }
+        if (closeModal) {
+            closeModal.addEventListener('click', closeAttendanceModal);
+        }
+        if (captureBtn) {
+            captureBtn.addEventListener('click', capturePhoto);
+        }
+        if (retakeBtn) {
+            retakeBtn.addEventListener('click', retakePhoto);
+        }
+        if (switchCameraBtn) {
+            switchCameraBtn.addEventListener('click', switchCamera);
+        }
+        const captureAndSubmitBtn = document.getElementById('captureAndSubmit');
+        if (captureAndSubmitBtn) {
+            captureAndSubmitBtn.addEventListener('click', captureAndSubmit);
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (modal && e.target === modal) {
+                closeAttendanceModal();
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            clearInterval(timeInterval);
+            
+            if (faceDetectionInterval) {
+                cancelAnimationFrame(faceDetectionInterval);
+            }
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+    });
+
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/absensi/service-worker.js')
+                .then(reg => {
+                    console.log('SW Registered ✅', reg.scope);
+
+                    // Background Sync
+                    if ('sync' in reg) {
+                        reg.sync.register('sync-form').catch(console.error);
+                    }
+
+                    // Periodic Sync (jika didukung browser)
+                    if ('periodicSync' in reg) {
+                        reg.periodicSync.register('update-data', {
+                            minInterval: 24 * 60 * 60 * 1000 // 1 hari
+                        }).catch(console.error);
+                    }
+                })
+                .catch(err => console.error('SW Registration Failed ❌', err));
+        });
+    }
 </script>
 </body>
 </html>
