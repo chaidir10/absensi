@@ -251,7 +251,7 @@
             transition: transform 0.3s ease-out;
             display: flex;
             flex-direction: column;
-            max-width: 450px;  /*harusnya 500 */
+            max-width: 450px;
             margin: 0 auto;
         }
 
@@ -341,23 +341,35 @@
             opacity: 0.7;
         }
 
+        /* Modified Chat Input Area */
         .chat-input-area {
             padding: 15px;
             background-color: var(--white);
             border-top: 1px solid var(--gray-light);
             display: flex;
             gap: 10px;
-            align-items: center;
+            align-items: flex-end;
+        }
+
+        .chat-input-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .chat-input {
-            flex-grow: 1;
+            width: 100%;
             border: 1px solid var(--gray-light);
             border-radius: 20px;
             padding: 10px 15px;
             font-size: 14px;
             outline: none;
             transition: all 0.2s;
+            resize: none;
+            min-height: 40px;
+            max-height: 120px;
+            line-height: 1.4;
+            box-sizing: border-box;
         }
 
         .chat-input:focus {
@@ -368,6 +380,8 @@
         .send-btn {
             width: 40px;
             height: 40px;
+            min-width: 40px;
+            min-height: 40px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary-light), var(--primary));
             color: white;
@@ -377,9 +391,16 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
+            flex-shrink: 0;
         }
 
-        .send-btn:hover {
+        .send-btn:disabled {
+            background: var(--gray-light);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .send-btn:hover:not(:disabled) {
             transform: scale(1.05);
         }
 
@@ -389,6 +410,7 @@
             color: var(--gray);
             font-size: 20px;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         /* Bottom Navigation */
@@ -703,8 +725,10 @@
             <button class="attachment-btn">
                 <i class="fas fa-paperclip"></i>
             </button>
-            <input type="text" class="chat-input" id="chat-input" placeholder="Ketik pesan...">
-            <button class="send-btn" id="send-btn">
+            <div class="chat-input-container">
+                <textarea class="chat-input" id="chat-input" placeholder="Ketik pesan..." rows="1"></textarea>
+            </div>
+            <button class="send-btn" id="send-btn" disabled>
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
@@ -895,10 +919,28 @@
                 
                 chatMessages.appendChild(messageElement);
                 chatInput.value = '';
+                chatInput.style.height = 'auto';
+                sendBtn.disabled = true;
                 
                 // Scroll to bottom
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
+
+            // Auto-resize textarea
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+                
+                // Enable/disable tombol kirim berdasarkan isi input
+                sendBtn.disabled = this.value.trim() === '';
+            });
+
+            // Mencegah pengiriman dengan enter
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                }
+            });
 
             // Tambahkan event listener
             navItems.forEach(item => {
@@ -920,12 +962,6 @@
             chatBackBtn.addEventListener('click', closeChatRoom);
 
             sendBtn.addEventListener('click', sendMessage);
-
-            chatInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    sendMessage();
-                }
-            });
 
             // Set active nav based on current page
             function setActiveNav() {
