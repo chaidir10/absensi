@@ -51,6 +51,8 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
+            padding-bottom: 30px;
+            /* Ruang untuk overlap */
         }
 
         .header::before {
@@ -94,13 +96,24 @@
         }
 
         /* Employee Section Styles */
+        /* Employee Section Styles */
         .employee-section {
             background-color: var(--white);
-            margin: 0 20px 25px;
+            margin: -20px 20px 25px;
+            /* Atas kanan bawah kiri */
+            position: relative;
+            z-index: 2;
             padding: 20px;
+            z-index: 2;
             border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
             border: 1px solid var(--gray-light);
+            box-shadow: 0 10px 25px rgba(109, 40, 217, 0.15);
+        }
+
+        .employee-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(109, 40, 217, 0.2);
         }
 
         .section-header {
