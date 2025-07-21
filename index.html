@@ -905,10 +905,15 @@
                 const now = new Date();
                 const options = { day: 'numeric', month: 'short', year: 'numeric' };
                 const dateElement = document.getElementById('current-date');
-              
+                const timeElement = document.getElementById('current-time');
                 
                 if (dateElement) {
                     dateElement.textContent = now.toLocaleDateString('id-ID', options);
+                }
+                
+                if (timeElement) {
+                    const timeOptions = { hour: '2-digit', minute: '2-digit' };
+                    timeElement.textContent = now.toLocaleTimeString('id-ID', timeOptions);
                 }
             }
             
