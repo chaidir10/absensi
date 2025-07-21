@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts - Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     
     <style>
         :root {
@@ -434,6 +439,48 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .camera-container {
+    position: relative;
+}
+
+.camera-guide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 250px;
+    border: 3px dashed rgba(255,255,255,0.7);
+    border-radius: 10px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.camera-guide::before {
+    content: "Arahkan wajah ke dalam bingkai";
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+#map-container {
+    height: 150px;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    border: 1px solid var(--gray-light);
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
     </style>
 </head>
 <body>
@@ -456,9 +503,9 @@
                 <span id="current-date">24 Jun 2025</span>
             </div>
             <div class="attendance-time d-flex justify-content-center align-items-center gap-3 mb-3">
-                <i class="far fa-clock time-icon"></i>
-                <span class="time-range" id="current-time">07:30 - 16:00</span>
-            </div>
+    <i class="far fa-clock time-icon"></i>
+    <span class="time-range">Jam Kerja (07:00-16:00)</span>
+</div>
             
             <div class="attendance-actions">
                 <div class="attendance-btn btn-scale" id="clock-in-btn">
@@ -583,32 +630,38 @@
                 <span id="close-modal" style="cursor: pointer; font-size: 24px;">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="camera-container">
-                    <video id="camera-view" autoplay playsinline></video>
-                    <div class="camera-controls">
-                        <button class="camera-btn" id="switch-camera">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                        <button class="camera-btn" id="capture-btn">
-                            <i class="fas fa-camera"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="location-info">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span id="location-text">Mendapatkan lokasi...</span>
-                </div>
-                
-                <textarea class="notes-area" placeholder="Tambahkan catatan (opsional)" id="attendance-notes"></textarea>
-                
-                <button class="submit-btn" id="submit-attendance" disabled>
-                    <span id="submit-text">Submit Attendance</span>
-                    <span id="loading-spinner" style="display: none;">
-                        <i class="fas fa-spinner fa-spin"></i> Memproses...
-                    </span>
-                </button>
-            </div>
+    <div class="camera-container">
+        <video id="camera-view" autoplay playsinline></video>
+        <div class="camera-guide"></div>
+        <div class="camera-controls">
+            <button class="camera-btn" id="switch-camera">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button class="camera-btn" id="capture-btn">
+                <i class="fas fa-camera"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+    
+    <div class="location-info">
+        <i class="fas fa-map-marker-alt"></i>
+        <span id="location-text">Mendapatkan lokasi...</span>
+        <span id="coordinates" style="display: block; font-size: 12px; margin-top: 5px;"></span>
+    </div>
+    
+    <textarea class="notes-area" placeholder="Tambahkan catatan (opsional)" id="attendance-notes"></textarea>
+    
+    <button class="submit-btn" id="submit-attendance" disabled>
+        <span id="submit-text">Submit Attendance</span>
+        <span id="loading-spinner" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i> Memproses...
+        </span>
+    </button>
+</div>
         </div>
     </div>
 
@@ -881,6 +934,80 @@
                 closeAttendanceModal();
             }
         });
+        // Variabel untuk peta
+let map;
+let marker;
+
+// Fungsi untuk menampilkan peta
+function initMap(lat, lng) {
+    map = L.map('map').setView([lat, lng], 16);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    
+    // Tambahkan marker
+    marker = L.marker([lat, lng]).addTo(map)
+        .bindPopup("Lokasi Anda saat ini")
+        .openPopup();
+}
+
+// Update fungsi getLocation
+function getLocation() {
+    if (!navigator.geolocation) {
+        locationText.textContent = "Geolokasi tidak didukung oleh browser Anda";
+        return;
+    }
+    
+    locationText.textContent = "Mendapatkan lokasi...";
+    
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            currentLocation = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                accuracy: position.coords.accuracy
+            };
+            
+            // Tampilkan peta
+            initMap(position.coords.latitude, position.coords.longitude);
+            
+            // Tampilkan koordinat
+            document.getElementById('coordinates').textContent = 
+                `Lat: ${position.coords.latitude.toFixed(6)}, Long: ${position.coords.longitude.toFixed(6)}`;
+            
+            // Reverse geocoding
+            getAddressFromCoords(position.coords.latitude, position.coords.longitude);
+            
+            if (capturedPhoto) {
+                submitBtn.disabled = false;
+            }
+        },
+        (error) => {
+            console.error("Error getting location:", error);
+            let errorMessage = "Tidak dapat mendapatkan lokasi";
+            
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "Izin lokasi ditolak. Harap aktifkan izin lokasi.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "Informasi lokasi tidak tersedia.";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "Permintaan lokasi timeout.";
+                    break;
+            }
+            
+            locationText.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${errorMessage}`;
+        },
+        { 
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
+}
     </script>
 </body>
 </html>
