@@ -75,7 +75,7 @@
             z-index: -1;
         }
 
-        .app-header::after {
+        .header::after {
             content: "";
             position: absolute;
             bottom: -30px;
@@ -84,6 +84,12 @@
             height: 150px;
             background: radial-gradient(circle, rgba(167, 139, 250, 0.2) 0%, transparent 70%);
             z-index: -1;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .greeting {
@@ -522,6 +528,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -542,11 +549,25 @@
             opacity: 0;
         }
 
-        .message-item:nth-child(1) { animation-delay: 0.15s; }
-        .message-item:nth-child(2) { animation-delay: 0.2s; }
-        .message-item:nth-child(3) { animation-delay: 0.25s; }
-        .message-item:nth-child(4) { animation-delay: 0.3s; }
-        .message-item:nth-child(5) { animation-delay: 0.35s; }
+        .message-item:nth-child(1) {
+            animation-delay: 0.15s;
+        }
+
+        .message-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .message-item:nth-child(3) {
+            animation-delay: 0.25s;
+        }
+
+        .message-item:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .message-item:nth-child(5) {
+            animation-delay: 0.35s;
+        }
 
         /* .bottom-nav {
             animation: fadeIn 0.4s 0.15s ease-out forwards;
@@ -602,7 +623,8 @@
                             <span class="message-time">10 menit lalu</span>
                         </div>
                         <p class="message-subject">Pengajuan Cuti Tahunan</p>
-                        <p class="message-preview">Mohon persetujuan untuk pengajuan cuti tahunan saya tanggal 15-20 Juli 2023...</p>
+                        <p class="message-preview">Mohon persetujuan untuk pengajuan cuti tahunan saya tanggal 15-20
+                            Juli 2023...</p>
                     </div>
                     <div class="message-badge"></div>
                 </a>
@@ -616,7 +638,8 @@
                             <span class="message-time">1 jam lalu</span>
                         </div>
                         <p class="message-subject">Laporan Bulanan HR</p>
-                        <p class="message-preview">Berikut saya lampirkan laporan bulanan departemen HR untuk bulan Juni 2023...</p>
+                        <p class="message-preview">Berikut saya lampirkan laporan bulanan departemen HR untuk bulan Juni
+                            2023...</p>
                     </div>
                 </a>
 
@@ -629,7 +652,8 @@
                             <span class="message-time">3 jam lalu</span>
                         </div>
                         <p class="message-subject">Permintaan Dokumen</p>
-                        <p class="message-preview">Mohon bantuannya untuk pengiriman dokumen kontrak karyawan baru...</p>
+                        <p class="message-preview">Mohon bantuannya untuk pengiriman dokumen kontrak karyawan baru...
+                        </p>
                     </div>
                     <div class="message-badge"></div>
                 </a>
@@ -643,7 +667,8 @@
                             <span class="message-time">Kemarin</span>
                         </div>
                         <p class="message-subject">Undangan Meeting</p>
-                        <p class="message-preview">Meeting rutin bulanan akan dilaksanakan hari Jumat pukul 10.00 WIB...</p>
+                        <p class="message-preview">Meeting rutin bulanan akan dilaksanakan hari Jumat pukul 10.00 WIB...
+                        </p>
                     </div>
                 </a>
 
@@ -656,7 +681,8 @@
                             <span class="message-time">2 hari lalu</span>
                         </div>
                         <p class="message-subject">Approval Budget</p>
-                        <p class="message-preview">Budget untuk event tahunan sudah saya review dan approve, silakan diproses...</p>
+                        <p class="message-preview">Budget untuk event tahunan sudah saya review dan approve, silakan
+                            diproses...</p>
                     </div>
                 </a>
             </div>
@@ -699,11 +725,11 @@
                 <div class="chat-user-status">Online</div>
             </div>
         </div>
-        
+
         <div class="chat-messages" id="chat-messages">
             <!-- Messages will be inserted here by JavaScript -->
         </div>
-        
+
         <div class="chat-input-area">
             <button class="attachment-btn">
                 <i class="fas fa-paperclip"></i>
@@ -837,7 +863,7 @@
 
             // Handle navigation item clicks
             navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
+                item.addEventListener('click', function (e) {
                     if (this.getAttribute('href') === '#') {
                         e.preventDefault();
                     }
@@ -848,7 +874,7 @@
 
             // Handle inbox tab clicks
             inboxTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
+                tab.addEventListener('click', function () {
                     inboxTabs.forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     // Here you would filter messages based on the selected tab
@@ -857,7 +883,7 @@
 
             // Open chat room when a message is clicked
             messageItems.forEach(item => {
-                item.addEventListener('click', function(e) {
+                item.addEventListener('click', function (e) {
                     e.preventDefault();
                     const chatId = this.getAttribute('data-chat');
                     openChatRoom(chatId);
@@ -881,12 +907,12 @@
                     const messageElement = document.createElement('div');
                     messageElement.classList.add('message');
                     messageElement.classList.add(msg.sent ? 'sent' : 'received');
-                    
+
                     messageElement.innerHTML = `
                         <div>${msg.text}</div>
                         <div class="message-time">${msg.time}</div>
                     `;
-                    
+
                     chatMessages.appendChild(messageElement);
                 });
 
@@ -898,12 +924,12 @@
             }
 
             // Close chat room
-            chatBackBtn.addEventListener('click', function() {
+            chatBackBtn.addEventListener('click', function () {
                 chatRoom.classList.remove('active');
             });
 
             // Send message functionality
-            chatInput.addEventListener('input', function() {
+            chatInput.addEventListener('input', function () {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
                 sendBtn.disabled = this.value.trim() === '';
@@ -923,17 +949,17 @@
                 const messageElement = document.createElement('div');
                 messageElement.classList.add('message');
                 messageElement.classList.add('sent');
-                
+
                 messageElement.innerHTML = `
                     <div>${messageText}</div>
                     <div class="message-time">${timeString}</div>
                 `;
-                
+
                 chatMessages.appendChild(messageElement);
                 chatInput.value = '';
                 chatInput.style.height = 'auto';
                 sendBtn.disabled = true;
-                
+
                 // Scroll to bottom
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
