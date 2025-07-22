@@ -2,7 +2,7 @@
 <html lang="id">
 
 <head>
-    <meta content="#5c24c0" name="theme-color" />
+    <meta content="#6d28d9" name="theme-color" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Inbox</title>
@@ -17,19 +17,27 @@
             --primary: #6d28d9;
             --primary-light: #8b5cf6;
             --primary-dark: #5b21b6;
+            --primary-soft: #f3f0ff;
             --secondary: #a78bfa;
             --accent: #f59e0b;
+            --accent-light: #fef3c7;
             --light: #f8fafc;
-            --gray-light: #e2e8f0;
+            --gray-light: #f1f5f9;
             --gray: #94a3b8;
+            --gray-dark: #64748b;
             --dark: #1e293b;
             --white: #ffffff;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --success: #10b981;
+            --success-light: #d1fae5;
         }
 
         body {
-            background-color: #f5f3ff;
+            background-color: var(--primary-soft);
             color: var(--dark);
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .container {
@@ -38,7 +46,7 @@
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
-            box-shadow: 0 0 40px rgba(109, 40, 217, 0.08);
+            box-shadow: 0 0 30px rgba(109, 40, 217, 0.1);
             padding: 0;
             padding-bottom: 90px;
         }
@@ -102,14 +110,8 @@
             z-index: 2;
             padding: 20px;
             border-radius: 16px;
-            transition: all 0.3s ease;
-            border: 1px solid var(--gray-light);
             box-shadow: 0 10px 25px rgba(109, 40, 217, 0.15);
-        }
-
-        .inbox-section:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(109, 40, 217, 0.2);
+            border: 1px solid var(--gray-light);
         }
 
         .section-header {
@@ -178,7 +180,7 @@
         .message-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(109, 40, 217, 0.1);
-            background-color: #f5f3ff;
+            background-color: var(--primary-soft);
         }
 
         .sender-avatar {
@@ -187,6 +189,7 @@
             border-radius: 50%;
             margin-right: 15px;
             object-fit: cover;
+            border: 2px solid var(--gray-light);
         }
 
         .message-content {
@@ -252,7 +255,7 @@
             transition: transform 0.3s ease-out;
             display: flex;
             flex-direction: column;
-            max-width: 450px;
+            max-width: 500px;
             margin: 0 auto;
         }
 
@@ -308,7 +311,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            background-color: #f9f7ff;
+            background-color: var(--primary-soft);
         }
 
         .message {
@@ -342,7 +345,7 @@
             opacity: 0.7;
         }
 
-        /* Modified Chat Input Area */
+        /* Chat Input Area */
         .chat-input-area {
             padding: 15px;
             background-color: var(--white);
@@ -423,16 +426,19 @@
             display: flex;
             justify-content: space-around;
             background-color: var(--white);
-            padding: 12px 0;
-            box-shadow: 0 -6px 20px rgba(109, 40, 217, 0.08);
+            padding: 15px 0;
+            box-shadow: 0 -10px 30px rgba(109, 40, 217, 0.1);
             z-index: 10;
             border-top: 1px solid var(--gray-light);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            transition: background-color 0.3s ease;
         }
 
         .nav-item {
             text-align: center;
-            color: var(--gray);
-            font-size: 9px;
+            color: var(--gray-dark);
+            font-size: 10px;
             width: 20%;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -442,29 +448,11 @@
             text-decoration: none;
         }
 
-        .nav-item::before {
-            content: "";
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .nav-item:hover {
-            color: var(--primary);
-            background: #f5f3ff;
-        }
-
         .nav-icon {
             font-size: 22px;
             margin-bottom: 5px;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .nav-item.active {
@@ -472,20 +460,16 @@
             transform: translateY(-5px);
         }
 
-        .nav-item.active::before {
-            opacity: 1;
-            top: -5px;
-        }
-
         .nav-item.active .nav-icon {
-            transform: scale(1.15);
+            transform: scale(1.2);
             color: var(--primary);
         }
 
         /* Button Styles */
         .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+            border-radius: 10px;
         }
 
         .btn-outline-primary {
@@ -498,21 +482,35 @@
             color: white;
         }
 
-        /* NAVBAR */
-        .nav-item {
-            text-decoration: none !important;
-            color: var(--gray);
+        /* Search Box */
+        .search-box {
+            margin-bottom: 20px;
         }
 
-        .nav-item.active {
-            color: var(--primary);
+        .search-box .input-group {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        .nav-item:hover {
-            color: var(--primary);
+        .search-box .input-group-text {
+            border: none;
+            background-color: var(--white);
+            padding-left: 15px;
         }
 
-        /* Animasi */
+        .search-box .form-control {
+            border: none;
+            font-size: 14px;
+            padding: 12px 15px;
+            background-color: var(--white);
+        }
+
+        .search-box .form-control:focus {
+            box-shadow: none;
+        }
+
+        /* Animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -547,28 +545,6 @@
         .bottom-nav {
             animation: fadeIn 0.4s 0.15s ease-out forwards;
             opacity: 0;
-        }
-
-        /* Search Box */
-        .search-box {
-            margin-bottom: 20px;
-        }
-
-        .search-box .input-group-text {
-            border-radius: 10px 0 0 10px;
-            border-right: none;
-            background-color: white;
-        }
-
-        .search-box .form-control {
-            border-radius: 0 10px 10px 0;
-            border-left: none;
-            font-size: 14px;
-        }
-
-        .search-box .form-control:focus {
-            box-shadow: none;
-            border-color: #ced4da;
         }
     </style>
 </head>
@@ -682,23 +658,23 @@
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <a href="index.html" class="nav-item btn-scale" id="nav-home">
+            <a href="index.html" class="nav-item" id="nav-home">
                 <div class="nav-icon"><i class="fas fa-home"></i></div>
                 <div>Beranda</div>
             </a>
-            <a href="employees.html" class="nav-item btn-scale" id="nav-employees">
+            <a href="employees.html" class="nav-item" id="nav-employees">
                 <div class="nav-icon"><i class="fas fa-users"></i></div>
                 <div>Karyawan</div>
             </a>
-            <a href="pengajuan.html" class="nav-item">
+            <a href="pengajuan.html" class="nav-item" id="nav-pengajuan">
                 <div class="nav-icon"><i class="fas fa-file-upload"></i></div>
                 <div>Pengajuan</div>
             </a>
-            <a href="inbox.html" class="nav-item active">
+            <a href="inbox.html" class="nav-item active" id="nav-inbox">
                 <div class="nav-icon"><i class="fas fa-inbox"></i></div>
                 <div>Inbox</div>
             </a>
-            <a href="account.html" class="nav-item">
+            <a href="account.html" class="nav-item" id="nav-account">
                 <div class="nav-icon"><i class="fas fa-user"></i></div>
                 <div>Akun</div>
             </a>
@@ -838,30 +814,51 @@
                 }
             };
 
-            // Fungsi untuk menangani klik navigasi
-            function handleNavClick(e) {
-                if (this.getAttribute('href') === '#') {
+            // Set active navigation
+            function setActiveNav() {
+                const currentPage = window.location.pathname.split('/').pop();
+                const pageToNavId = {
+                    'index.html': 'nav-home',
+                    'employees.html': 'nav-employees',
+                    'pengajuan.html': 'nav-pengajuan',
+                    'inbox.html': 'nav-inbox',
+                    'account.html': 'nav-account'
+                };
+
+                const activeNavId = pageToNavId[currentPage] || 'nav-inbox';
+                document.getElementById(activeNavId)?.classList.add('active');
+            }
+
+            // Handle navigation item clicks
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') === '#') {
+                        e.preventDefault();
+                    }
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Handle inbox tab clicks
+            inboxTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    inboxTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    // Here you would filter messages based on the selected tab
+                });
+            });
+
+            // Open chat room when a message is clicked
+            messageItems.forEach(item => {
+                item.addEventListener('click', function(e) {
                     e.preventDefault();
-                }
+                    const chatId = this.getAttribute('data-chat');
+                    openChatRoom(chatId);
+                });
+            });
 
-                navItems.forEach(item => item.classList.remove('active'));
-                this.classList.add('active');
-
-                if (this.getAttribute('href') !== '#') {
-                    return true;
-                }
-
-                console.log('Menu ini belum diimplementasikan');
-            }
-
-            // Fungsi untuk menangani klik tab inbox
-            function handleTabClick() {
-                inboxTabs.forEach(tab => tab.classList.remove('active'));
-                this.classList.add('active');
-                console.log('Tab diubah:', this.textContent);
-            }
-
-            // Fungsi untuk membuka chat room
+            // Function to open chat room
             function openChatRoom(chatId) {
                 const chat = chatData[chatId];
                 if (!chat) return;
@@ -894,12 +891,20 @@
                 chatRoom.classList.add('active');
             }
 
-            // Fungsi untuk menutup chat room
-            function closeChatRoom() {
+            // Close chat room
+            chatBackBtn.addEventListener('click', function() {
                 chatRoom.classList.remove('active');
-            }
+            });
 
-            // Fungsi untuk mengirim pesan
+            // Send message functionality
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+                sendBtn.disabled = this.value.trim() === '';
+            });
+
+            sendBtn.addEventListener('click', sendMessage);
+
             function sendMessage() {
                 const messageText = chatInput.value.trim();
                 if (!messageText) return;
@@ -927,57 +932,7 @@
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
-            // Auto-resize textarea
-            chatInput.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
-                
-                // Enable/disable tombol kirim berdasarkan isi input
-                sendBtn.disabled = this.value.trim() === '';
-            });
-
-            // Mencegah pengiriman dengan enter
-            chatInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                }
-            });
-
-            // Tambahkan event listener
-            navItems.forEach(item => {
-                item.addEventListener('click', handleNavClick);
-            });
-
-            inboxTabs.forEach(tab => {
-                tab.addEventListener('click', handleTabClick);
-            });
-
-            messageItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const chatId = this.getAttribute('data-chat');
-                    openChatRoom(chatId);
-                });
-            });
-
-            chatBackBtn.addEventListener('click', closeChatRoom);
-
-            sendBtn.addEventListener('click', sendMessage);
-
-            // Set active nav based on current page
-            function setActiveNav() {
-                const currentPage = window.location.pathname.split('/').pop();
-                const pageToNavId = {
-                    'index.html': 'nav-home',
-                    'employees.html': 'nav-employees',
-                    'inbox.html': 'nav-inbox',
-                    'account.html': 'nav-account'
-                };
-
-                const activeNavId = pageToNavId[currentPage] || 'nav-inbox';
-                document.getElementById(activeNavId)?.classList.add('active');
-            }
-
+            // Initialize
             setActiveNav();
         });
     </script>
