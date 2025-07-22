@@ -520,13 +520,16 @@
 
         .modal-content {
             background-color: var(--white);
-            margin: 20px auto;
+            margin: 0 auto;
             padding: 25px;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 0;
+            max-width: 100%;
+            width: 100%;
+            height: 100%;
+            box-shadow: none;
             animation: fadeIn 0.3s ease-out;
+            position: relative;
+            overflow: hidden;
         }
 
         .modal-header {
@@ -534,6 +537,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            position: relative;
+            z-index: 10;
         }
 
         .modal-title {
@@ -556,14 +561,16 @@
             transform: rotate(90deg);
         }
 
+        /* Improved Camera Container */
         .camera-container {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 300px;
-            background-color: var(--gray-light);
-            border-radius: 16px;
+            height: 100%;
+            background-color: #000;
             overflow: hidden;
-            margin-bottom: 20px;
-            position: relative;
+            z-index: 1;
         }
 
         #camera-view {
@@ -572,90 +579,111 @@
             object-fit: cover;
         }
 
-        .camera-controls {
-            position: absolute;
-            bottom: 10px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .camera-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: var(--white);
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .camera-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .capture-btn {
-            width: 60px;
-            height: 60px;
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .map-container {
-            width: 100%;
-            height: 200px;
-            border-radius: 16px;
+        /* Mini Map Container */
+        .mini-map-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 20px;
+            border: 2px solid var(--white);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 20;
         }
-
+        
         #attendance-map {
             width: 100%;
             height: 100%;
-        }
-
-        .location-info {
-            background-color: var(--gray-light);
-            padding: 15px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .location-icon {
-            color: var(--primary);
-            margin-right: 8px;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .submit-btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3);
+        
+        .accuracy-indicator {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            z-index: 500;
         }
-
-        .submit-btn:disabled {
-            background-color: var(--gray-light);
-            color: var(--gray);
-            cursor: not-allowed;
+        
+        .accuracy-indicator i {
+            margin-right: 5px;
+            font-size: 10px;
+        }
+        
+        /* Improved Location Info */
+        .location-info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 150px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 16px;
+            font-size: 14px;
+            z-index: 20;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .location-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--primary-dark);
+        }
+        
+        .location-address {
+            font-size: 14px;
+            color: var(--dark);
+            line-height: 1.4;
+        }
+        
+        .location-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--gray-dark);
+        }
+        
+        .location-meta-icon {
+            margin-right: 5px;
+            color: var(--primary);
+            font-size: 12px;
+        }
+        
+        .location-status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: var(--accent-light);
+            color: var(--accent);
+            font-size: 13px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .location-status i {
+            margin-right: 8px;
+        }
+        
+        /* Geofence status colors */
+        .location-status.in-geofence {
+            background-color: var(--success-light);
+            color: var(--success);
+        }
+        
+        .location-status.out-geofence {
+            background-color: var(--danger-light);
+            color: var(--danger);
         }
 
         .captured-photo {
@@ -667,7 +695,7 @@
 
         .switch-camera-btn {
             position: absolute;
-            top: 10px;
+            top: 70px;
             right: 10px;
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
@@ -680,6 +708,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            z-index: 20;
         }
 
         .switch-camera-btn:hover {
@@ -802,6 +831,74 @@
             }
         }
 
+        /* Camera Controls */
+        .camera-controls {
+            position: fixed;
+            bottom: 160px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 20;
+        }
+
+        .camera-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--white);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .camera-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .capture-btn {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 20;
+            box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3);
+        }
+
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateX(-50%) scale(1.02);
+        }
+
+        .submit-btn:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from {
@@ -814,10 +911,6 @@
                 transform: translateY(0);
             }
         }
-
-        /* .app-header {
-            animation: fadeIn 0.2s ease-out forwards;
-        } */
 
         .attendance-card {
             animation: fadeIn 0.2s 0.2s ease-out forwards;
@@ -838,11 +931,6 @@
             animation: fadeIn 0.2s 0.5s ease-out forwards;
             opacity: 0;
         }
-
-        /* .bottom-nav {
-            animation: fadeIn 0.2s 0.2s ease-out forwards;
-            opacity: 0;
-        } */
     </style>
 </head>
 
@@ -855,7 +943,7 @@
                     <div class="greeting">Selamat pagi</div>
                     <h1 class="user-name">Chaidirrahman, S.Kom.</h1>
                 </div>
-                <div class="user-avatar mb-2">
+                <div class="user-avatar">
                     <img alt="User Avatar" class="img-fluid" src="https://avatar.iran.liara.run/public/48">
                 </div>
             </div>
@@ -1003,6 +1091,8 @@
                 <h3 class="modal-title" id="modalTitle">Clock In</h3>
                 <button class="close-btn" id="closeModal">×</button>
             </div>
+            
+            <!-- Full Screen Camera -->
             <div class="camera-container">
                 <video autoplay="" id="camera-view" playsinline=""></video>
                 <canvas id="photo-canvas" style="display:none;"></canvas>
@@ -1016,21 +1106,52 @@
                 <button class="switch-camera-btn" id="switchCamera">
                     <i class="fas fa-camera-retro"></i>
                 </button>
-                <div class="camera-controls">
-                    <button class="camera-btn" id="retakePhoto" style="display:none;">
-                        <i class="fas fa-redo"></i>
-                    </button>
+            </div>
+            
+            <!-- Mini Map in Bottom Right -->
+            <div class="mini-map-container">
+                <div id="attendance-map"></div>
+                <div class="accuracy-indicator">
+                    <i class="fas fa-crosshairs"></i>
+                    <span id="accuracy-value">Mendeteksi...</span>
                 </div>
             </div>
-            <div class="map-container">
-                <div id="attendance-map"></div>
-            </div>
+            
+            <!-- Location Info in Bottom Left -->
             <div class="location-info">
-                <div><small><i class="fas fa-map-marker-alt location-icon"></i> <span id="location-address">Mendeteksi
-                            lokasi...</span></small></div>
-                <div class="mt-2"><small><i class="fas fa-info-circle location-icon"></i>Pastikan Anda berada di lokasi
-                        yang benar</small></div>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-map-marker-alt location-icon"></i>
+                    <div>
+                        <div class="location-title">Lokasi Absensi</div>
+                        <div class="location-address" id="location-address">Mendeteksi lokasi...</div>
+                    </div>
+                </div>
+                <div class="location-meta">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-clock location-meta-icon"></i>
+                        <span id="location-time"></span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-satellite-dish location-meta-icon"></i>
+                        <span id="location-source">GPS</span>
+                    </div>
+                </div>
+                <div class="location-status" id="location-status">
+                    <i class="fas fa-spinner fa-spin"></i> Memverifikasi lokasi...
+                </div>
             </div>
+            
+            <!-- Camera Controls -->
+            <div class="camera-controls">
+                <button class="camera-btn" id="retakePhoto" style="display:none;">
+                    <i class="fas fa-redo"></i>
+                </button>
+                <button class="camera-btn capture-btn" id="capturePhoto">
+                    <i class="fas fa-camera"></i>
+                </button>
+            </div>
+            
+            <!-- Submit Button -->
             <button class="submit-btn btn-scale" disabled id="captureAndSubmit">Ambil Foto &amp; Absen</button>
         </div>
     </div>
@@ -1042,16 +1163,13 @@
         let isCameraReady = false;
         let isMapReady = false;
         let currentLocation = null;
+        let map = null;
+        let marker = null;
+        let geofenceCircle = null;
+        let watchPositionId = null;
 
         function checkReadiness() {
-            const captureBtn = document.getElementById('capturePhoto');
             const submitBtn = document.getElementById('captureAndSubmit');
-
-            if (captureBtn) {
-                captureBtn.disabled = !isCameraReady;
-                captureBtn.style.backgroundColor = isCameraReady ? 'var(--primary)' : 'var(--gray)';
-            }
-
             if (submitBtn) {
                 submitBtn.disabled = !(isCameraReady && isMapReady && currentLocation);
             }
@@ -1159,22 +1277,19 @@
             const clockInBtn = document.getElementById('clock-in-btn');
             const clockOutBtn = document.getElementById('clock-out-btn');
             const modalTitle = document.getElementById('modalTitle');
-            const submitBtn = document.getElementById('submitAttendance');
 
             // Camera and Map Variables
             const cameraView = document.getElementById('camera-view');
             const photoCanvas = document.getElementById('photo-canvas');
             const capturedPhoto = document.getElementById('captured-photo');
-            const captureBtn = document.getElementById('capturePhoto');
             const retakeBtn = document.getElementById('retakePhoto');
             const switchCameraBtn = document.getElementById('switchCamera');
+            const captureBtn = document.getElementById('capturePhoto');
             const locationAddress = document.getElementById('location-address');
             const faceFeedback = document.getElementById('faceFeedback');
 
             let stream = null;
             let currentFacingMode = 'user'; // front camera by default
-            let map;
-            let marker;
             let photoTaken = false;
             let isFaceInPosition = false;
 
@@ -1273,7 +1388,7 @@
 
                 // Check if location services are enabled
                 if (!navigator.geolocation) {
-                    alert('Lokasi tidak diaktifkan. Silakan aktifkan lokasi untuk melanjutkan.');
+                    alert('Lokasi tidak diaktifkan. Silakan aktifkan izin lokasi untuk melanjutkan.');
                     return;
                 }
 
@@ -1291,6 +1406,7 @@
                 if (capturedPhoto) capturedPhoto.style.display = 'none';
                 if (cameraView) cameraView.style.display = 'block';
                 if (retakeBtn) retakeBtn.style.display = 'none';
+                if (captureBtn) captureBtn.style.display = 'flex';
 
                 // Hide face feedback
                 if (faceFeedback) {
@@ -1324,6 +1440,12 @@
                 // Stop face detection
                 if (faceDetectionInterval) {
                     cancelAnimationFrame(faceDetectionInterval);
+                }
+
+                // Stop watching position
+                if (watchPositionId && navigator.geolocation) {
+                    navigator.geolocation.clearWatch(watchPositionId);
+                    watchPositionId = null;
                 }
             }
 
@@ -1388,7 +1510,8 @@
                 capturedPhoto.src = photoCanvas.toDataURL('image/jpeg');
                 cameraView.style.display = 'none';
                 capturedPhoto.style.display = 'block';
-                if (retakeBtn) retakeBtn.style.display = 'block';
+                if (retakeBtn) retakeBtn.style.display = 'flex';
+                if (captureBtn) captureBtn.style.display = 'none';
                 photoTaken = true;
 
                 // Hide face feedback
@@ -1399,11 +1522,12 @@
 
             // Retake photo
             function retakePhoto() {
-                if (!cameraView || !capturedPhoto || !retakeBtn) return;
+                if (!cameraView || !capturedPhoto || !retakeBtn || !captureBtn) return;
 
                 cameraView.style.display = 'block';
                 capturedPhoto.style.display = 'none';
                 retakeBtn.style.display = 'none';
+                captureBtn.style.display = 'flex';
                 photoTaken = false;
 
                 // Restart face detection
@@ -1413,23 +1537,47 @@
             // Get current location and show on map
             function getLocation() {
                 if (!navigator.geolocation) {
-                    if (locationAddress) {
-                        locationAddress.textContent = 'Geolocation tidak didukung oleh browser Anda';
-                    }
-                    alert('Lokasi tidak diaktifkan. Silakan aktifkan lokasi untuk melanjutkan.');
+                    updateLocationUI(null, 'Geolocation tidak didukung oleh browser Anda');
+                    alert('Lokasi tidak diaktifkan. Silakan aktifkan izin lokasi untuk melanjutkan.');
                     return;
                 }
 
-                if (locationAddress) {
-                    locationAddress.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendeteksi lokasi...';
-                }
+                updateLocationUI(null, 'Mendeteksi lokasi...', true);
 
-                navigator.geolocation.getCurrentPosition(
+                // Watch position for better accuracy
+                watchPositionId = navigator.geolocation.watchPosition(
                     position => {
-                        const { latitude, longitude } = position.coords;
+                        const { latitude, longitude, accuracy } = position.coords;
                         currentLocation = { lat: latitude, lng: longitude };
+                        
+                        // Update accuracy indicator
+                        const accuracyElement = document.getElementById('accuracy-value');
+                        if (accuracyElement) {
+                            accuracyElement.textContent = `${Math.round(accuracy)}m`;
+                            
+                            // Change color based on accuracy
+                            if (accuracy < 20) {
+                                accuracyElement.style.color = '#10b981';
+                            } else if (accuracy < 50) {
+                                accuracyElement.style.color = '#f59e0b';
+                            } else {
+                                accuracyElement.style.color = '#ef4444';
+                            }
+                        }
+                        
+                        // Update time
+                        const timeElement = document.getElementById('location-time');
+                        if (timeElement) {
+                            timeElement.textContent = new Date(position.timestamp).toLocaleTimeString('id-ID');
+                        }
+                        
+                        // Update source
+                        const sourceElement = document.getElementById('location-source');
+                        if (sourceElement) {
+                            sourceElement.textContent = position.coords.altitude ? 'GPS+Alt' : 'GPS';
+                        }
 
-                        // Initialize map if not already done
+                        // Initialize or update map
                         if (!map) {
                             initMap(latitude, longitude);
                         } else {
@@ -1441,16 +1589,33 @@
 
                         // Get address from coordinates
                         getAddressFromCoords(latitude, longitude);
-
-                        isMapReady = true;
-                        checkReadiness();
+                        
+                        // Stop watching after we get a good fix
+                        if (accuracy < 30) {
+                            navigator.geolocation.clearWatch(watchPositionId);
+                            watchPositionId = null;
+                            isMapReady = true;
+                            checkReadiness();
+                        }
                     },
                     error => {
                         console.error("Error getting location:", error);
-                        if (locationAddress) {
-                            locationAddress.textContent = 'Gagal mendapatkan lokasi. Pastikan GPS aktif dan izin diberikan.';
+                        let errorMessage = 'Gagal mendapatkan lokasi';
+                        
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage = 'Izin lokasi ditolak. Harap aktifkan izin lokasi.';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage = 'Informasi lokasi tidak tersedia.';
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage = 'Permintaan lokasi timeout.';
+                                break;
                         }
-                        alert('Lokasi tidak dapat dideteksi. Pastikan GPS aktif dan izin lokasi diberikan.');
+                        
+                        updateLocationUI(null, errorMessage);
+                        alert(errorMessage);
 
                         // Default location if geolocation fails
                         const defaultLat = -6.2088;
@@ -1463,10 +1628,14 @@
 
                         isMapReady = true;
                         checkReadiness();
+                        if (watchPositionId) {
+                            navigator.geolocation.clearWatch(watchPositionId);
+                            watchPositionId = null;
+                        }
                     },
                     {
                         enableHighAccuracy: true,
-                        timeout: 10000,
+                        timeout: 15000,
                         maximumAge: 0
                     }
                 );
@@ -1477,38 +1646,140 @@
                 const mapElement = document.getElementById('attendance-map');
                 if (!mapElement) return;
 
-                map = L.map(mapElement).setView([lat, lng], 18);
+                // Clear existing map if any
+                if (map) {
+                    map.remove();
+                }
 
+                map = L.map(mapElement, {
+                    zoomControl: false,
+                    attributionControl: false
+                }).setView([lat, lng], 18);
+
+                // Add tile layer
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
 
-                marker = L.marker([lat, lng]).addTo(map)
-                    .bindPopup('Lokasi Anda saat ini')
-                    .openPopup();
+                // Create a custom icon
+                const customIcon = L.icon({
+                    iconUrl: 'https://cdn.jsdelivr.net/npm/leaflet-color-markers@1.0.3/img/marker-icon-2x-violet.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                    shadowSize: [41, 41]
+                });
 
+                // Add marker with custom icon
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+                
+                marker = L.marker([lat, lng], {
+                    icon: customIcon,
+                    draggable: false
+                }).addTo(map);
+
+                // Add geofence circle (example coordinates - replace with your office location)
+                const officeLocation = [-6.2088, 106.8456]; // Example: Jakarta coordinates
+                const geofenceRadius = 100; // 100 meters radius
+                
+                if (geofenceCircle) {
+                    map.removeLayer(geofenceCircle);
+                }
+                
+                geofenceCircle = L.circle(officeLocation, {
+                    color: '#6d28d9',
+                    fillColor: '#8b5cf6',
+                    fillOpacity: 0.2,
+                    radius: geofenceRadius
+                }).addTo(map);
+
+                // Check if user is within geofence
+                const distance = map.distance([lat, lng], officeLocation);
+                const isInGeofence = distance <= geofenceRadius;
+                
+                updateGeofenceStatus(isInGeofence, distance);
+                
                 isMapReady = true;
                 checkReadiness();
             }
 
-            // Get address from coordinates using Nominatim (OpenStreetMap)
+            // Update location UI elements
+            function updateLocationUI(address, status, isLoading = false) {
+                const addressElement = document.getElementById('location-address');
+                const statusElement = document.getElementById('location-status');
+                
+                if (addressElement) {
+                    addressElement.textContent = address || 'Mendeteksi lokasi...';
+                }
+                
+                if (statusElement) {
+                    if (isLoading) {
+                        statusElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + status;
+                        statusElement.className = 'location-status';
+                    } else {
+                        statusElement.textContent = status;
+                    }
+                }
+            }
+
+            // Update geofence status
+            function updateGeofenceStatus(isInGeofence, distance) {
+                const statusElement = document.getElementById('location-status');
+                if (!statusElement) return;
+                
+                if (isInGeofence) {
+                    statusElement.innerHTML = '<i class="fas fa-check-circle"></i> Anda berada dalam area kantor';
+                    statusElement.className = 'location-status in-geofence';
+                } else {
+                    statusElement.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Anda ${Math.round(distance)}m di luar area kantor`;
+                    statusElement.className = 'location-status out-geofence';
+                }
+            }
+
+            // Improved address lookup
             async function getAddressFromCoords(lat, lng) {
-                if (!locationAddress) return;
+                const addressElement = document.getElementById('location-address');
+                if (!addressElement) return;
 
                 try {
-                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+                    // First try with Nominatim
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
                     const data = await response.json();
-
+                    
+                    let address = '';
+                    
                     if (data && data.address) {
-                        const address = data.display_name ||
-                            `${data.address.road || ''}, ${data.address.village || data.address.town || data.address.city || ''}`;
-                        locationAddress.textContent = address;
+                        // Build a more readable address
+                        const addr = data.address;
+                        address = [
+                            addr.road ? addr.road : '',
+                            addr.neighbourhood ? `, ${addr.neighbourhood}` : '',
+                            addr.suburb ? `, ${addr.suburb}` : '',
+                            addr.city_district ? `, ${addr.city_district}` : '',
+                            addr.city ? `, ${addr.city}` : '',
+                            addr.postcode ? ` ${addr.postcode}` : ''
+                        ].join('');
+                        
+                        // Clean up the address string
+                        address = address.replace(/^,/, '').trim();
+                        
+                        if (!address && data.display_name) {
+                            address = data.display_name;
+                        }
+                    }
+                    
+                    if (address) {
+                        updateLocationUI(address, 'Lokasi terdeteksi');
                     } else {
-                        locationAddress.textContent = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+                        // Fallback to coordinates if no address found
+                        updateLocationUI(`Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`, 'Alamat tidak ditemukan');
                     }
                 } catch (err) {
                     console.error("Error getting address:", err);
-                    locationAddress.textContent = `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`;
+                    updateLocationUI(`Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}`, 'Gagal mendapatkan alamat');
                 }
             }
 
@@ -1527,7 +1798,8 @@
                 capturedPhoto.src = photoCanvas.toDataURL('image/jpeg');
                 cameraView.style.display = 'none';
                 capturedPhoto.style.display = 'block';
-                if (retakeBtn) retakeBtn.style.display = 'block';
+                if (retakeBtn) retakeBtn.style.display = 'flex';
+                if (captureBtn) captureBtn.style.display = 'none';
                 photoTaken = true;
 
                 // Hide face feedback
@@ -1571,11 +1843,11 @@
             if (closeModal) {
                 closeModal.addEventListener('click', closeAttendanceModal);
             }
-            if (captureBtn) {
-                captureBtn.addEventListener('click', capturePhoto);
-            }
             if (retakeBtn) {
                 retakeBtn.addEventListener('click', retakePhoto);
+            }
+            if (captureBtn) {
+                captureBtn.addEventListener('click', capturePhoto);
             }
             if (switchCameraBtn) {
                 switchCameraBtn.addEventListener('click', switchCamera);
@@ -1602,6 +1874,10 @@
 
                 if (stream) {
                     stream.getTracks().forEach(track => track.stop());
+                }
+
+                if (watchPositionId && navigator.geolocation) {
+                    navigator.geolocation.clearWatch(watchPositionId);
                 }
             });
         });
