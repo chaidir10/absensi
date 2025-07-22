@@ -2,34 +2,62 @@
 <html lang="id">
 
 <head>
-    <meta content="#5c24c0" name="theme-color" />
+    <meta content="#6d28d9" name="theme-color" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Akun Saya</title>
+    <title>Profil Saya</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-    <!-- Google Fonts - Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
     <style>
         :root {
             --primary: #6d28d9;
             --primary-light: #8b5cf6;
             --primary-dark: #5b21b6;
+            --primary-soft: #f3f0ff;
             --secondary: #a78bfa;
             --accent: #f59e0b;
+            --accent-light: #fef3c7;
             --light: #f8fafc;
-            --gray-light: #e2e8f0;
+            --gray-light: #f1f5f9;
             --gray: #94a3b8;
+            --gray-dark: #64748b;
             --dark: #1e293b;
             --white: #ffffff;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --success: #10b981;
+            --success-light: #d1fae5;
+        }
+
+        .dark-mode {
+            --primary: #8b5cf6;
+            --primary-light: #a78bfa;
+            --primary-dark: #6d28d9;
+            --primary-soft: #2e1065;
+            --secondary: #7c3aed;
+            --light: #0f172a;
+            --gray-light: #1e293b;
+            --gray: #64748b;
+            --gray-dark: #94a3b8;
+            --dark: #f8fafc;
+            --white: #1e293b;
+            --danger: #ef4444;
+            --danger-light: #7f1d1d;
+            --success: #10b981;
+            --success-light: #064e3b;
         }
 
         body {
-            background-color: #f5f3ff;
+            background-color: var(--primary-soft);
             color: var(--dark);
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .container {
@@ -38,100 +66,107 @@
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
-            box-shadow: 0 0 40px rgba(109, 40, 217, 0.08);
+            box-shadow: 0 0 30px rgba(109, 40, 217, 0.1);
             padding: 0;
-            padding-bottom: 90px;
+            padding-bottom: 100px;
+            transition: background-color 0.3s ease;
         }
 
         /* Header Section */
-        .header {
+        .app-header {
             padding: 25px;
-            background: linear-gradient(160deg, var(--primary-dark), var(--primary));
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             position: relative;
             overflow: hidden;
             z-index: 1;
             padding-bottom: 30px;
+            border-bottom-right-radius: 30px;
+            border-bottom-left-radius: 30px;
+            transition: background 0.3s ease;
         }
 
-        .header::before {
+        .app-header::before {
             content: "";
             position: absolute;
-            top: -100px;
-            right: -80px;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 65%);
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
             z-index: -1;
         }
 
-        .greeting {
-            font-size: 11px;
-            font-weight: 500;
-            opacity: 0.9;
-            margin-bottom: 4px;
-            letter-spacing: 0.5px;
+        .app-header::after {
+            content: "";
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.2) 0%, transparent 70%);
+            z-index: -1;
         }
 
-        .user-name {
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-weight: 700;
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .header-subtitle {
             font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            opacity: 0.9;
+            font-weight: 400;
         }
 
-        .user-avatar {
-            width: 48px;
-            height: 48px;
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--light), #e2e8f0);
+            background-color: rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            overflow: hidden;
-            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* Account Section */
-        .account-section {
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+        }
+
+        .theme-toggle i {
+            font-size: 20px;
+            color: white;
+        }
+
+        /* Profile Card */
+        .profile-card {
             background-color: var(--white);
             margin: -20px 20px 25px;
             position: relative;
             z-index: 2;
-            padding: 20px;
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            border: 1px solid var(--gray-light);
-            box-shadow: 0 10px 25px rgba(109, 40, 217, 0.15);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(109, 40, 217, 0.1);
+            border: 1px solid rgba(109, 40, 217, 0.1);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
         }
 
-        .account-section:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(109, 40, 217, 0.2);
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .section-title {
-            font-weight: 700;
-            font-size: 17px;
-            color: var(--dark);
-            margin: 0;
-        }
-
-        .profile-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            margin-bottom: 25px;
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(109, 40, 217, 0.2);
         }
 
         .profile-avatar {
@@ -139,22 +174,152 @@
             height: 100px;
             border-radius: 50%;
             border: 4px solid var(--white);
-            box-shadow: 0 6px 15px rgba(109, 40, 217, 0.2);
-            margin-bottom: 15px;
+            box-shadow: 0 10px 30px rgba(109, 40, 217, 0.2);
+            margin: -70px auto 15px;
             object-fit: cover;
+            background-color: var(--light);
+            transition: all 0.4s ease;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(109, 40, 217, 0.3);
         }
 
         .profile-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .profile-title {
+            font-size: 14px;
+            color: var(--gray-dark);
+            margin-bottom: 20px;
+            font-weight: 500;
+            padding: 5px 15px;
+            background-color: var(--primary-soft);
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
             font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray-dark);
+            margin-top: 5px;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 0 20px;
+            margin-bottom: 30px;
+        }
+
+        .grid-item {
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(109, 40, 217, 0.05);
+            border: 1px solid var(--gray-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grid-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(109, 40, 217, 0.1);
+        }
+
+        .grid-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .grid-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background-color: var(--primary-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: var(--primary);
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .grid-item:hover .grid-icon {
+            background-color: var(--primary);
+            color: white;
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .grid-title {
+            font-size: 14px;
             font-weight: 600;
             margin-bottom: 5px;
             color: var(--dark);
         }
 
-        .profile-position {
-            font-size: 14px;
-            color: var(--gray);
+        .grid-desc {
+            font-size: 12px;
+            color: var(--gray-dark);
+        }
+
+        /* Menu List */
+        .menu-section {
+            padding: 0 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
             margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--primary);
         }
 
         .menu-list {
@@ -166,32 +331,56 @@
         .menu-item {
             display: flex;
             align-items: center;
-            padding: 15px;
-            background-color: var(--light);
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            padding: 16px;
+            background-color: var(--white);
+            border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             border: 1px solid var(--gray-light);
             text-decoration: none;
             color: var(--dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--primary-light));
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s ease;
         }
 
         .menu-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(109, 40, 217, 0.1);
-            background-color: #f5f3ff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(109, 40, 217, 0.1);
             color: var(--primary);
+        }
+
+        .menu-item:hover::after {
+            transform: scaleY(1);
         }
 
         .menu-icon {
             width: 40px;
             height: 40px;
             border-radius: 10px;
-            background-color: rgba(109, 40, 217, 0.1);
+            background-color: var(--primary-soft);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
             color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover .menu-icon {
+            background-color: var(--primary);
+            color: white;
         }
 
         .menu-content {
@@ -206,12 +395,18 @@
 
         .menu-desc {
             font-size: 12px;
-            color: var(--gray);
+            color: var(--gray-dark);
         }
 
         .menu-arrow {
             color: var(--gray);
             font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover .menu-arrow {
+            color: var(--primary);
+            transform: translateX(5px);
         }
 
         /* Bottom Navigation */
@@ -223,16 +418,19 @@
             display: flex;
             justify-content: space-around;
             background-color: var(--white);
-            padding: 12px 0;
-            box-shadow: 0 -6px 20px rgba(109, 40, 217, 0.08);
+            padding: 15px 0;
+            box-shadow: 0 -10px 30px rgba(109, 40, 217, 0.1);
             z-index: 10;
             border-top: 1px solid var(--gray-light);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            transition: background-color 0.3s ease;
         }
 
         .nav-item {
             text-align: center;
-            color: var(--gray);
-            font-size: 9px;
+            color: var(--gray-dark);
+            font-size: 10px;
             width: 20%;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -242,29 +440,11 @@
             text-decoration: none;
         }
 
-        .nav-item::before {
-            content: "";
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .nav-item:hover {
-            color: var(--primary);
-            background: #f5f3ff;
-        }
-
         .nav-icon {
             font-size: 22px;
             margin-bottom: 5px;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .nav-item.active {
@@ -272,120 +452,216 @@
             transform: translateY(-5px);
         }
 
-        .nav-item.active::before {
-            opacity: 1;
-            top: -5px;
+        .nav-item.active .nav-icon {
+            transform: scale(1.2);
+            color: var(--primary);
         }
 
-        .nav-item.active .nav-icon {
-            transform: scale(1.15);
-            color: var(--primary);
+        .nav-badge {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
         }
 
         /* Button Styles */
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
-        }
-
-        .btn-outline-primary {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-outline-primary:hover {
+        .btn-primary {
             background-color: var(--primary);
-            color: white;
+            border-color: var(--primary);
+            transition: all 0.3s ease;
         }
 
-        /* NAVBAR */
-        .nav-item {
-            text-decoration: none !important;
-            color: var(--gray);
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3);
         }
 
-        .nav-item.active {
-            color: var(--primary);
-        }
-
-        .nav-item:hover {
-            color: var(--primary);
-        }
-
-        /* Animasi */
+        /* Animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .header {
-            animation: fadeIn 0.4s ease-out forwards;
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
-        .account-section {
-            animation: fadeIn 0.4s 0.1s ease-out forwards;
-            opacity: 0;
+        .app-header {
+            animation: fadeIn 0.6s ease-out forwards;
         }
 
         .profile-card {
-            animation: fadeIn 0.4s 0.15s ease-out forwards;
+            animation: fadeIn 0.6s 0.2s ease-out forwards;
             opacity: 0;
         }
 
-        .menu-item {
-            animation: fadeIn 0.3s ease-out forwards;
+        .dashboard-grid {
+            animation: fadeIn 0.6s 0.3s ease-out forwards;
             opacity: 0;
         }
 
-        .menu-item:nth-child(1) { animation-delay: 0.2s; }
-        .menu-item:nth-child(2) { animation-delay: 0.25s; }
-        .menu-item:nth-child(3) { animation-delay: 0.3s; }
-        .menu-item:nth-child(4) { animation-delay: 0.35s; }
-        .menu-item:nth-child(5) { animation-delay: 0.4s; }
-        .menu-item:nth-child(6) { animation-delay: 0.45s; }
+        .menu-section {
+            animation: fadeIn 0.6s 0.4s ease-out forwards;
+            opacity: 0;
+        }
 
         .bottom-nav {
-            animation: fadeIn 0.4s 0.15s ease-out forwards;
+            animation: fadeIn 0.6s 0.5s ease-out forwards;
             opacity: 0;
+        }
+
+        .profile-avatar {
+            animation: float 6s ease-in-out infinite;
+            animation-delay: 0.8s;
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 400px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+            }
+
+            .profile-name {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <!-- Header Section -->
-        <div class="header d-flex justify-content-between align-items-center">
+        <!-- App Header -->
+        <div class="app-header">
             <div class="header-content">
-                <div class="greeting">Akun Saya</div>
-                <h4 class="user-name">Pengaturan Profil</h4>
-            </div>
-            <div class="user-avatar mb-2">
-                <img alt="User Avatar" class="img-fluid" src="https://avatar.iran.liara.run/public/48">
+                <div>
+                    <div class="header-subtitle">Halo, Selamat Datang</div>
+                    <h1 class="header-title">Profil Saya</h1>
+                </div>
+                <div class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </div>
             </div>
         </div>
 
-        <!-- Profile Section -->
-        <div class="account-section">
-            <div class="profile-card">
-                <img src="https://avatar.iran.liara.run/public/48" alt="Profile" class="profile-avatar">
-                <h3 class="profile-name">Chaidirrahman, S.Kom.</h3>
-                <p class="profile-position">Pranata Komputer Ahli Pertama</p>
-                <button class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-pencil-alt me-1"></i> Edit Profil
-                </button>
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <img src="https://avatar.iran.liara.run/public/48" alt="Profile" class="profile-avatar">
+            <h3 class="profile-name">Chaidirrahman</h3>
+            <div class="profile-title">Pranata Komputer Ahli Pertama</div>
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Proyek</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Tahun</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">98%</div>
+                    <div class="stat-label">Rating</div>
+                </div>
             </div>
 
+            <button class="btn btn-primary w-100 py-2" style="border-radius: 12px;">
+                <i class="fas fa-pencil-alt me-2"></i> Edit Profil
+            </button>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <div class="grid-item">
+                <div class="grid-icon">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <div class="grid-title">Edit Profil</div>
+                <div class="grid-desc">Perbarui data diri Anda</div>
+            </div>
+
+            <div class="grid-item">
+                <div class="grid-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="grid-title">Keamanan</div>
+                <div class="grid-desc">Ubah password & PIN</div>
+            </div>
+
+            <div class="grid-item">
+                <div class="grid-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="grid-title">Notifikasi</div>
+                <div class="grid-desc">Pengaturan pemberitahuan</div>
+            </div>
+
+            <div class="grid-item">
+                <div class="grid-icon">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <div class="grid-title">Tema</div>
+                <div class="grid-desc">Ubah tampilan aplikasi</div>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="menu-section">
+            <h3 class="section-title">
+                <i class="fas fa-cog"></i> Pengaturan
+            </h3>
+
             <div class="menu-list">
-                <!-- Menu Item 1 -->
                 <a href="#" class="menu-item">
                     <div class="menu-icon">
-                        <i class="fas fa-user-cog"></i>
+                        <i class="fas fa-id-card"></i>
                     </div>
                     <div class="menu-content">
                         <div class="menu-title">Informasi Pribadi</div>
@@ -396,55 +672,38 @@
                     </div>
                 </a>
 
-                <!-- Menu Item 2 -->
                 <a href="#" class="menu-item">
                     <div class="menu-icon">
-                        <i class="fas fa-lock"></i>
+                        <i class="fas fa-shield-alt"></i>
                     </div>
                     <div class="menu-content">
                         <div class="menu-title">Keamanan Akun</div>
-                        <div class="menu-desc">Ubah password dan verifikasi</div>
+                        <div class="menu-desc">Verifikasi dua langkah</div>
                     </div>
                     <div class="menu-arrow">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </a>
 
-                <!-- Menu Item 3 -->
                 <a href="#" class="menu-item">
                     <div class="menu-icon">
-                        <i class="fas fa-bell"></i>
+                        <i class="fas fa-credit-card"></i>
                     </div>
                     <div class="menu-content">
-                        <div class="menu-title">Notifikasi</div>
-                        <div class="menu-desc">Pengaturan pemberitahuan</div>
+                        <div class="menu-title">Pembayaran</div>
+                        <div class="menu-desc">Metode pembayaran</div>
                     </div>
                     <div class="menu-arrow">
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </a>
 
-                <!-- Menu Item 4 -->
-                <a href="#" class="menu-item">
-                    <div class="menu-icon">
-                        <i class="fas fa-moon"></i>
-                    </div>
-                    <div class="menu-content">
-                        <div class="menu-title">Tema Aplikasi</div>
-                        <div class="menu-desc">Light mode / Dark mode</div>
-                    </div>
-                    <div class="menu-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </a>
-
-                <!-- Menu Item 5 -->
                 <a href="#" class="menu-item">
                     <div class="menu-icon">
                         <i class="fas fa-question-circle"></i>
                     </div>
                     <div class="menu-content">
-                        <div class="menu-title">Bantuan & Dukungan</div>
+                        <div class="menu-title">Bantuan</div>
                         <div class="menu-desc">Pusat bantuan dan FAQ</div>
                     </div>
                     <div class="menu-arrow">
@@ -452,9 +711,8 @@
                     </div>
                 </a>
 
-                <!-- Menu Item 6 -->
-                <a href="#" class="menu-item text-danger">
-                    <div class="menu-icon" style="background-color: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                <a href="#" class="menu-item">
+                    <div class="menu-icon" style="background-color: var(--danger-light); color: var(--danger);">
                         <i class="fas fa-sign-out-alt"></i>
                     </div>
                     <div class="menu-content">
@@ -470,25 +728,40 @@
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <a href="index.html" class="nav-item btn-scale" id="nav-home">
-                <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">
+                    <i class="fas fa-home"></i>
+                </div>
                 <div>Beranda</div>
             </a>
-            <a href="employees.html" class="nav-item btn-scale" id="nav-employees">
-                <div class="nav-icon"><i class="fas fa-users"></i></div>
-                <div>Karyawan</div>
+
+            <a href="#" class="nav-item">
+                <div class="nav-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <div>Proyek</div>
             </a>
-            <a href="pengajuan.html" class="nav-item">
-                <div class="nav-icon"><i class="fas fa-file-upload"></i></div>
-                <div>Pengajuan</div>
+
+            <a href="#" class="nav-item">
+                <div class="nav-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div>Kalender</div>
             </a>
-            <a href="inbox.html" class="nav-item">
-                <div class="nav-icon"><i class="fas fa-inbox"></i></div>
-                <div>Inbox</div>
+
+            <a href="#" class="nav-item">
+                <div class="nav-icon">
+                    <i class="fas fa-envelope"></i>
+                    <span class="nav-badge">3</span>
+                </div>
+                <div>Pesan</div>
             </a>
-            <a href="account.html" class="nav-item active">
-                <div class="nav-icon"><i class="fas fa-user"></i></div>
-                <div>Akun</div>
+
+            <a href="#" class="nav-item active">
+                <div class="nav-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>Profil</div>
             </a>
         </div>
     </div>
@@ -496,47 +769,79 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const navItems = document.querySelectorAll('.nav-item');
+            // Theme Toggle Functionality
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
 
-            // Fungsi untuk menangani klik navigasi
-            function handleNavClick(e) {
-                // Hanya preventDefault jika itu adalah link placeholder (#)
-                if (this.getAttribute('href') === '#') {
-                    e.preventDefault();
-                }
-
-                // Update active state
-                navItems.forEach(item => item.classList.remove('active'));
-                this.classList.add('active');
-
-                // Jika bukan link placeholder, biarkan default behavior bekerja
-                if (this.getAttribute('href') !== '#') {
-                    return true;
-                }
-
-                // Untuk link placeholder, bisa tambahkan logika custom di sini
-                console.log('Menu ini belum diimplementasikan');
+            // Check for saved theme preference or use light theme by default
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            if (currentTheme === 'dark') {
+                body.classList.add('dark-mode');
+                updateThemeIcon('dark');
             }
 
-            // Tambahkan event listener
-            navItems.forEach(item => {
-                item.addEventListener('click', handleNavClick);
+            // Toggle theme on button click
+            themeToggle.addEventListener('click', function () {
+                body.classList.toggle('dark-mode');
+                const theme = body.classList.contains('dark-mode') ? 'dark' : 'light';
+                localStorage.setItem('theme', theme);
+                updateThemeIcon(theme);
+
+                // Add animation class
+                this.classList.add('theme-toggle-active');
+                setTimeout(() => {
+                    this.classList.remove('theme-toggle-active');
+                }, 300);
             });
 
-            // Set active nav based on current page
-            function setActiveNav() {
-                const currentPage = window.location.pathname.split('/').pop();
-                const pageToNavId = {
-                    'index.html': 'nav-home',
-                    'employees.html': 'nav-employees',
-                    'account.html': 'nav-account'
-                };
-
-                const activeNavId = pageToNavId[currentPage] || 'nav-account';
-                document.getElementById(activeNavId)?.classList.add('active');
+            function updateThemeIcon(theme) {
+                const icon = themeToggle.querySelector('i');
+                if (theme === 'dark') {
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                } else {
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                }
             }
 
-            setActiveNav();
+            // Ripple effect for all clickable items
+            const clickableItems = document.querySelectorAll('.grid-item, .menu-item, .nav-item');
+
+            clickableItems.forEach(item => {
+                item.addEventListener('click', function (e) {
+                    if (this.classList.contains('nav-item')) {
+                        // Handle nav item active state
+                        document.querySelectorAll('.nav-item').forEach(nav => {
+                            nav.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    }
+                    createRipple(e, this);
+                });
+            });
+
+            function createRipple(event, element) {
+                const rect = element.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+
+                // Special styling for dark elements
+                if (element.classList.contains('grid-item') ||
+                    element.classList.contains('menu-item') ||
+                    element.classList.contains('profile-card')) {
+                    ripple.style.backgroundColor = 'rgba(109, 40, 217, 0.2)';
+                }
+
+                element.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            }
         });
     </script>
 </body>
