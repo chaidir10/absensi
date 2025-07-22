@@ -2,7 +2,7 @@
 <html lang="id">
 
 <head>
-    <meta content="#5c24c0" name="theme-color" />
+    <meta content="#6d28d9" name="theme-color" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Manajemen Karyawan</title>
@@ -17,19 +17,46 @@
             --primary: #6d28d9;
             --primary-light: #8b5cf6;
             --primary-dark: #5b21b6;
+            --primary-soft: #f3f0ff;
             --secondary: #a78bfa;
             --accent: #f59e0b;
+            --accent-light: #fef3c7;
             --light: #f8fafc;
-            --gray-light: #e2e8f0;
+            --gray-light: #f1f5f9;
             --gray: #94a3b8;
+            --gray-dark: #64748b;
             --dark: #1e293b;
             --white: #ffffff;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --success: #10b981;
+            --success-light: #d1fae5;
+        }
+
+        .dark-mode {
+            --primary: #8b5cf6;
+            --primary-light: #a78bfa;
+            --primary-dark: #6d28d9;
+            --primary-soft: #2e1065;
+            --secondary: #7c3aed;
+            --light: #0f172a;
+            --gray-light: #1e293b;
+            --gray: #64748b;
+            --gray-dark: #94a3b8;
+            --dark: #f8fafc;
+            --white: #1e293b;
+            --danger: #ef4444;
+            --danger-light: #7f1d1d;
+            --success: #10b981;
+            --success-light: #064e3b;
         }
 
         body {
-            background-color: #f5f3ff;
+            background-color: var(--primary-soft);
             color: var(--dark);
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .container {
@@ -38,82 +65,91 @@
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
-            box-shadow: 0 0 40px rgba(109, 40, 217, 0.08);
+            box-shadow: 0 0 30px rgba(109, 40, 217, 0.1);
             padding: 0;
-            padding-bottom: 90px;
+            padding-bottom: 100px;
+            transition: background-color 0.3s ease;
         }
 
         /* Header Section */
-        .header {
+        .app-header {
             padding: 25px;
-            background: linear-gradient(160deg, var(--primary-dark), var(--primary));
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             position: relative;
             overflow: hidden;
             z-index: 1;
             padding-bottom: 30px;
-            /* Ruang untuk overlap */
+            border-bottom-right-radius: 30px;
+            border-bottom-left-radius: 30px;
         }
 
-        .header::before {
+        .app-header::before {
             content: "";
             position: absolute;
-            top: -100px;
-            right: -80px;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 65%);
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
             z-index: -1;
         }
 
+        .app-header::after {
+            content: "";
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.2) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .greeting {
-            font-size: 11px;
-            font-weight: 500;
+            font-size: 12px;
             opacity: 0.9;
-            margin-bottom: 4px;
-            letter-spacing: 0.5px;
+            margin-bottom: 3px;
         }
 
         .user-name {
             font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
+            font-weight: 700;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .user-avatar {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--light), #e2e8f0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
             border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             flex-shrink: 0;
         }
 
-        /* Employee Section Styles */
-        /* Employee Section Styles */
+        /* Employee Section */
         .employee-section {
             background-color: var(--white);
             margin: -20px 20px 25px;
-            /* Atas kanan bawah kiri */
             position: relative;
             z-index: 2;
-            padding: 20px;
-            z-index: 2;
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            border: 1px solid var(--gray-light);
-            box-shadow: 0 10px 25px rgba(109, 40, 217, 0.15);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(109, 40, 217, 0.1);
+            border: 1px solid rgba(109, 40, 217, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
         }
 
         .employee-section:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(109, 40, 217, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(109, 40, 217, 0.2);
         }
 
         .section-header {
@@ -139,16 +175,16 @@
         .employee-item {
             display: flex;
             align-items: center;
-            padding: 12px 15px;
+            padding: 15px;
             background-color: var(--light);
-            border-radius: 12px;
+            border-radius: 16px;
             transition: all 0.3s ease;
             border: 1px solid var(--gray-light);
         }
 
         .employee-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(109, 40, 217, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(109, 40, 217, 0.1);
         }
 
         .employee-avatar {
@@ -156,13 +192,15 @@
             height: 50px;
             margin-right: 15px;
             flex-shrink: 0;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--gray-light);
         }
 
         .employee-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 50%;
         }
 
         .employee-info {
@@ -186,33 +224,45 @@
             font-size: 10px;
             font-weight: 500;
             padding: 4px 8px;
+            border-radius: 6px;
         }
 
         .employee-status .badge {
             font-size: 11px;
             padding: 5px 10px;
             font-weight: 500;
+            border-radius: 6px;
         }
 
         /* Badge Color Variants */
         .bg-primary-light {
             background-color: rgba(109, 40, 217, 0.1);
+            color: var(--primary);
         }
 
         .bg-warning-light {
             background-color: rgba(245, 158, 11, 0.1);
+            color: var(--accent);
         }
 
         .bg-danger-light {
             background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
         }
 
         .bg-info-light {
             background-color: rgba(6, 182, 212, 0.1);
+            color: #06b6d4;
         }
 
-        .text-warning {
-            color: var(--accent);
+        .bg-success-light {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .bg-secondary-light {
+            background-color: rgba(100, 116, 139, 0.1);
+            color: var(--gray-dark);
         }
 
         /* Search Box */
@@ -220,21 +270,27 @@
             margin-bottom: 20px;
         }
 
+        .search-box .input-group {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
         .search-box .input-group-text {
-            border-radius: 10px 0 0 10px;
-            border-right: none;
-            background-color: white;
+            border: none;
+            background-color: var(--white);
+            padding-left: 15px;
         }
 
         .search-box .form-control {
-            border-radius: 0 10px 10px 0;
-            border-left: none;
+            border: none;
             font-size: 14px;
+            padding: 12px 15px;
+            background-color: var(--white);
         }
 
         .search-box .form-control:focus {
             box-shadow: none;
-            border-color: #ced4da;
         }
 
         /* Bottom Navigation */
@@ -246,16 +302,19 @@
             display: flex;
             justify-content: space-around;
             background-color: var(--white);
-            padding: 12px 0;
-            box-shadow: 0 -6px 20px rgba(109, 40, 217, 0.08);
+            padding: 15px 0;
+            box-shadow: 0 -10px 30px rgba(109, 40, 217, 0.1);
             z-index: 10;
             border-top: 1px solid var(--gray-light);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            transition: background-color 0.3s ease;
         }
 
         .nav-item {
             text-align: center;
-            color: var(--gray);
-            font-size: 9px;
+            color: var(--gray-dark);
+            font-size: 10px;
             width: 20%;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -265,29 +324,11 @@
             text-decoration: none;
         }
 
-        .nav-item::before {
-            content: "";
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .nav-item:hover {
-            color: var(--primary);
-            background: #f5f3ff;
-        }
-
         .nav-icon {
             font-size: 22px;
             margin-bottom: 5px;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .nav-item.active {
@@ -295,20 +336,24 @@
             transform: translateY(-5px);
         }
 
-        .nav-item.active::before {
-            opacity: 1;
-            top: -5px;
-        }
-
         .nav-item.active .nav-icon {
-            transform: scale(1.15);
+            transform: scale(1.2);
             color: var(--primary);
         }
 
         /* Button Styles */
+        .btn-scale {
+            transition: transform 0.2s ease;
+        }
+
+        .btn-scale:active {
+            transform: scale(0.96);
+        }
+
         .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+            border-radius: 10px;
         }
 
         .btn-outline-primary {
@@ -321,83 +366,62 @@
             color: white;
         }
 
-        /* NAVBAR */
-        .nav-item {
-            text-decoration: none !important;
-            color: var(--gray);
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .nav-item.active {
-            color: var(--primary);
+        .app-header {
+            animation: fadeIn 0.3s ease-out forwards;
         }
 
-        .nav-item:hover {
-            color: var(--primary);
-        }
-         /* Animasi Fade In yang lebih cepat */
-    @keyframes fadeIn {
-        from {
+        .employee-section {
+            animation: fadeIn 0.3s 0.1s ease-out forwards;
             opacity: 0;
-            transform: translateY(10px); /* Gerakan lebih pendek */
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+
+        .employee-item {
+            animation: fadeIn 0.3s ease-out forwards;
+            opacity: 0;
         }
-    }
 
-    /* Header Animation - lebih cepat */
+        .employee-item:nth-child(1) { animation-delay: 0.15s; }
+        .employee-item:nth-child(2) { animation-delay: 0.2s; }
+        .employee-item:nth-child(3) { animation-delay: 0.25s; }
+        .employee-item:nth-child(4) { animation-delay: 0.3s; }
+        .employee-item:nth-child(5) { animation-delay: 0.35s; }
 
+        .search-box {
+            animation: fadeIn 0.3s 0.05s ease-out forwards;
+            opacity: 0;
+        }
 
-    /* Employee Section Animation - lebih cepat */
-    .employee-section {
-        animation: fadeIn 0.4s 0.1s ease-out forwards;
-        opacity: 0;
-    }
-
-    /* Employee Items Animation - lebih cepat dengan staggered delay lebih pendek */
-    .employee-item {
-        animation: fadeIn 0.3s ease-out forwards;
-        opacity: 0;
-    }
-
-    /* Staggered Animation yang lebih rapat */
-    .employee-item:nth-child(1) { animation-delay: 0.15s; }
-    .employee-item:nth-child(2) { animation-delay: 0.2s; }
-    .employee-item:nth-child(3) { animation-delay: 0.25s; }
-    .employee-item:nth-child(4) { animation-delay: 0.3s; }
-    .employee-item:nth-child(5) { animation-delay: 0.35s; }
-
-    /* Search Box Animation - lebih cepat */
-    .search-box {
-        animation: fadeIn 0.4s 0.05s ease-out forwards;
-        opacity: 0;
-    }
-
-    /* Bottom Nav Animation - lebih cepat */
-    .bottom-nav {
-        animation: fadeIn 0.4s 0.15s ease-out forwards;
-        opacity: 0;
-    }
-
-    /* Efek hover yang lebih cepat */
-    .employee-item:hover, 
-    .employee-section:hover {
-        transition-duration: 0.2s;
-    }
+        .bottom-nav {
+            animation: fadeIn 0.3s 0.15s ease-out forwards;
+            opacity: 0;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <!-- Header Section -->
-        <div class="header d-flex justify-content-between align-items-center">
+        <!-- App Header -->
+        <div class="app-header">
             <div class="header-content">
-                <div class="greeting">Profil Karyawan</div>
-                <h4 class="user-name">Balai Kekarantinaan Kesehatan Kelas 1 Tarakan</h4>
-            </div>
-            <div class="user-avatar mb-2">
-                <img alt="User Avatar" class="img-fluid" src="https://avatar.iran.liara.run/public/48">
+                <div>
+                    <div class="greeting">Profil Karyawan</div>
+                    <h1 class="user-name">Balai Kekarantinaan Kesehatan Kelas 1 Tarakan</h1>
+                </div>
+                <div class="user-avatar">
+                    <img alt="User Avatar" class="img-fluid" src="https://avatar.iran.liara.run/public/48">
+                </div>
             </div>
         </div>
 
@@ -406,7 +430,7 @@
             <div class="section-header">
                 <h3 class="section-title">Daftar Karyawan</h3>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-outline-primary">
+                    <button class="btn btn-sm btn-outline-primary btn-scale">
                         <i class="fas fa-filter"></i> Filter
                     </button>
                 </div>
@@ -431,12 +455,12 @@
                         <h5 class="employee-name">Ahmad Budiman</h5>
                         <p class="employee-position">Frontend Developer</p>
                         <div class="employee-department">
-                            <span class="badge bg-primary-light text-primary">IT Department</span>
+                            <span class="badge bg-primary-light">IT Department</span>
                         </div>
                     </div>
                     <div class="employee-status">
-                        <span class="badge bg-success bg-opacity-10 text-success">
-                            <i class="fas fa-circle small me-1"></i> Aktif
+                        <span class="badge bg-success-light">
+                            <i class="fas fa-circle small me-1" style="font-size: 6px;"></i> Aktif
                         </span>
                     </div>
                 </div>
@@ -450,12 +474,12 @@
                         <h5 class="employee-name">Siti Rahayu</h5>
                         <p class="employee-position">HR Manager</p>
                         <div class="employee-department">
-                            <span class="badge bg-warning-light text-warning">HR Department</span>
+                            <span class="badge bg-warning-light">HR Department</span>
                         </div>
                     </div>
                     <div class="employee-status">
-                        <span class="badge bg-success bg-opacity-10 text-success">
-                            <i class="fas fa-circle small me-1"></i> Aktif
+                        <span class="badge bg-success-light">
+                            <i class="fas fa-circle small me-1" style="font-size: 6px;"></i> Aktif
                         </span>
                     </div>
                 </div>
@@ -469,12 +493,12 @@
                         <h5 class="employee-name">Budi Santoso</h5>
                         <p class="employee-position">Finance Staff</p>
                         <div class="employee-department">
-                            <span class="badge bg-danger-light text-danger">Finance</span>
+                            <span class="badge bg-danger-light">Finance</span>
                         </div>
                     </div>
                     <div class="employee-status">
-                        <span class="badge bg-secondary bg-opacity-10 text-secondary">
-                            <i class="fas fa-circle small me-1"></i> Cuti
+                        <span class="badge bg-secondary-light">
+                            <i class="fas fa-circle small me-1" style="font-size: 6px;"></i> Cuti
                         </span>
                     </div>
                 </div>
@@ -488,12 +512,12 @@
                         <h5 class="employee-name">Dewi Lestari</h5>
                         <p class="employee-position">Backend Developer</p>
                         <div class="employee-department">
-                            <span class="badge bg-primary-light text-primary">IT Department</span>
+                            <span class="badge bg-primary-light">IT Department</span>
                         </div>
                     </div>
                     <div class="employee-status">
-                        <span class="badge bg-success bg-opacity-10 text-success">
-                            <i class="fas fa-circle small me-1"></i> Aktif
+                        <span class="badge bg-success-light">
+                            <i class="fas fa-circle small me-1" style="font-size: 6px;"></i> Aktif
                         </span>
                     </div>
                 </div>
@@ -507,12 +531,12 @@
                         <h5 class="employee-name">Rudi Hermawan</h5>
                         <p class="employee-position">Marketing Head</p>
                         <div class="employee-department">
-                            <span class="badge bg-info-light text-info">Marketing</span>
+                            <span class="badge bg-info-light">Marketing</span>
                         </div>
                     </div>
                     <div class="employee-status">
-                        <span class="badge bg-success bg-opacity-10 text-success">
-                            <i class="fas fa-circle small me-1"></i> Aktif
+                        <span class="badge bg-success-light">
+                            <i class="fas fa-circle small me-1" style="font-size: 6px;"></i> Aktif
                         </span>
                     </div>
                 </div>
@@ -529,15 +553,15 @@
                 <div class="nav-icon"><i class="fas fa-users"></i></div>
                 <div>Karyawan</div>
             </a>
-            <a href="pengajuan.html" class="nav-item ">
+            <a href="pengajuan.html" class="nav-item btn-scale">
                 <div class="nav-icon"><i class="fas fa-file-upload"></i></div>
                 <div>Pengajuan</div>
             </a>
-            <a href="inbox.html" class="nav-item">
+            <a href="inbox.html" class="nav-item btn-scale">
                 <div class="nav-icon"><i class="fas fa-inbox"></i></div>
                 <div>Inbox</div>
             </a>
-            <a href="account.html" class="nav-item">
+            <a href="account.html" class="nav-item btn-scale">
                 <div class="nav-icon"><i class="fas fa-user"></i></div>
                 <div>Akun</div>
             </a>
