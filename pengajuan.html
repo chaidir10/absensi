@@ -384,16 +384,19 @@
             display: flex;
             justify-content: space-around;
             background-color: var(--white);
-            padding: 12px 0;
-            box-shadow: 0 -6px 20px rgba(109, 40, 217, 0.08);
+            padding: 15px 0;
+            box-shadow: 0 -10px 30px rgba(109, 40, 217, 0.1);
             z-index: 10;
             border-top: 1px solid var(--gray-light);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            transition: background-color 0.3s ease;
         }
 
         .nav-item {
             text-align: center;
-            color: var(--gray);
-            font-size: 9px;
+            color: var(--gray-dark);
+            font-size: 10px;
             width: 20%;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -407,6 +410,7 @@
             font-size: 22px;
             margin-bottom: 5px;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .nav-item.active {
@@ -415,7 +419,7 @@
         }
 
         .nav-item.active .nav-icon {
-            transform: scale(1.15);
+            transform: scale(1.2);
             color: var(--primary);
         }
 
