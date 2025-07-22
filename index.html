@@ -559,8 +559,7 @@
 
         .camera-container {
             width: 100%;
-            height: 600px;
-            /* Changed from 300px to 600px */
+            height: 450px;
             background-color: var(--gray-light);
             border-radius: 16px;
             overflow: hidden;
@@ -609,18 +608,17 @@
             color: white;
         }
 
-        .map-container {
-            width: 100%;
-            height: 150px;
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 20px;
+        .map-overlay {
             position: absolute;
-            right: 20px;
             bottom: 20px;
-            width: 60%;
+            right: 20px;
+            width: 40%;
+            height: 30%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             z-index: 10;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--white);
         }
 
         #attendance-map {
@@ -1014,6 +1012,10 @@
             </div>
             <div class="camera-container">
                 <video autoplay="" id="camera-view" playsinline=""></video>
+                <!-- Tambahkan map overlay di sini -->
+                <div class="map-overlay">
+                    <div id="attendance-map"></div>
+                </div>
                 <canvas id="photo-canvas" style="display:none;"></canvas>
                 <img alt="Captured photo" class="captured-photo" id="captured-photo" />
                 <div class="guide-overlay">
@@ -1031,9 +1033,9 @@
                     </button>
                 </div>
             </div>
-            <div class="map-container">
+            <!-- <div class="map-container">
                 <div id="attendance-map"></div>
-            </div>
+            </div> -->
             <div class="location-info">
                 <div><small><i class="fas fa-map-marker-alt location-icon"></i> <span id="location-address">Mendeteksi
                             lokasi...</span></small></div>
