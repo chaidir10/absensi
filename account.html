@@ -230,9 +230,18 @@
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
+            /* 2 kolom */
             gap: 15px;
             padding: 0 20px;
             margin-bottom: 30px;
+            max-width: 100%;
+        }
+
+        @media (max-width: 576px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                /* 1 kolom di layar kecil */
+            }
         }
 
         .grid-item {
@@ -620,7 +629,7 @@
 
         <!-- Dashboard Grid -->
         <div class="dashboard-grid">
-            <div class="grid-item col-md-6">
+            <div class="grid-item">
                 <div class="grid-icon">
                     <i class="fas fa-user-edit"></i>
                 </div>
