@@ -857,6 +857,8 @@
 </head>
 
 <body>
+    <button id="installButton" style="display:none;">Install Aplikasi</button>
+
     <div class="container">
         <!-- App Header -->
         <div class="app-header">
@@ -1055,26 +1057,28 @@
     <script>
         // PRINTAH INSTALL
         let deferredPrompt;
+        const installBtn = document.getElementById('installButton');
 
-        // Deteksi event sebelum prompt install muncul
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); // Mencegah muncul otomatis
+            e.preventDefault();
             deferredPrompt = e;
+            installBtn.style.display = 'block'; // Tampilkan tombol install
 
-            // Langsung munculkan prompt install
-            if (deferredPrompt) {
+            installBtn.addEventListener('click', () => {
+                installBtn.style.display = 'none';
                 deferredPrompt.prompt();
 
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted install');
+                        console.log('User accepted the install prompt');
                     } else {
-                        console.log('User dismissed install');
+                        console.log('User dismissed the install prompt');
                     }
                     deferredPrompt = null;
                 });
-            }
+            });
         });
+
 
         let isCameraReady = false;
         let isMapReady = false;
