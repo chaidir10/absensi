@@ -15,6 +15,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="manifest" href="/absensi/manifest.json">
     <meta name="theme-color" content="#5c24c0">
+    <!-- Untuk iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="MyPresensi">
+    <link rel="apple-touch-icon" href="/absensi/assets/icons/icon-192x192.png">
+
     <style>
         :root {
             --primary: #6d28d9;
@@ -872,11 +878,12 @@
 </head>
 
 <body>
-<div id="installWrapper" class="d-flex justify-content-center text-center" style="background-color: var(--primary);">
-  <button class="my-3 btn btn-primary" id="installButton" style="display:none;">
-    <i class="fa-solid fa-arrow-down me-2"></i>Install Aplikasi
-  </button>
-</div>
+    <div id="installWrapper" class="d-flex justify-content-center text-center"
+        style="background-color: var(--primary);">
+        <button class="my-3 btn btn-primary" id="installButton" style="display:none;">
+            <i class="fa-solid fa-arrow-down me-2"></i>Install Aplikasi
+        </button>
+    </div>
 
     <div class="container">
         <!-- App Header -->
