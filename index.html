@@ -15,13 +15,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="manifest" href="/absensi/manifest.json">
     <meta name="theme-color" content="#5c24c0">
-    <!-- Tampilkan aplikasi full-screen saat dibuka dari homescreen iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="MyPresensi">
-
-    <!-- Apple Touch Icon (harus 180x180 minimal) -->
-    <link rel="apple-touch-icon" href="/absensi/icons/icon-192x192.png">
     <style>
         :root {
             --primary: #6d28d9;
@@ -394,9 +387,9 @@
             line-height: 1.5;
         }
 
-        .btn-primary {
-            background-color: var(--white);
-            color: var(--primary);
+        .install-btn {
+            background-color: var(--primary);
+            color: var(--white);
             border: none;
             padding: 10px 20px;
             border-radius: 50px;
@@ -879,11 +872,11 @@
 </head>
 
 <body>
-    <div class="d-flex justify-content-center text-center" style="background-color: var(--primary-dark);">
-        <button class="btn btn-primary my-3 mx-auto text-center" id="installButton" >
-            <i class="fa-solid fa-arrow-down me-2"></i> Install Aplikasi
-        </button>
-    </div>
+<div id="installWrapper" class="d-flex justify-content-center text-center">
+  <button class="my-3 btn btn-primary" id="installButton" style="display:none;">
+    Install Aplikasi
+  </button>
+</div>
 
     <div class="container">
         <!-- App Header -->
@@ -1081,6 +1074,7 @@
     <!-- Leaflet JS for maps -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // PRINTAH INSTALL
         let deferredPrompt;
         const installBtn = document.getElementById('installButton');
 
@@ -1104,10 +1098,7 @@
             });
         });
 
-    </script>
 
-
-    <script>
         let isCameraReady = false;
         let isMapReady = false;
         let currentLocation = null;
