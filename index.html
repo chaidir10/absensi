@@ -1051,6 +1051,36 @@
     <!-- Leaflet JS for maps -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // PRINTAH INSTALL
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Mencegah prompt otomatis muncul
+            e.preventDefault();
+            // Simpan event untuk ditampilkan nanti
+            deferredPrompt = e;
+
+            // Langsung munculkan prompt install (bisa juga tunggu aksi user)
+            showInstallPrompt();
+        });
+
+        function showInstallPrompt() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+
+                // Tunggu respon user
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    } else {
+                        console.log('User dismissed the install prompt');
+                    }
+                    deferredPrompt = null; // Hapus event setelah dipakai
+                });
+            }
+        }
+
+
         let isCameraReady = false;
         let isMapReady = false;
         let currentLocation = null;
