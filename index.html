@@ -15,6 +15,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="manifest" href="/absensi/manifest.json">
     <meta name="theme-color" content="#5c24c0">
+    <!-- Tampilkan aplikasi full-screen saat dibuka dari homescreen iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="MyPresensi">
+
+    <!-- Apple Touch Icon (harus 180x180 minimal) -->
+    <link rel="apple-touch-icon" href="/absensi/icons/icon-192x192.png">
     <style>
         :root {
             --primary: #6d28d9;
@@ -1077,12 +1084,20 @@
         let deferredPrompt;
         const installButton = document.getElementById('installButton');
 
-        // Cek apakah sudah dalam mode standalone (terinstal)
-        const isInStandaloneMode = () =>
-            window.matchMedia('(display-mode: standalone)').matches ||
-            window.navigator.standalone === true;
+        function checkStandaloneMode() {
+            return (
+                window.matchMedia('(display-mode: standalone)').matches ||
+                window.navigator.standalone === true
+            );
+        }
 
-        if (!isInStandaloneMode()) {
+        document.addEventListener('DOMContentLoaded', () => {
+            if (checkStandaloneMode()) {
+                installButton.style.display = 'none';
+                return;
+            }
+
+            // Munculkan tombol install jika belum terinstall
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
@@ -1104,10 +1119,9 @@
                 console.log('App installed');
                 installButton.style.display = 'none';
             });
-        } else {
-            installButton.style.display = 'none';
-        }
+        });
     </script>
+
 
     <script>
         let isCameraReady = false;
