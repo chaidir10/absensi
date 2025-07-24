@@ -1082,44 +1082,28 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         let deferredPrompt;
-        const installButton = document.getElementById('installButton');
+        const installBtn = document.getElementById('installButton');
 
-        function checkStandaloneMode() {
-            return (
-                window.matchMedia('(display-mode: standalone)').matches ||
-                window.navigator.standalone === true
-            );
-        }
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block'; // Tampilkan tombol install
 
-        document.addEventListener('DOMContentLoaded', () => {
-            if (checkStandaloneMode()) {
-                installButton.style.display = 'none';
-                return;
-            }
+            installBtn.addEventListener('click', () => {
+                installBtn.style.display = 'none';
+                deferredPrompt.prompt();
 
-            // Munculkan tombol install jika belum terinstall
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                installButton.style.display = 'inline-block';
-            });
-
-            installButton.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    if (outcome === 'accepted') {
-                        console.log('User accepted install');
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    } else {
+                        console.log('User dismissed the install prompt');
                     }
                     deferredPrompt = null;
-                }
-            });
-
-            window.addEventListener('appinstalled', () => {
-                console.log('App installed');
-                installButton.style.display = 'none';
+                });
             });
         });
+
     </script>
 
 
