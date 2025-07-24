@@ -872,11 +872,11 @@
 </head>
 
 <body>
-    <div id="installWrapper" class="my-3 d-flex justify-content-center text-center">
-        <button class="btn btn-primary id=" installButton" style="display:none;">
-            Install Aplikasi
-        </button>
-    </div>
+<div id="installWrapper" class="my-3 d-flex justify-content-center text-center">
+  <button class="install-btn id="installButton" style="display:none;">
+    Install Aplikasi
+  </button>
+</div>
 
     <div class="container">
         <!-- App Header -->
@@ -1076,34 +1076,27 @@
     <script>
         // PRINTAH INSTALL
         let deferredPrompt;
-        const installButton = document.getElementById('installButton');
-        const installWrapper = document.getElementById('installWrapper');
+        const installBtn = document.getElementById('installButton');
 
-        // Tangkap event sebelum install
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); // Cegah prompt otomatis
+            e.preventDefault();
             deferredPrompt = e;
-            installButton.style.display = 'inline-block'; // Tampilkan tombol
-        });
+            installBtn.style.display = 'block'; // Tampilkan tombol install
 
-        // Klik tombol install
-        installButton.addEventListener('click', async () => {
-            if (deferredPrompt) {
+            installBtn.addEventListener('click', () => {
+                installBtn.style.display = 'none';
                 deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
-                }
-                deferredPrompt = null;
-            }
-        });
 
-        // Sembunyikan tombol dan wrapper setelah terinstall
-        window.addEventListener('appinstalled', () => {
-            console.log('Aplikasi telah terinstall');
-            installWrapper.style.display = 'none'; // Sembunyikan wrapper + tombol
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    } else {
+                        console.log('User dismissed the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            });
         });
-
 
 
         let isCameraReady = false;
