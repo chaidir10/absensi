@@ -1054,6 +1054,27 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // PRINTAH INSTALL
+        let deferredPrompt;
+
+        // Deteksi event sebelum prompt install muncul
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); // Mencegah muncul otomatis
+            deferredPrompt = e;
+
+            // Langsung munculkan prompt install
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted install');
+                    } else {
+                        console.log('User dismissed install');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        });
 
         let isCameraReady = false;
         let isMapReady = false;
