@@ -387,6 +387,21 @@
             line-height: 1.5;
         }
 
+        .install-btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
         .promo-btn {
             background-color: var(--white);
             color: var(--primary);
@@ -857,8 +872,8 @@
 </head>
 
 <body>
-    <div class="my-3 d-flex justify-content-center text-center">
-        <button class="btn btn-success" id="installButton" style="display:none;">
+    <div id="installWrapper" class="my-3 d-flex justify-content-center text-center">
+        <button class="install-btn id=" installButton" style="display:none;">
             Install Aplikasi
         </button>
     </div>
@@ -1061,27 +1076,34 @@
     <script>
         // PRINTAH INSTALL
         let deferredPrompt;
-        const installBtn = document.getElementById('installButton');
+        const installButton = document.getElementById('installButton');
+        const installWrapper = document.getElementById('installWrapper');
 
+        // Tangkap event sebelum install
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Cegah prompt otomatis
             deferredPrompt = e;
-            installBtn.style.display = 'block'; // Tampilkan tombol install
-
-            installBtn.addEventListener('click', () => {
-                installBtn.style.display = 'none';
-                deferredPrompt.prompt();
-
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the install prompt');
-                    } else {
-                        console.log('User dismissed the install prompt');
-                    }
-                    deferredPrompt = null;
-                });
-            });
+            installButton.style.display = 'inline-block'; // Tampilkan tombol
         });
+
+        // Klik tombol install
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        // Sembunyikan tombol dan wrapper setelah terinstall
+        window.addEventListener('appinstalled', () => {
+            console.log('Aplikasi telah terinstall');
+            installWrapper.style.display = 'none'; // Sembunyikan wrapper + tombol
+        });
+
 
 
         let isCameraReady = false;
