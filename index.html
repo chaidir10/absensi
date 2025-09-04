@@ -2,7 +2,7 @@
 <html lang="id">
 
 <head>
-    <meta content="#6d28d9" name="theme-color" />
+    <meta content="#5AB6EA" name="theme-color" />
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Aplikasi Absensi Professional</title>
@@ -14,7 +14,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="manifest" href="/absensi/manifest.json">
-    <meta name="theme-color" content="#5c24c0">
+    <meta name="theme-color" content="#5AB6EA">
     <!-- Untuk iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -23,13 +23,12 @@
 
     <style>
         :root {
-            --primary: #6d28d9;
-            --primary-light: #8b5cf6;
-            --primary-dark: #5b21b6;
-            --primary-soft: #f3f0ff;
-            --secondary: #a78bfa;
-            --accent: #f59e0b;
-            --accent-light: #fef3c7;
+            --primary: #5AB6EA;
+            --primary-light: #87CEEB;
+            --primary-dark: #2E97D4;
+            --primary-soft: #E6F4F9;
+            --accent: #FEAA2B;
+            --accent-light: #FFE4BC;
             --light: #f8fafc;
             --gray-light: #f1f5f9;
             --gray: #94a3b8;
@@ -40,14 +39,16 @@
             --danger-light: #fee2e2;
             --success: #10b981;
             --success-light: #d1fae5;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
         }
 
         .dark-mode {
-            --primary: #8b5cf6;
-            --primary-light: #a78bfa;
-            --primary-dark: #6d28d9;
-            --primary-soft: #2e1065;
-            --secondary: #7c3aed;
+            --primary: #2E97D4;
+            --primary-light: #5AB6EA;
+            --primary-dark: #1A76B4;
+            --primary-soft: #0F3A57;
+            --accent: #FEAA2B;
             --light: #0f172a;
             --gray-light: #1e293b;
             --gray: #64748b;
@@ -58,6 +59,8 @@
             --danger-light: #7f1d1d;
             --success: #10b981;
             --success-light: #064e3b;
+            --warning: #f59e0b;
+            --warning-light: #7c2d12;
         }
 
         body {
@@ -74,7 +77,7 @@
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
-            box-shadow: 0 0 30px rgba(109, 40, 217, 0.1);
+            box-shadow: 0 0 30px rgba(90, 182, 234, 0.1);
             padding: 0;
             padding-bottom: 100px;
             transition: background-color 0.3s ease;
@@ -91,7 +94,6 @@
             padding-bottom: 30px;
             border-bottom-right-radius: 30px;
             border-bottom-left-radius: 30px;
-            /* transition: background 0.3s ease; */
         }
 
         .app-header::before {
@@ -112,7 +114,7 @@
             left: -30px;
             width: 150px;
             height: 150px;
-            background: radial-gradient(circle, rgba(167, 139, 250, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(254, 170, 43, 0.2) 0%, transparent 70%);
             z-index: -1;
         }
 
@@ -152,14 +154,14 @@
             z-index: 2;
             padding: 25px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(109, 40, 217, 0.1);
-            border: 1px solid rgba(109, 40, 217, 0.1);
+            box-shadow: 0 10px 30px rgba(90, 182, 234, 0.1);
+            border: 1px solid rgba(90, 182, 234, 0.1);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
         }
 
         .attendance-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(109, 40, 217, 0.2);
+            box-shadow: 0 15px 40px rgba(90, 182, 234, 0.2);
         }
 
         .attendance-date {
@@ -196,12 +198,12 @@
         /* Attendance Actions */
         .attendance-actions {
             display: flex;
-            background: var(--gray-light);
+            background: var(--accent-light);
             border-radius: 50px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.1);
+            box-shadow: 0 4px 12px rgba(254, 170, 43, 0.2);
             height: 56px;
-            border: 1px solid rgba(214, 188, 250, 0.5);
+            border: 1px solid rgba(254, 170, 43, 0.3);
         }
 
         .attendance-btn {
@@ -210,13 +212,13 @@
             align-items: center;
             justify-content: center;
             font-weight: 600;
-            color: var(--dark);
+            color: white;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             font-size: 15px;
             outline: none !important;
             text-decoration: none !important;
-            background-color: var(--white);
+            background-color: var(--accent);
         }
 
         #clock-in-btn {
@@ -229,21 +231,15 @@
 
         .attendance-btn:hover {
             transform: translateY(-2px);
-            background-color: var(--primary-soft);
+            background-color: var(--accent);
+            filter: brightness(1.1);
         }
 
         .attendance-icon {
             font-size: 20px;
             transition: all 0.3s ease;
             margin-right: 8px;
-        }
-
-        #clock-in-btn .attendance-icon {
-            color: var(--primary);
-        }
-
-        #clock-out-btn .attendance-icon {
-            color: var(--primary);
+            color: white;
         }
 
         /* Feature Card */
@@ -251,10 +247,9 @@
             background-color: var(--white);
             margin: 0 20px 25px;
             padding: 10px 0px 10px 0px;
-            /* padding: 20px; */
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(109, 40, 217, 0.1);
-            border: 1px solid rgba(109, 40, 217, 0.1);
+            box-shadow: 0 10px 30px rgba(90, 182, 234, 0.1);
+            border: 1px solid rgba(90, 182, 234, 0.1);
             transition: all 0.3s ease;
         }
 
@@ -286,7 +281,6 @@
             height: 75px;
             margin: 5px;
             border-radius: 16px;
-            /*background: var(--primary-soft);*/
             transition: all 0.3s ease;
             cursor: pointer;
         }
@@ -294,15 +288,15 @@
         .feature-item:hover {
             background: var(--primary);
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(109, 40, 217, 0.2);
+            box-shadow: 0 8px 20px rgba(90, 182, 234, 0.2);
         }
 
         .feature-item:hover .feature-icon {
-            color: white;
+            color: var(--white);
         }
 
         .feature-item:hover .feature-name {
-            color: white;
+            color: var(--white);
         }
 
         .feature-icon {
@@ -354,79 +348,91 @@
             }
         }
 
-        /* Promo Banner */
-        .promo-banner {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
+        /* Attendance History Section */
+        .attendance-history {
+            background-color: var(--white);
             margin: 0 20px 25px;
             padding: 20px;
             border-radius: 20px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(109, 40, 217, 0.2);
+            box-shadow: 0 10px 30px rgba(90, 182, 234, 0.1);
+            border: 1px solid rgba(90, 182, 234, 0.1);
         }
 
-        .promo-banner::after {
-            content: "";
-            position: absolute;
-            top: -100px;
-            right: -80px;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 65%);
-        }
-
-        .promo-title {
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: 700;
-            position: relative;
-            z-index: 2;
-        }
-
-        .promo-text {
-            font-size: 12px;
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
-            opacity: 0.95;
-            position: relative;
-            z-index: 2;
-            line-height: 1.5;
         }
 
-        .btn-primary {
-            background-color: var(--white);
-            color: var(--primary);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
+        .history-title {
+            font-weight: 700;
             font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 2;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            color: var(--dark);
         }
 
-        .promo-btn {
-            background-color: var(--white);
+        .view-all {
             color: var(--primary);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 2;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
         }
 
-        .promo-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        .view-all:hover {
             color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-light);
+            cursor: pointer;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-time {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark);
+        }
+
+        .history-type {
+            font-size: 12px;
+            color: var(--gray-dark);
+        }
+
+        .history-status {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .status-on-time {
+            background-color: var(--success-light);
+            color: var(--success);
+        }
+
+        .status-late {
+            background-color: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .history-arrow {
+            color: var(--primary);
+            font-size: 16px;
         }
 
         /* Sections */
@@ -483,7 +489,7 @@
             justify-content: space-around;
             background-color: var(--white);
             padding: 15px 0;
-            box-shadow: 0 -10px 30px rgba(109, 40, 217, 0.1);
+            box-shadow: 0 -10px 30px rgba(90, 182, 234, 0.1);
             z-index: 10;
             border-top: 1px solid var(--gray-light);
             border-top-left-radius: 20px;
@@ -679,7 +685,7 @@
         .submit-btn:hover {
             background-color: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3);
+            box-shadow: 0 4px 15px rgba(90, 182, 234, 0.3);
         }
 
         .submit-btn:disabled {
@@ -807,6 +813,84 @@
             animation: bounce 0.8s infinite alternate;
         }
 
+        /* Detail History Modal */
+        .detail-modal-content {
+            background-color: var(--white);
+            margin: 20px auto;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        .detail-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .detail-body {
+            padding: 0;
+        }
+
+        .media-container {
+            display: flex;
+            width: 100%;
+            height: 250px;
+        }
+
+        .photo-container {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .detail-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .map-container {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .detail-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .detail-info {
+            padding: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .info-label {
+            width: 100px;
+            font-weight: 600;
+            color: var(--gray-dark);
+            font-size: 14px;
+        }
+
+        .info-value {
+            flex: 1;
+            font-size: 14px;
+            color: var(--dark);
+        }
+
+        .info-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
         @keyframes pulse {
             0% {
                 box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4);
@@ -846,10 +930,6 @@
             }
         }
 
-        /* .app-header {
-            animation: fadeIn 0.2s ease-out forwards;
-        } */
-
         .attendance-card {
             animation: fadeIn 0.2s 0.2s ease-out forwards;
             opacity: 0;
@@ -860,7 +940,7 @@
             opacity: 0;
         }
 
-        .promo-banner {
+        .attendance-history {
             animation: fadeIn 0.2s 0.4s ease-out forwards;
             opacity: 0;
         }
@@ -869,11 +949,6 @@
             animation: fadeIn 0.2s 0.5s ease-out forwards;
             opacity: 0;
         }
-
-        /* .bottom-nav {
-            animation: fadeIn 0.2s 0.2s ease-out forwards;
-            opacity: 0;
-        } */
     </style>
 </head>
 
@@ -978,12 +1053,30 @@
             </div>
         </div>
 
-        <!-- Promo Banner -->
-        <div class="promo-banner">
-            <h3 class="promo-title">Makin flexible!</h3>
-            <p class="promo-text">Kini performance review dapat dilakukan di Mobile App dengan fitur yang lebih lengkap
-                dan akses yang lebih mudah</p>
-            <button class="promo-btn btn-scale">Coba Sekarang</button>
+        <!-- Attendance History -->
+        <div class="attendance-history">
+            <div class="history-header">
+                <h3 class="history-title">Riwayat Hari Ini</h3>
+                <span class="view-all" id="view-all-history">Lihat Semua</span>
+            </div>
+            <div id="today-history">
+                <div class="history-item" data-id="1">
+                    <div class="history-info">
+                        <span class="history-time">07:28</span>
+                        <span class="history-type">Clock In</span>
+                    </div>
+                    <span class="history-status status-on-time">Tepat Waktu</span>
+                    <i class="fas fa-chevron-right history-arrow"></i>
+                </div>
+                <div class="history-item" data-id="2">
+                    <div class="history-info">
+                        <span class="history-time">16:05</span>
+                        <span class="history-type">Clock Out</span>
+                    </div>
+                    <span class="history-status status-on-time">Tepat Waktu</span>
+                    <i class="fas fa-chevron-right history-arrow"></i>
+                </div>
+            </div>
         </div>
 
         <!-- Announcement Section -->
@@ -1064,9 +1157,6 @@
                     </button>
                 </div>
             </div>
-            <!-- <div class="map-container">
-                <div id="attendance-map"></div>
-            </div> -->
             <div class="location-info">
                 <div><small><i class="fas fa-map-marker-alt location-icon"></i> <span id="location-address">Mendeteksi
                             lokasi...</span></small></div>
@@ -1074,6 +1164,75 @@
                         yang benar</small></div>
             </div>
             <button class="submit-btn btn-scale" disabled id="captureAndSubmit">Ambil Foto &amp; Absen</button>
+        </div>
+    </div>
+
+    <!-- Full History Modal -->
+    <div class="attendance-modal" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Riwayat Absensi</h3>
+                <button class="close-btn" id="closeHistoryModal">×</button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="history-filters p-3 border-bottom">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                        <input type="month" class="form-control" id="historyMonth" value="2025-06">
+                    </div>
+                </div>
+                <div class="history-list" style="max-height: 400px; overflow-y: auto;">
+                    <!-- History items will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail History Modal -->
+    <div class="attendance-modal" id="detailModal">
+        <div class="detail-modal-content">
+            <div class="detail-header">
+                <h3 class="modal-title">Detail Absensi</h3>
+                <button class="close-btn" id="closeDetailModal">×</button>
+            </div>
+            <div class="detail-body">
+                <div class="media-container">
+                    <div class="photo-container">
+                        <img src="" alt="Foto Absensi" class="detail-photo" id="detailPhoto">
+                    </div>
+                    <div class="map-container">
+                        <div id="detailMap" class="detail-map"></div>
+                    </div>
+                </div>
+                <div class="detail-info">
+                    <div class="info-item">
+                        <div class="info-label">Hari/Tanggal</div>
+                        <div class="info-value" id="detailDate">Senin, 24 Juni 2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Jam</div>
+                        <div class="info-value" id="detailTime">07:28</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Tipe</div>
+                        <div class="info-value" id="detailType">Clock In</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="info-value">
+                            <span class="info-status status-on-time" id="detailStatus">Tepat Waktu</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Keterangan</div>
+                        <div class="info-value" id="detailNote">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Lokasi</div>
+                        <div class="info-value" id="detailLocation">Jl. Contoh No. 123, Jakarta</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1122,6 +1281,197 @@
             if (submitBtn) {
                 submitBtn.disabled = !(isCameraReady && isMapReady && currentLocation);
             }
+        }
+
+        // Sample attendance history data
+        const sampleHistoryData = [
+            { 
+                id: 1,
+                date: '2025-06-24', 
+                time: '07:28', 
+                type: 'Clock In', 
+                status: 'on-time',
+                note: '',
+                location: { lat: -6.2088, lng: 106.8456 },
+                address: 'Jl. Sudirman No. 123, Jakarta',
+                photo: 'https://placeholder.pics/svg/400x300/DEDEDE/555555/Foto%20Absensi'
+            },
+            { 
+                id: 2,
+                date: '2025-06-24', 
+                time: '16:05', 
+                type: 'Clock Out', 
+                status: 'on-time',
+                note: '',
+                location: { lat: -6.2088, lng: 106.8456 },
+                address: 'Jl. Sudirman No. 123, Jakarta',
+                photo: 'https://placeholder.pics/svg/400x300/DEDEDE/555555/Foto%20Absensi'
+            },
+            { 
+                id: 3,
+                date: '2025-06-23', 
+                time: '07:45', 
+                type: 'Clock In', 
+                status: 'late', 
+                lateBy: '15m',
+                note: 'Terlambat karena macet',
+                location: { lat: -6.2088, lng: 106.8456 },
+                address: 'Jl. Sudirman No. 123, Jakarta',
+                photo: 'https://placeholder.pics/svg/400x300/DEDEDE/555555/Foto%20Absensi'
+            },
+            { 
+                id: 4,
+                date: '2025-06-23', 
+                time: '16:00', 
+                type: 'Clock Out', 
+                status: 'on-time',
+                note: '',
+                location: { lat: -6.2088, lng: 106.8456 },
+                address: 'Jl. Sudirman No. 123, Jakarta',
+                photo: 'https://placeholder.pics/svg/400x300/DEDEDE/555555/Foto%20Absensi'
+            }
+        ];
+
+        // Function to format date
+        function formatDate(dateString) {
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        // Function to show full history modal
+        function showFullHistory() {
+            const historyModal = document.getElementById('historyModal');
+            const historyList = document.querySelector('.history-list');
+            const monthFilter = document.getElementById('historyMonth');
+            
+            // Show modal
+            historyModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Load history data
+            loadHistoryData(monthFilter.value);
+            
+            // Add event listener for month filter change
+            monthFilter.addEventListener('change', function() {
+                loadHistoryData(this.value);
+            });
+        }
+
+        // Function to load history data based on selected month
+        function loadHistoryData(month) {
+            const historyList = document.querySelector('.history-list');
+            const [year, monthNum] = month.split('-');
+            
+            // Filter data by selected month
+            const filteredData = sampleHistoryData.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate.getFullYear() == year && (itemDate.getMonth() + 1) == monthNum;
+            });
+            
+            // Group data by date
+            const groupedData = {};
+            filteredData.forEach(item => {
+                if (!groupedData[item.date]) {
+                    groupedData[item.date] = [];
+                }
+                groupedData[item.date].push(item);
+            });
+            
+            // Generate HTML for history list
+            let html = '';
+            
+            if (Object.keys(groupedData).length === 0) {
+                html = `<div class="empty-state p-4">Tidak ada data absensi untuk bulan ini</div>`;
+            } else {
+                // Sort dates in descending order
+                const sortedDates = Object.keys(groupedData).sort((a, b) => new Date(b) - new Date(a));
+                
+                sortedDates.forEach(date => {
+                    html += `<div class="p-3 border-bottom">
+                                <div class="fw-bold mb-2">${formatDate(date)}</div>`;
+                    
+                    groupedData[date].forEach(item => {
+                        const statusClass = item.status === 'on-time' ? 'status-on-time' : 
+                                          item.status === 'late' ? 'status-late' : 'status-early';
+                        const statusText = item.status === 'on-time' ? 'Tepat Waktu' : 
+                                         item.status === 'late' ? `Terlambat ${item.lateBy}` : `Pulang Awal ${item.earlyBy}`;
+                        
+                        html += `<div class="d-flex justify-content-between align-items-center mb-2 history-item-detail" data-id="${item.id}">
+                                    <div>
+                                        <div class="fw-semibold">${item.time}</div>
+                                        <div class="small text-muted">${item.type}</div>
+                                    </div>
+                                    <span class="history-status ${statusClass}">${statusText}</span>
+                                </div>`;
+                    });
+                    
+                    html += `</div>`;
+                });
+            }
+            
+            historyList.innerHTML = html;
+            
+            // Add event listeners to detail buttons
+            document.querySelectorAll('.history-item-detail').forEach(item => {
+                item.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    showDetailModal(id);
+                });
+            });
+        }
+
+        // Function to show detail modal
+        function showDetailModal(id) {
+            const detailModal = document.getElementById('detailModal');
+            const item = sampleHistoryData.find(i => i.id == id);
+            
+            if (!item) return;
+            
+            // Populate modal with data
+            document.getElementById('detailDate').textContent = formatDate(item.date);
+            document.getElementById('detailTime').textContent = item.time;
+            document.getElementById('detailType').textContent = item.type;
+            
+            const statusElement = document.getElementById('detailStatus');
+            statusElement.textContent = item.status === 'on-time' ? 'Tepat Waktu' : `Terlambat ${item.lateBy}`;
+            statusElement.className = 'info-status ' + (item.status === 'on-time' ? 'status-on-time' : 'status-late');
+            
+            document.getElementById('detailNote').textContent = item.note || '-';
+            document.getElementById('detailLocation').textContent = item.address;
+            document.getElementById('detailPhoto').src = item.photo;
+            
+            // Initialize map
+            const detailMapElement = document.getElementById('detailMap');
+            detailMapElement.innerHTML = '';
+            
+            const map = L.map(detailMapElement).setView([item.location.lat, item.location.lng], 17);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+            
+            L.marker([item.location.lat, item.location.lng])
+                .addTo(map)
+                .bindPopup('Lokasi Absensi')
+                .openPopup();
+            
+            // Show modal
+            detailModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Function to close history modal
+        function closeHistoryModal() {
+            const historyModal = document.getElementById('historyModal');
+            historyModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Function to close detail modal
+        function closeDetailModal() {
+            const detailModal = document.getElementById('detailModal');
+            detailModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
         // Wait for DOM to be fully loaded
@@ -1226,7 +1576,6 @@
             const clockInBtn = document.getElementById('clock-in-btn');
             const clockOutBtn = document.getElementById('clock-out-btn');
             const modalTitle = document.getElementById('modalTitle');
-            const submitBtn = document.getElementById('submitAttendance');
 
             // Camera and Map Variables
             const cameraView = document.getElementById('camera-view');
@@ -1274,64 +1623,6 @@
                     isCameraReady = true;
                     checkReadiness();
                 }
-            }
-
-            // Detect faces in video stream
-            async function detectFaces() {
-                if (!faceDetector || !cameraView || !cameraView.videoWidth) {
-                    faceDetectionInterval = requestAnimationFrame(detectFaces);
-                    return;
-                }
-
-                try {
-                    const faces = await faceDetector.detect(cameraView);
-
-                    if (faces.length > 0) {
-                        const face = faces[0];
-                        const guideFrame = document.querySelector('.guide-frame');
-
-                        if (!guideFrame) {
-                            faceDetectionInterval = requestAnimationFrame(detectFaces);
-                            return;
-                        }
-
-                        const guideRect = guideFrame.getBoundingClientRect();
-
-                        // Calculate face position relative to guide frame
-                        const faceX = face.boundingBox.x + face.boundingBox.width / 2;
-                        const faceY = face.boundingBox.y + face.boundingBox.height / 2;
-
-                        // Check if face is centered in guide frame
-                        const isXInCenter = faceX > guideRect.left && faceX < guideRect.right;
-                        const isYInCenter = faceY > guideRect.top && faceY < guideRect.bottom;
-
-                        // Face is properly positioned
-                        if (isXInCenter && isYInCenter) {
-                            if (!isFaceInPosition && faceFeedback) {
-                                // Show feedback
-                                faceFeedback.style.display = 'flex';
-                                faceFeedback.style.left = `${face.boundingBox.x + face.boundingBox.width / 2 - 50}px`;
-                                faceFeedback.style.top = `${face.boundingBox.y + face.boundingBox.height / 2 - 50}px`;
-                                isFaceInPosition = true;
-                            }
-                        } else {
-                            if (isFaceInPosition && faceFeedback) {
-                                faceFeedback.style.display = 'none';
-                                isFaceInPosition = false;
-                            }
-                        }
-                    } else {
-                        if (isFaceInPosition && faceFeedback) {
-                            faceFeedback.style.display = 'none';
-                            isFaceInPosition = false;
-                        }
-                    }
-                } catch (err) {
-                    console.error('Face detection error:', err);
-                }
-
-                // Continue detection
-                faceDetectionInterval = requestAnimationFrame(detectFaces);
             }
 
             // Open modal for clock in/out
@@ -1430,51 +1721,6 @@
                     checkReadiness();
                     alert('Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.');
                 }
-            }
-
-            // Switch between front and back camera
-            async function switchCamera() {
-                currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-                isCameraReady = false;
-                checkReadiness();
-                await startCamera();
-            }
-
-            // Capture photo
-            function capturePhoto() {
-                if (!stream || !cameraView || !photoCanvas || !capturedPhoto) return;
-
-                const context = photoCanvas.getContext('2d');
-                photoCanvas.width = cameraView.videoWidth;
-                photoCanvas.height = cameraView.videoHeight;
-
-                // Draw image to canvas
-                context.drawImage(cameraView, 0, 0, photoCanvas.width, photoCanvas.height);
-
-                // Convert to data URL and display
-                capturedPhoto.src = photoCanvas.toDataURL('image/jpeg');
-                cameraView.style.display = 'none';
-                capturedPhoto.style.display = 'block';
-                if (retakeBtn) retakeBtn.style.display = 'block';
-                photoTaken = true;
-
-                // Hide face feedback
-                if (faceFeedback) {
-                    faceFeedback.style.display = 'none';
-                }
-            }
-
-            // Retake photo
-            function retakePhoto() {
-                if (!cameraView || !capturedPhoto || !retakeBtn) return;
-
-                cameraView.style.display = 'block';
-                capturedPhoto.style.display = 'none';
-                retakeBtn.style.display = 'none';
-                photoTaken = false;
-
-                // Restart face detection
-                initFaceDetection();
             }
 
             // Get current location and show on map
@@ -1625,7 +1871,55 @@
 
                 // Show success message
                 alert(`${isClockIn ? 'Clock In' : 'Clock Out'} berhasil!`);
+                
+                // Add to today's history
+                addToTodayHistory(isClockIn ? 'Clock In' : 'Clock Out');
+                
                 closeAttendanceModal();
+            }
+            
+            // Add new attendance to today's history
+            function addToTodayHistory(type) {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                const todayHistory = document.getElementById('today-history');
+                
+                // Determine if on time or late
+                const isOnTime = type === 'Clock In' ? now.getHours() < 8 : true;
+                const statusClass = isOnTime ? 'status-on-time' : 'status-late';
+                const statusText = isOnTime ? 'Tepat Waktu' : 'Terlambat';
+                
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.setAttribute('data-id', sampleHistoryData.length + 1);
+                historyItem.innerHTML = `
+                    <div class="history-info">
+                        <span class="history-time">${timeString}</span>
+                        <span class="history-type">${type}</span>
+                    </div>
+                    <span class="history-status ${statusClass}">${statusText}</span>
+                    <i class="fas fa-chevron-right history-arrow"></i>
+                `;
+                
+                // Add click event to show detail
+                historyItem.addEventListener('click', function() {
+                    showDetailModal(this.getAttribute('data-id'));
+                });
+                
+                todayHistory.prepend(historyItem);
+                
+                // Add to sample data
+                sampleHistoryData.unshift({
+                    id: sampleHistoryData.length + 1,
+                    date: now.toISOString().split('T')[0],
+                    time: timeString,
+                    type: type,
+                    status: isOnTime ? 'on-time' : 'late',
+                    note: '',
+                    location: currentLocation,
+                    address: locationAddress.textContent,
+                    photo: photoCanvas.toDataURL('image/jpeg')
+                });
             }
 
             // Event Listeners with null checks
@@ -1638,24 +1932,47 @@
             if (closeModal) {
                 closeModal.addEventListener('click', closeAttendanceModal);
             }
-            if (captureBtn) {
-                captureBtn.addEventListener('click', capturePhoto);
-            }
-            if (retakeBtn) {
-                retakeBtn.addEventListener('click', retakePhoto);
-            }
-            if (switchCameraBtn) {
-                switchCameraBtn.addEventListener('click', switchCamera);
-            }
+            
             const captureAndSubmitBtn = document.getElementById('captureAndSubmit');
             if (captureAndSubmitBtn) {
                 captureAndSubmitBtn.addEventListener('click', captureAndSubmit);
             }
+            
+            // View all history button
+            const viewAllHistoryBtn = document.getElementById('view-all-history');
+            if (viewAllHistoryBtn) {
+                viewAllHistoryBtn.addEventListener('click', showFullHistory);
+            }
+            
+            // Close history modal button
+            const closeHistoryModalBtn = document.getElementById('closeHistoryModal');
+            if (closeHistoryModalBtn) {
+                closeHistoryModalBtn.addEventListener('click', closeHistoryModal);
+            }
+            
+            // Close detail modal button
+            const closeDetailModalBtn = document.getElementById('closeDetailModal');
+            if (closeDetailModalBtn) {
+                closeDetailModalBtn.addEventListener('click', closeDetailModal);
+            }
+            
+            // Add click events to existing history items
+            document.querySelectorAll('.history-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    showDetailModal(this.getAttribute('data-id'));
+                });
+            });
 
             // Close modal when clicking outside
             window.addEventListener('click', (e) => {
-                if (modal && e.target === modal) {
+                if (e.target === modal) {
                     closeAttendanceModal();
+                }
+                if (e.target === document.getElementById('historyModal')) {
+                    closeHistoryModal();
+                }
+                if (e.target === document.getElementById('detailModal')) {
+                    closeDetailModal();
                 }
             });
 
